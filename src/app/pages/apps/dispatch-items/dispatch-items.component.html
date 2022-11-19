@@ -1,0 +1,325 @@
+<div class="card-header card-header-flex" *ngIf="isDisp">
+
+    <!-- <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="baseFullname">Receive By</label>
+        <div class="col-md-6">
+            <ng-template class="w-100" #rt let-r="result" let-t="term">
+                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <input #dispautocomplete style="height: 70%;" #instance="ngbTypeahead" type="text" class="form-control"
+                placeholder="Search ..." [ngbTypeahead]="searchdispatch" [inputFormatter]="formatterdispatch"
+                [resultTemplate]="rt" (selectItem)="selecteddispatchitem($event.item)" />
+        </div>
+    </div> -->
+</div>
+<!-- <div class="form-group row" >
+        <label class="col-md-3 col-form-label" for="baseFullname">Supplied By</label>
+                               <ng-template class="w-100" #ot let-o="result" let-t="term">
+                            <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
+                        </ng-template>   
+                        <input #Supplierautocomplete style="height: 50%;width: 140px;margin-top: 10px;margin-left: 20px;" #instance="ngbTypeahead" type="text"
+                        class="form-control" placeholder="Search Supplier..." 
+                        [ngbTypeahead]="searchsupplier" [resultTemplate]="ot" [inputFormatter]="formattersupplier"
+                        (selectItem)="selectedsupplieritem($event.item)" /> 
+    </div> 
+
+    <div class="form-group row" >
+    <ng-template class="w-100" #ot let-o="result" let-t="term">
+        <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
+    </ng-template>  
+    <label class="col-md-3 col-form-label" for="baseFullname">Ordered By</label>
+    <input #Receiverautocomplete style="height: 50%;width: 140px;margin-top:10px;margin-left:20px" #instance="ngbTypeahead" type="text"
+    class="form-control" placeholder="Search Receiver..." 
+    [ngbTypeahead]="searchreceiver" [resultTemplate]="ot" [inputFormatter]="formatterreceiver"
+    (selectItem)="selectedreceiveritem($event.item)" /> 
+    </div>  -->
+
+<!-- <div class="d-inline-block mb-3 mr-3">
+        <label class="col-md-3 col-form-label" for="baseFullname">Dispatch Type</label>
+        <nz-select style="width: 170px;" (click)="dropdownnew(nzValue)" [(ngModel)]="nzValue" nzAllowClear nzPlaceHolder="Select Dispatch">
+          <nz-option nzValue="1" nzLabel="Normal_Dispatch"></nz-option>
+          <nz-option nzValue="3" nzLabel="Wastage_Dispatch"></nz-option>
+          <nz-option nzValue="2" nzLabel="Return_Dispatch"></nz-option>
+        </nz-select>
+      </div> -->
+<!-- <div class=" col-xl-12">
+
+    <div class="row">
+        <nz-card style="height: 90% ;width:25%;" nzTitle="Select Product" [nzExtra]="extraTemplate" *ngIf="isDisp">
+            <div>
+                <ng-template class="w-100" #rt let-r="result" let-t="term">
+                    <ngb-highlight [result]="r.product" [term]="t"></ngb-highlight>
+                </ng-template>
+                <input id="typeahead-template" [ngClass]="{'is-invalid':submitted && !temporaryItem.productId}"
+                    [(ngModel)]="model" #productautocomplete style="height: 84%;" #instance="ngbTypeahead" type="text"
+                    class="form-control" placeholder="Search Product..." [ngbTypeahead]="search" [resultTemplate]="rt"
+                    [inputFormatter]="formatter" (selectItem)="selectedItem($event.item)" />
+            </div>
+            <br>
+            <div>
+                <input #quantityel type="number" [ngClass]="{'is-invalid':submitted &&temporaryItem.DispatchQty <= 0}"
+                    [(ngModel)]="temporaryItem.DispatchQty" onfocus="this.select()" placeholder="Qty"
+                    class="form-control" (keyup.enter)="price.focus()" min="1" />
+            </div>
+            <br>
+            <div>
+                <input #price placeholder="price..." [ngClass]="{'is-invalid':submitted &&temporaryItem.price <= 0}"
+                    onfocus="this.select()" [(ngModel)]="temporaryItem.price" min="1" type="number" class="form-control"
+                    (keyup.enter)="tax1.focus()" />
+            </div>
+            <br>
+            <div>
+                <input #tax1 [(ngModel)]="temporaryItem.tax1" onfocus="this.select()" placeholder="tax1..."
+                    type="number" class="form-control" (keyup.enter)="tax2.focus()" />
+            </div>
+            <br>
+            <div>
+                <input #tax2 [(ngModel)]="temporaryItem.tax2" onfocus="this.select()" placeholder="tax2..."
+                    type="number" class="form-control" (keyup.enter)="BatchNum.focus()" />
+            </div>
+            <br>
+            <div>
+                <input #BatchNum [(ngModel)]="temporaryItem.BatchNum" onfocus="this.select()" placeholder="BatchNum..."
+                    type="number" class="form-control" (keyup.enter)="ContainerCount.focus()" />
+            </div>
+            <br>
+            <div>
+                <ng-template class="w-100" #st let-s="result" let-t="term">
+                    <ngb-highlight [result]="s.stockContainerName" [term]="t"></ngb-highlight>
+                </ng-template>
+                <input [ngClass]="{'is-invalid':submitted && !temporaryItem.ContainerCount}" [(ngModel)]="model"
+                    #ContainerCount style="height: 84%;" type="text" class="form-control"
+                    placeholder="Search Container..." [ngbTypeahead]="searchStock" [resultTemplate]="st"
+                    [inputFormatter]="formatterStock" (selectItem)="selectItem($event.item)" />
+            </div>
+            <br>
+        </nz-card>
+
+        <ng-template #extraTemplate>
+            <a href="javascript: void(0);" class="btn btn-sm btn-primary" (click)="addItem()">
+                <i class="fe fe-plus fa-lg"></i>
+            </a>
+        </ng-template>
+        <div class="col-xs-12 col-md-9 ">
+            <div class="card" *ngIf="isDisp">
+                <div class="card-header card-header-flex">
+                    <div class="d-flex flex-column justify-content-center mr-2">
+                        <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="d-flex flex-column  ">
+                        <button style="margin-left: 20px;margin-top: 20px;" class="btn btn-success "
+                            href="javascript: void(0);" (click)="receive()">
+                            RECEIVE
+                        </button>
+                    </div>
+                </div>
+
+                <nz-table #getproduct [nzShowPagination]="false" [nzData]="products" class="kit__utils__table"
+                    *ngIf="isDisp">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Tax1</th>
+                            <th>Tax2</th>
+                            <th>DispatchPrd</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let prod of dispList.orderProductDetList;let i = index">
+                            <td>{{i+1}}</td>
+                            <td>
+                                <a class="btn btn-sm btn-light" href="javascript: void(0);">
+                                    <input type="text" nz-input nzSize='small' [(ngModel)]="prod.receiveProduct"
+                                        style="width: 150px;">
+                                </a>
+                            </td>
+                           
+                            <td>
+                                <input type="text" nz-input nzSize='small' [(ngModel)]="prod.quantity"
+                                    style="width: 40px;">
+                            </td>
+                            <td>
+                                <input type="text" nz-input nzSize='small' [(ngModel)]="prod.unitPrice"
+                                    style="width: 40px;">
+                            </td>
+                            <td><input type="text" nz-input nzSize='small' [(ngModel)]="prod.tax1" style="width: 40px;">
+                            </td>
+                            <td><input type="text" nz-input nzSize='small' [(ngModel)]="prod.tax2" style="width: 40px;">
+                            </td>
+                            
+
+                            <td><input type="text" nz-input nzSize='small' [(ngModel)]="prod.receiveProduct"
+                                    style="width: 150px;"></td>
+                            <td class="text-right">
+                                <a href="javascript: void(0);" (click)="delete(prod)"
+                                    class="btn btn-sm btn-light pull-left" slot="actions">
+                                    <i class="fe fe-trash mr-1"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let product of order.Items; let i = index">
+
+                            <td>{{i+1}}</td>
+                            <td>
+                                <a class="btn btn-sm btn-light" href="javascript: void(0);">
+                                    {{product.ProductName}}
+                                </a>
+                            </td>
+                            <td>
+                                <input type="number" style="width: 50px;" nz-input nzSize='small'
+                                    [(ngModel)]="product.OrderQuantity" min="1"
+                                    (input)="settotalprice(i,product.OrderQuantity)">
+                            </td>
+                            <td>
+                                {{product.Price}}
+                            </td>
+                            <td>
+                                {{product.Tax1}}
+                            </td>
+                            <td>
+                                {{product.Tax2}}
+                            </td>
+                            <td>
+                                {{product.Dispatchprd}}
+                            </td>
+                            <td class="text-right">
+                                <a href="javascript: void(0);" (click)="delete(i)"
+                                    class="btn btn-sm btn-light pull-left" slot="actions">
+                                    <i class="fe fe-trash mr-1"></i>
+                                </a>
+                        </tr>
+                    </tbody>
+                    <button routerLink="/apps/internaltransfer">Go Back</button>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<div class="row" *ngIf="isShown">
+    <!-- <div class="mb-5" *ngIf="isShown">
+        <nz-radio-group [(ngModel)]="nzValue">
+            <label nz-radio nzValue="Receive" (click)="radio(nzValue)">Receive</label>
+        </nz-radio-group>
+    </div> -->
+    <!-- 
+    <br><br> -->
+
+    <!-- <div class="form-group" style="width: 10em;margin-left:40px;" *ngIf="isShown">
+        <label for="username">Receive Status:</label>
+        <select class="form-control custom-select" style="margin-left: 102px;margin-top: -62px;" name="Source">
+            <option value="0">All</option>
+            <option value="1">open</option>
+            <option value="2">Closed</option>
+            <option value="3">Returned</option>
+        </select>
+    </div> -->
+    <!-- <div class="d-inline-block mb-3 mr-3" *ngIf="isShown">
+    <label class="col-md-3 col-form-label" for="baseFullname">Receive Status</label>
+    <nz-select style="width: 120px;"   [(ngModel)]="nzValue"  nzPlaceHolder="Receive Status">
+      <nz-option nzValue="-1" (click)="recStatus(nzValue)"nzLabel="Return"></nz-option>
+      <nz-option nzValue="0" nzLabel="All" (click)="recStatus(nzValue)"></nz-option>
+      <nz-option nzValue="1" nzLabel="Open" (click)="recStatus(nzValue)"></nz-option>
+      <nz-option nzValue="3" nzLabel="Closed" (click)="recStatus(nzValue)"></nz-option>
+      <nz-option nzValue="2" nzLabel="Partial" (click)="recStatus(nzValue)"></nz-option>
+    </nz-select>
+  </div> -->
+</div>
+<nz-table #basicTable class="kit__utils__table mb-4" [nzData]="tabledata" *ngIf="isShown">
+    <thead>
+        <tr>
+            <th style="text-align: center;"><strong># </strong></th>
+            <th style="text-align: center;"><strong>Id</strong></th>
+            <th style="text-align: center;"><strong>OrderedBy Location </strong></th>
+            <th style="text-align: center;"><strong>Supplier Store </strong></th>
+            <th style="text-align: center;"><strong>Bill Amount </strong></th>
+            <th style="text-align: center;"><strong>DispatchDate </strong></th>
+            <th style="text-align: center;"><strong>Status </strong></th>
+            <th style="text-align: center;"><strong>Action </strong></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="text-align: center" *ngFor="let ord of basicTable.data; let i = index">
+            <td>{{i+1}}</td>
+
+            <td><a class="btn btn-sm btn-light" href="javascript: void(0);"
+                    (click)="getorderid(ord.id,contentdetail1);">{{ord.id}} </a></td>
+
+            <td>
+                {{ord.receiver}}
+            </td>
+            <td>
+                {{ord.supplier}}
+            </td>
+            <td>
+
+                {{ord.billAmount}}
+
+            </td>
+            <td>
+                {{ord.dispatchedDate | date: 'MMM d, h:mm a'}}
+            </td>
+
+            <td>
+                <span *ngIf="ord.receiveStatus == 3" class="badge badge-success mr-10">Received</span>
+                <span *ngIf="ord.receiveStatus == 2" class="badge badge-danger mr-10">Cancelled</span>
+                <span *ngIf="ord.receiveStatus == !0" class="badge badge-warning mr-10">Dispatched</span>
+                <span *ngIf="ord.receiveStatus == -1" class="badge badge-warning mr-10">Return</span>
+            </td>
+            <td>
+                <i class="fa fa-share-square" aria-hidden="true"></i>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #contentdetail1 let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Order details</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <nz-table class="table table-sm mb-0" [nzFrontPagination]="false" [nzData]="popupData.receipts">
+        <thead>
+            <tr>
+                <td><strong>Product</strong></td>
+                <td><strong>Quantity</strong></td>
+                <td class="text-right"><strong>Price</strong></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let ord of OrderDetail.itemDetails">
+                <td>{{ord.Product}}</td>
+                <td>{{ord.OrderQuantity}}</td>
+                <td class="text-right">&#8377;{{ord.Price | number:".2"}}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td> <strong>CGST</strong> </td>
+                <td class="text-right"> {{OrderDetail.tax1 | number:".2"}}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td> <strong>SGST</strong> </td>
+                <td class="text-right"> {{OrderDetail.tax2 | number:".2"}} </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td> <strong>TotalAmt</strong> </td>
+                <td class="text-right"> &#8377; <strong class="font-weight-bold">{{OrderDetail.billAmount1 |
+                        number:".2"}}</strong></td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>

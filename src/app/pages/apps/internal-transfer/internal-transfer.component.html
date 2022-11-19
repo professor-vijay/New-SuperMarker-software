@@ -1,0 +1,288 @@
+<div class=" col-xl-12">
+  <div>
+    <div class="card" *ngIf="isTable">
+      <div class="card-header card-header-flex">
+        <!-- <div class=" justify-content-center mr-2 mt-3">
+          <input nz-input type="number" [(ngModel)]="ordNo" placeholder="Order No" min="1" />
+        </div> -->
+        <ng-template class="w-100" #ot let-o="result" let-t="term">
+          <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
+        </ng-template>
+        <input #Supplierautocomplete style="height: 33px; width: 200px; margin-top: 15px; margin-left: 20px;"
+          #instance="ngbTypeahead" type="text" class="form-control" placeholder="Search Supplier..."
+          [ngbTypeahead]="searchsupplier" [resultTemplate]="ot" [inputFormatter]="formattersupplier"
+          (selectItem)="selectedsupplieritem($event.item)" />
+        <br>
+        <br>
+        <ng-template class="w-100" #ot let-o="result" let-t="term">
+          <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
+        </ng-template>
+        <!-- <input #Receiverautocomplete style="height: 33px; width: 200px; margin-top: 15px; margin-left: 20px;"
+          #instance="ngbTypeahead" type="text" class="form-control" placeholder="Search Receiver..."
+          [ngbTypeahead]="searchreceiver" [resultTemplate]="ot" [inputFormatter]="formatterreceiver"
+          (selectItem)="selectedreceiveritem($event.item)" /> -->
+        <br>
+
+        <div class="d-flex flex-column justify-content-center mr-2" style="margin-left: 20px; width: 200px;">
+          <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+        </div>
+        <div class="d-flex flex-column justify-content-center" style="margin-left: 40px;">
+          <button class="btn btn-success" (click)="saveOrder()">
+            Save
+          </button>
+        </div>
+        <div class="d-flex flex-column justify-content-center" style="margin-left: 40px;">
+          <button class="btn btn-danger" href="javascript: void(0);" *ngIf="isTable" (click)="back()">
+            Back
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <nz-card style="height: 90% ;width:25%;" nzTitle="Select Product" [nzExtra]="extraTemplate" *ngIf="isTable">
+        <div>
+          <ng-template class="w-100" #rt let-r="result" let-t="term">
+            <ngb-highlight [result]="r.product" [term]="t"></ngb-highlight>
+          </ng-template>
+          <input id="typeahead-template" [ngClass]="{'is-invalid':submitted &&temporaryItem.product == ''}"
+            [(ngModel)]="model" #productautocomplete style="height: 84%;" #instance="ngbTypeahead" type="text"
+            class="form-control" placeholder="Search Product..." [ngbTypeahead]="search" [resultTemplate]="rt"
+            [inputFormatter]="formatter" (selectItem)="selectedItem($event.item)" />
+        </div>
+        <br>
+        <div>
+          <input #quantityel type="number" [ngClass]="{'is-invalid':submitted &&temporaryItem.Quantity <= 0 || temporaryItem.Quantity > temporaryItem.quantity}"
+            [(ngModel)]="temporaryItem.Quantity" onfocus="this.select()" placeholder="Qty" class="form-control"
+            (keyup.enter)="addItem()" min="1" />
+            <!-- {{temporaryItem.quantity}}
+            {{temporaryItem.Quantity}}
+            {{submitted}} -->
+        </div>
+        <br>
+
+        <div>
+          <input #price placeholder="price..." [ngClass]="{'is-invalid':submitted &&temporaryItem.price <= 0}"
+            onfocus="this.select()" [(ngModel)]="temporaryItem.price" min="1" type="number" class="form-control"
+            (keyup.enter)="tax1.focus()" />
+        </div>
+        <br>
+
+        <div>
+          <input #tax1 [(ngModel)]="temporaryItem.tax1" onfocus="this.select()" placeholder="tax1..." type="number"
+            class="form-control" (keyup.enter)="addItem()" />
+        </div>
+        <br>
+        <div>
+          <input #tax2 [(ngModel)]="temporaryItem.tax2" onfocus="this.select()" placeholder="tax2..." type="number"
+            class="form-control" (keyup.enter)="addItem()" />
+        </div>
+
+      </nz-card>
+      <ng-template #extraTemplate>
+        <a href="javascript: void(0);" class="btn btn-sm btn-primary" (click)="addItem()">
+          <i class="fe fe-plus fa-lg"></i>
+        </a>
+      </ng-template>
+      <div class="col-xs-12 col-md-9 ">
+        <div class="card" *ngIf="isTable">
+          <nz-table #getproduct [nzShowPagination]="false" [nzData]="products" class="kit__utils__table"
+            *ngIf="isTable">
+            <thead>
+              <tr>
+                <th> #</th>
+                <th><strong> Description</strong> </th>
+                <th><strong>Quantity </strong> </th>
+                <th><strong>Price </strong> </th>
+                <th><strong>Tax1 </strong> </th>
+                <th><strong>Tax2 </strong> </th>
+                <th><strong>Action </strong> </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of order.Items; let i = index">
+                <td>{{i+1}}</td>
+                <td>
+                  <a class="btn btn-sm btn-light" href="javascript: void(0);">
+                    {{product.ProductName}}
+                  </a>
+                </td>
+                <td>
+                  <input type="number" nz-input nzSize='small' [(ngModel)]="product.OrderQuantity" min="1"
+                    (input)="settotalprice(i,product.OrderQuantity)">
+                </td>
+                <td>
+                  {{product.Price}}
+                </td>
+                <td>
+                  {{product.Tax1}}
+                </td>
+                <td>
+                  {{product.Tax2}}
+                </td>
+                <td class="text-right">
+                  <a href="javascript: void(0);" (click)="delete(i)" class="btn btn-sm btn-light pull-left"
+                    slot="actions">
+                    <i class="fe fe-trash mr-1"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <div *ngIf="isShown" class="container">
+    <div class="row">
+      <div class="col">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input type="text" nz-input placeholder="input search text" [(ngModel)]="term" (input)="filtersearch()" />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+        </ng-template>
+      </div>
+      <div class="col-6">
+        <a class="btn btn-success" href="javascript: void(0);" (click)="internal()">
+          + ORDER
+        </a>
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <nz-table #basicTable class="kit__utils__table mb-4" nzSize="small" [nzData]="tabledata" *ngIf="isShown">
+    <thead>
+      <tr>
+        <th> #</th>
+        <th><strong>OrderId</strong> </th>
+        <th><strong>OrderedBy Location</strong> </th>
+        <th><strong> Supplier Store</strong></th>
+        <th><strong>OrderDate</strong> </th>
+        <th><strong>DelivDate</strong> </th>
+        <th><strong>OrderValue</strong> </th>
+        <th><strong>Action</strong> </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ord of  basicTable.data; let i = index">
+        <td>{{i+1}}</td>
+        <td>
+          <a class="btn btn-sm btn-light" href="javascript: void(0);" (click)="getorderid(ord.id,contentdetail1);">
+            {{ord.orderNo}}
+          </a>
+        </td>
+        <td>
+          {{ord.receiver}}
+        </td>
+        <td>
+          {{ord.supplier}}
+        </td>
+        <td>
+          {{ord.orderedDateTime | date: 'MMM d, h:mm a'}}
+        </td>
+        <td>
+          {{ord.deliveryDateTime | date: 'MMM d, h:mm a'}}
+        </td>
+
+        <td>
+          {{ord.billAmount}}
+        </td>
+
+        <td>
+          <div class="btn-group mr-2 mb-2">
+            <a href="javascript: void(0);" (click)="deleteOrder(ord.id)" class="btn btn-sm btn-light pull-left"
+              slot="actions">
+              <i class="fe fa-lg fe-trash-2"></i>
+            </a>
+            <a routerLink="/apps/editinternal/{{ord.id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
+              <i class="fe fa-lg fe-edit "></i>
+            </a>
+            <!-- <a routerLink="/apps/dispatch/{{ord.Id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
+              <i class="fa fa-lg fa-truck" aria-hidden="true"></i>
+            </a> -->
+          </div>
+        </td>
+      </tr>
+
+    </tbody>
+  </nz-table>
+</div>
+
+<ng-template #contentdetail1 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Order details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <nz-table class="table table-sm mb-0" [nzFrontPagination]="false" [nzData]="popupData.receipts">
+    <thead>
+      <tr>
+        <td><strong>Product</strong></td>
+        <td><strong>Quantity</strong></td>
+        <td class="text-right"><strong>Price</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ord of OrderDetail.itemDetails">
+        <td>{{ord.ProductName}}</td>
+        <td>{{ord.OrderQuantity}}</td>
+        <td class="text-right">&#8377;{{ord.Price | number:".2"}}</td>
+      </tr>
+      <!-- <tr>
+        <td></td>
+        <td> <strong>CGST</strong> </td>
+        <td class="text-right"> {{OrderDetail.Tax1 | number:".2"}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td> <strong>SGST</strong> </td>
+        <td class="text-right"> {{OrderDetail.Tax2 | number:".2"}} </td>
+      </tr> -->
+
+      <!-- <tr>
+        <td></td>
+        <td> <strong>TotalAmt</strong> </td>
+        <td class="text-right"> &#8377; <strong class="font-weight-bold">{{OrderDetail.billAmount1 |
+            number:".2"}}</strong></td>
+      </tr> -->
+    </tbody>
+  </nz-table>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close()">OK</button>
+  </div>
+</ng-template>
+
+<ng-template #batchproductmodal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title"> Select Batch Product</h5>
+    <button type="button" class="close" aria-label="Close" (click)="crossclick();d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <nz-table #smallTable nzSize="small" [nzData]="batchproducts" [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>AvailableQty</th>
+          <th>Price</th>
+          <th>BatchDate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of smallTable.data" (click)="product.quantity>0&&selectedproduct(product)"
+          [ngClass]="{'pointer': product.quantity>0,'na' : product.quantity==0}">
+          <td>{{ product.product }}</td>
+          <td>{{ product.quantity }}</td>
+          <td>&#8377; {{ product.price }}</td>
+          <td>{{ product.createdDate | date: 'MMM d, y' }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</ng-template>
