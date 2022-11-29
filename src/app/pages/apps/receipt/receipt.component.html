@@ -1,402 +1,460 @@
-<div class="hk-pg-wrapper" id="qqq">
-  <div *ngIf="!show">
+<div *ngIf="mode == 'VIEW_LIST'" class="hk-pg-wrapper">
 
-    <!-- Receipts Cards -->
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex flex-wrap align-items-center">
-              <div class="mr-auto">
-                <p class="text-uppercase text-dark font-weight-bold mb-1">
-                  Total Sales
-                </p>
-              </div>
-              <p class="text-blue font-weight-bold font-size-24 mb-0">
-                ₹ {{totalsales}}
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-wrap align-items-center">
+            <div class="mr-auto">
+              <p class="text-uppercase text-dark font-weight-bold mb-1">
+                Total Sales
               </p>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex flex-wrap align-items-center">
-              <div class="mr-auto">
-                <p class="text-uppercase text-dark font-weight-bold mb-1">
-                  Tolal Payment
-                </p>
-
-              </div>
-              <p class="text-success font-weight-bold font-size-24 mb-0">
-                ₹ {{totalpayments}}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex flex-wrap align-items-center">
-              <div class="mr-auto">
-                <p class="text-uppercase text-dark font-weight-bold mb-1">
-                  Refunds
-                </p>
-              </div>
-              <p class="text-danger font-weight-bold font-size-24 mb-0">
-                ₹ {{totalrefund}}
-              </p>
-            </div>
+            <p class="text-blue font-weight-bold font-size-24 mb-0">
+              ₹ {{total}}
+            </p>
           </div>
         </div>
       </div>
     </div>
-    <!-- Receipt Search Bar -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-wrap align-items-center">
+            <div class="mr-auto">
+              <p class="text-uppercase text-dark font-weight-bold mb-1">
+                Tolal Payment
+              </p>
 
-    <div class="row">
-      <div class="col-xl-4">
-        <div>
-          <input type="text" class="form-control" placeholder="Search Receipt.." [(ngModel)]="term"
-            (input)="onKeySearch()">
-
-          <div class="form-group hidden">
-            <div class="input-group">
-              <input name="datepicker" class="form-control hidden" ngbDatepicker #datepicker="ngbDatepicker"
-                [autoClose]="'outside'" (dateSelect)="onDateSelection($event, datepicker)" [displayMonths]="2"
-                [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
-              <ng-template #t let-date let-focused="focused">
-                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                  [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                  (mouseleave)="hoveredDate = null">
-                  {{ date.day }}
-                </span>
-              </ng-template>
             </div>
+            <p class="text-success font-weight-bold font-size-24 mb-0">
+              ₹ {{paid}}
+            </p>
           </div>
         </div>
       </div>
-      <div class="col-xl-4">
-        <h6 class="pl-3">Showing receipts from {{strdate| date: 'MMM d, y'}} to
-          {{enddate| date: 'MMM d, y'}}</h6>
-      </div>
-      <div class="col-xl-4">
-
-        <nz-range-picker style="width: inherit;" [(ngModel)]="dateRange" (ngModelChange)="onChange($event)">
-        </nz-range-picker>
-      </div>
-      <br><br>
     </div>
-
-
-    <div class="col-xl-12 pl-0 pr-0">
-      <!-- <section class="hk-sec-wrapper">
-              <div class="row">
-                  <div class="col-sm"> -->
-      <div class="table-wrap" *ngIf="receipts!=undefinde">
-        <div class="table-responsive" *ngIf="(receipts.receipts).length>0;else emptyreceipt">
-          <table class="table mb-0 text-center">{{ngforLen}}
-            <thead>
-              <tr>
-                <th>OrderNo</th>
-                <th>Created At</th>
-                <th>Customer Details</th>
-                <th>Order Status</th>
-                <th>Payment Status</th>
-                <th>Paid</th>
-                <!-- <th></th> -->
-                <th>BillAmount</th>
-                <!-- <th></th> -->
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of receipts.receipts ;let i=index">
-                <td class="text-left"><img src="{{item.logo}}" width="20"><button type="button" class="btn btn-link"
-                    (click)=" show = 1 ; filter(item.id,item.chargeAmount,item.paidAmount); OrderStatus = item.orderStatusId">{{item.invoiceNo}}</button>
-                </td>
-                <td>{{item.orderedDateTime}}</td>
-                <td class="text-center">
-                  {{item.customer==null?"-":item.customer}}/{{item.phoneNo==null?"-":item.phoneNo}}
-                </td>
-                <td><span *ngIf="item.orderStatusId == 5">Completed</span>
-                  <span *ngIf="item.orderStatusId != -1 && item.orderStatusId != 5">Pending</span>
-                  <span *ngIf="item.orderStatusId == -1">Cancelled</span>
-                </td>
-                <td>
-                  <span *ngIf="item.orderStatusId != -1 && item.billAmount == item.paidAmount"
-                    class="badge badge-success mr-10">Paid</span>
-                  <span *ngIf="item.orderStatusId != -1 && item.billAmount > item.paidAmount"
-                    class="badge badge-warning mr-10">Pending</span>
-                  <span *ngIf="item.orderStatusId == -1" class="badge badge-danger mr-10">Cancelled</span>
-                  <span *ngIf="item.orderStatusId != -1 && item.billAmount < item.paidAmount"
-                    class="badge badge-danger mr-10">Refundable</span>
-                </td>
-                <td>&#8377;{{item.paidAmount}} /-</td>
-                <!-- <td>
-                                              <i class="fe fe-balance-scale-right"></i>
-                                          </td> -->
-                <td>{{item.orderStatusId==-1?'Refunded &#8377;'+item.billAmount+'
-                  /-':'&#8377;'+item.billAmount+' /-' }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="text-center">
-            <button [class.disabled]="LastId" [ngClass]="{'text-blue': !LastId}" class="btn btn-link"
-              (click)="nextRecipts('prev')">Previous</button>
-            <button [class.disabled]="FirstId" [ngClass]="{'text-blue': !FirstId}" class="btn btn-link text-blue"
-              (click)="nextRecipts('next')">Next</button>
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-wrap align-items-center">
+            <div class="mr-auto">
+              <p class="text-uppercase text-dark font-weight-bold mb-1">
+                Refunds
+              </p>
+            </div>
+            <p class="text-danger font-weight-bold font-size-24 mb-0">
+              ₹ {{totalrefund}}
+            </p>
           </div>
         </div>
-        <ng-template #emptyreceipt>
-          <p class="text-center">No receipts found!</p>
-        </ng-template>
       </div>
-      <!-- </div>
-              </div>
-          </section> -->
     </div>
-    <!-- </div> -->
   </div>
 
-  <div class="container" *ngIf="show">
-    <!-- Title -->
-    <div class="hk-pg-header col-xl-12 row">
-      <h4 class="hk-pg-title col-xl-6"> <span class="badge badge-primary mr-2">{{ordertypes}}</span> {{orderno}}
-      </h4>
-      <div class="mb-10 text-right col-xl-6 float-right"><button class="btn btn-link"
-          (click)="show=0">Back</button>|<button class="btn btn-link" (click)="electronPrint()">print</button>
-        <span *ngIf="OrderStatus != -1&&roleid == 1"> |<button class="btn btn-link"
-            (click)="openOrderpopup(CancelReceipt)">Cancel</button></span>
-      </div>
-    </div>
-    <!-- Row -->
-    <div class="col-xl-12 pl-0 pr-0">
-      <section class="hk-sec-wrapper">
-        <div class="row col-xl-12">
-          <div class="col-xl-6 mt-5">
-            <div class="mb-2 ml-0 row">
-              <strong>CustomerName :</strong><span> {{customer.name }} | {{customer.phoneNo }}</span>
-            </div>
-            <div class="mb-2 ml-0 row">
-              <strong>CustomerAddress :</strong><span>{{customer.address}}</span>
-            </div>
-            <!-- <hr> -->
-            <div class="mb-2 ml-0 row">
-              <strong>Order Tickets: </strong>
-              <span *ngFor="let item of KOTs; let last = last" (click)="KOTFilter(item.id);openOrderpopup(KOTItem)"><a
-                  href="javascript:void(0)" class="sp-fit-width">&nbsp;#{{item.KOTNo}}<span
-                    *ngIf="!last">,</span>&nbsp;</a></span>
-            </div>
-            <!-- <hr> -->
-            <div class="mb-2">
-              <strong>Payment History</strong><br>
-              <ul>
-                <span *ngFor="let item of transactions">
-                  <li *ngIf="item.transTypeId==1">
-                    <span class="text-success">₹ {{item.amount}}
-                      /-</span> on {{item.transDateTime}} by <span class="badge badge-success">{{item.name}}</span>
-                  </li>
-                  <li *ngIf="item.transTypeId==2">
-                    <span class="text-danger">₹
-                      {{item.amount}}</span> /- Refunded on {{item.transDateTime}} by <span
-                      class="badge badge-success">{{item.name}}</span>
-                  </li>
-                </span>
-              </ul>
-              <!-- <span *ngIf="item.TransTypeId==1"> </span>
-                              <span *ngIf="item.TransTypeId==2"></span>
-                              <br> -->
-            </div>
-            <!-- <hr> -->
-            <div class="row" *ngIf="OrderStatus != -1&&Total-PaidAmount>0">
-              <div class="col-md-12 pt-0">
-                <strong class="sp-margin-left20">Pending Payment
-                  :</strong><span>{{Total-PaidAmount}}</span>
-              </div>
-            </div>
-
+  <!-- <div style="position: relative;" class="input-group col-xl-6 align-middle">
+          <span class="date-range-info">Showing receipts from {{formatter.format(fromDate) | date: 'MMM d, y'}} to
+              {{formatter.format(toDate) | date: 'MMM d, y'}}</span>
+          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" [(ngModel)]="invoiceid"
+              (keyup.enter)="getbyInvoice(invoiceid)"
+              placeholder="To search, type the complete local receipt number and press enter." />
+          <button *ngIf="invoiceid" class="btn btn-link btn-clear" (click)="clear()">
+              <i class="fa fa-times"></i>
+          </button>
+          <div style="height: fit-content;" class="input-group-append">
+              <button class="btn btn-primary" (click)="datepicker.toggle()"><i class="fe fe-calendar"></i></button>
           </div>
-          <div class="col-xl-6">
-            <div class="table-wrap">
-              <div class="table-responsive">
-                <table class="table mb-0">
-                  <thead>
-                    <tr>
-                      <th><strong>Item</strong></th>
-                      <th><strong>Qty</strong></th>
-                      <th><strong>Tax%</strong></th>
-                      <th class="text-right"><strong>Price</strong></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr [ngClass]="{print: last}" *ngFor="let item of orderitem;let last = last"
-                      style="border-bottom: 1px solid #000;">
-                      <td>{{item.description}}</td>
-                      <td>{{item.orderQuantity}}{{item.complementryQty>0?'+'+item.complementryQty:''}}
-                      </td>
-                      <td>{{item.tax1 + item.tax2 + item.tax3}}</td>
-                      <td class="text-right">{{((item.orderQuantity > 0) ? item.totalAmount : 0) |
-                        number: ".2" }}</td>
-                      <!-- <hr> -->
-                    </tr>
-                    <tr>
-                      <td class="cs" [attr.colspan]="3"><strong>Subtotal</strong><br><br>
-                        <span
-                          *ngFor="let item of AdditionalCharges"><strong>{{item.description}}</strong><br><br></span>
-                        <span *ngIf="Discount > 0"><strong>Discount</strong><br><br></span>
-                        <strong *ngIf="CGST">CGST</strong><br><br>
-                        <strong *ngIf="SGST">SGST</strong><br><br>
-                        <strong>Total</strong><br><br>
-                      </td>
-                      <td class="text-right">{{Subtotal | number: ".2" }}<br><br>
-                        <span class="text-right" *ngFor="let item of AdditionalCharges">{{item.ChargeAmount | number:
-                          ".2" }}<br><br></span>
-                        <span class="text-right" *ngIf="Discount > 0">{{Discount | number: ".2"
-                          }}<br><br></span>
-                        <span class="text-right" *ngIf="CGST">{{CGST | number: ".2" }}
-                        </span><br><br>
-                        <span class="text-right" *ngIf="SGST">{{SGST | number: ".2" }}
-                        </span><br><br>
-                        <span class="text-right">{{Total | number: ".2" }} </span><br><br>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+          <div class="form-group hidden">
+              <div class="input-group">
+                  <input name="datepicker" class="form-control hidden" ngbDatepicker #datepicker="ngbDatepicker"
+                      [autoClose]="'outside'" (dateSelect)="onDateSelection($event, datepicker)" [displayMonths]="2"
+                      [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
+                  <ng-template #t let-date let-focused="focused">
+                      <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                          [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                          (mouseleave)="hoveredDate = null">
+                          {{ date.day }}
+                      </span>
+                  </ng-template>
               </div>
-              <hr>
-            </div>
+          </div>
+      </div> -->
+
+  <div class="row">
+    <div class="col-xl-4">
+      <div>
+        <input type="text" class="form-control" placeholder="Search Receipt.." [(ngModel)]="term"
+          (input)="onKeySearch()">
+
+        <div class="form-group hidden">
+          <div class="input-group">
+            <input name="datepicker" class="form-control hidden" ngbDatepicker #datepicker="ngbDatepicker"
+              [autoClose]="'outside'" (dateSelect)="onDateSelection($event, datepicker)" [displayMonths]="2"
+              [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
+            <ng-template #t let-date let-focused="focused">
+              <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                (mouseleave)="hoveredDate = null">
+                {{ date.day }}
+              </span>
+            </ng-template>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+    <div class="col-xl-4">
+      <h6 class="pl-3">Showing receipts from {{strdate| date: 'MMM d, y'}} to
+        {{enddate| date: 'MMM d, y'}}</h6>
+    </div>
+    <div class="col-xl-4">
+
+      <nz-range-picker style="width: inherit;" [(ngModel)]="dateRange" (ngModelChange)="onChange($event)">
+      </nz-range-picker>
+
+
+    </div>
+    <br><br>
+  </div>
+
+
+
+  <nz-table class="kit__utils__table mb-4" #invoiceTable [nzShowPagination]="false" [nzPageSize]="25"
+    [nzData]="invoices">
+    <thead>
+      <tr>
+        <th>Invoice</th>
+        <th>Customer Details</th>
+        <th>Orderd At</th>
+        <th class="text-right">Paid</th>
+        <th class="text-right">Bill Amount</th>
+        <th class="text-center">Payment Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of invoiceTable.data">
+        <td *ngIf="data.Source == 'POS'">
+          <img style="vertical-align: top;" class="px-2" src="{{data.icon}}" width="35" height="auto">
+          <span style="display: inline-block;">
+            <a href="javascript: void(0);" class="text-blue" (click)="selectInvoice(data)">{{data.InvoiceNo}}</a>
+            <br> <i class="text-{{data.statusclass}}">{{data.statusname}}</i>
+          </span>
+        </td>
+        <td *ngIf="data.Source == 'POS'">
+          <span>
+            <i class="fe fe-user"></i>
+            {{data.CustomerDetails?.Name || '-'}}
+          </span>
+          <br>
+          <span>
+            <i class="fe fe-phone"></i>
+            {{data.CustomerDetails?.PhoneNo || '-'}}
+          </span>
+        </td>
+        <td *ngIf="data.Source == 'POS'">{{data.OrderedDateTime | date: 'MMM d, y, h:mm a'}}</td>
+
+        <td *ngIf="data.Source == 'POS'" class="text-right">{{data.PaidAmount | number:".2"}}</td>
+        <td *ngIf="data.Source == 'POS'" class="text-right">{{data.BillAmount | number:".2"}}</td>
+        <td class="text-center" *ngIf="data.Source == 'POS'">
+          <span
+            class="text-center border border-{{data.payment_class}} bg-{{data.payment_class}} text-white px-2 rounded">
+            {{data.payment_status}}
+          </span>
+        </td>
+
+        <!-- ZOMATO -->
+        <td *ngIf="data.Source == 'UP'">
+          <img style="vertical-align: top;" class="px-2" src="{{data.icon}}" width="35" height="auto">
+          <span style="display: inline-block;">
+            <a href="javascript: void(0);" class="text-blue" (click)="selectInvoice(data)">{{data.InvoiceNo}}</a>
+            <br> <i class="text-{{data.statusclass}}">{{data.statusname}}</i>
+          </span>
+        </td>
+        <td *ngIf="data.Source == 'UP'">
+          <span>
+            <i class="fe fe-user"></i>
+            {{data.customer?.name || '-'}}
+          </span>
+          <br>
+          <span>
+            <i class="fe fe-phone"></i>
+            {{data.customer?.phone || '-'}}
+          </span>
+        </td>
+        <td *ngIf="data.Source == 'UP'">{{data.OrderedDateTime | date: 'MMM d, y, h:mm a'}}</td>
+        <td *ngIf="data.Source == 'UP'" class="text-right">{{data.PaidAmount | number:".2"}}</td>
+        <td *ngIf="data.Source == 'UP'" class="text-right">{{data.BillAmount | number:".2"}}</td>
+        <td class="text-center" *ngIf="data.Source == 'UP'">
+          <span
+            class="text-center border border-{{data.payment_class}} bg-{{data.payment_class}} text-white px-2 rounded">
+            {{data.payment_status}}
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5"></td>
+        <td>
+          <button class="btn btn-link float-right" (click)="next()">Next</button>
+          <button class="btn btn-link float-right" (click)="previous()">Previous</button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+<!-- VIEW_INVOICE -->
+
+<div *ngIf="mode == 'VIEW_INVOICE'" class="hk-pg-wrapper">
+  <!-- <div class="row col-xl-12 mb-5">
+      <div class="col-xl-9">
+
+      </div>
+      <div class="col-xl-3">
+          <button class="btn btn-link" (click)="mode = 'VIEW_LIST'">
+              <i class="fe fe-printer"></i>
+          </button>
+          <span>|</span>
+          <button class="btn btn-link" (click)="mode = 'VIEW_LIST'">Cancel</button>
+          <span>|</span>
+          <button class="btn btn-link" (click)="mode = 'VIEW_LIST'">Back</button>
+      </div>
+  </div> -->
+  <!-- POS -->
+  <div *ngIf="invoice.Source == 'POS'" class="row col-xl-12">
+    <div class="col-xl-4 font-larger">
+      <strong class="text-dark">Invoice Details : - #<span class="text-danger">{{invoice.InvoiceNo}}</span></strong>
+      <br>
+      <!-- <span>
+              
+          </span> -->
+      <br>
+      <span>
+        <i class="fe fe-user"></i>
+        {{invoice.CustomerDetails?.Name || '-'}}
+      </span>
+      <br>
+      <span>
+        <i class="fe fe-phone"></i>
+        {{invoice.CustomerDetails?.PhoneNo || '-'}}
+      </span>
+      <br>
+      <span>
+        <i class="fe fe-book"></i>
+        {{invoice.CustomerDetails?.Address || '-'}}
+      </span>
+      <br>
+      <span>
+        <i class="fe fe-tag"></i>
+        <span *ngFor="let kot of invoice.KOTS">
+          <button class="btn btn-link font-larger" (click)="viewItems(kot)">#{{kot.KOTNo}}</button>
+        </span>
+      </span>
+      <br>
+      <br>
+      <span *ngFor="let transaxn of invoice.transactions">
+        <span class="text-success">₹{{transaxn.Amount}}</span> on <strong>{{transaxn.SPT}}</strong>
+        <span class="ml-4">- {{transaxn.TransDateTime | date:"MMM d, y hh:mm a"}}</span>
+      </span>
+    </div>
+    <div class="col-xl-8">
+      <nz-table class="kit__utils__table mb-4 border border-info" #invoiceDetailTable [nzShowPagination]="false"
+        [nzPageSize]="25" [nzData]="invoice.Items">
+        <thead>
+          <tr>
+            <td class="p-3" colspan="2">
+              <div>
+                <strong class="text-dark">Status</strong>
+                <span class="px-1 mx-1 text-white bg-{{invoice.statusclass}}">{{invoice.statusname}}</span>
+                <span class="px-1 mx-1 text-white bg-{{invoice.payment_class}}">{{invoice.payment_status}}</span>
+              </div>
+            </td>
+            <td class="p-3" colspan="2">
+              <div class="float-right">
+                <button class="btn btn-link" (click)="print(invoice)">
+                  <i class="fe fe-printer"></i>
+                </button>
+                <span>|</span>
+                <button *ngIf="roleid == 1" class="btn btn-link" (click)="cancelorder(invoice)">Cancel</button>
+                <span *ngIf="roleid == 1">|</span>
+                <button class="btn btn-link" (click)="mode = 'VIEW_LIST'">Back</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="p-3"><strong class="text-dark">Item</strong></td>
+            <td class="p-3"><strong class="text-dark">Quantity</strong></td>
+            <td class="p-3 text-right"><strong class="text-dark">GST</strong></td>
+            <td class="p-3 text-right"><strong class="text-dark">Price</strong></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-dark" *ngFor="let data of invoiceDetailTable.data">
+            <td>{{data.showname}}</td>
+            <td>{{data.Quantity}} {{(data.ComplementryQty > 0) ? ' + ' + data.ComplementryQty : ''}}</td>
+            <td class="text-right">₹{{data.TaxAmount | number:".2"}}</td>
+            <td class="text-right">₹{{data.TotalAmount | number:".2"}}</td>
+          </tr>
+          <tr class="text-dark">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="text-dark">Subtotal</strong></td>
+            <td class="text-right">₹{{invoice.subtotal | number:".2"}}</td>
+          </tr>
+          <tr *ngIf="(invoice.AllItemTotalDisc + invoice.OrderTotDisc) > 0" class="text-dark">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="text-dark">Discount</strong></td>
+            <td class="text-right">-₹{{invoice.AllItemTotalDisc + invoice.OrderTotDisc | number:".2"}}
+            </td>
+          </tr>
+          <tr class="text-dark" *ngIf="invoice.Tax1 > 0">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="text-dark">CGST</strong></td>
+            <td class="text-right">₹{{invoice.Tax1 | number:".2"}}</td>
+          </tr>
+          <tr class="text-dark" *ngIf="invoice.Tax2 > 0">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="text-dark">SGST</strong></td>
+            <td class="text-right">₹{{invoice.Tax2 | number:".2"}}</td>
+          </tr>
+          <tr class="text-dark">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="text-dark">Total</strong></td>
+            <td class="text-right">₹{{invoice.BillAmount | number:".2"}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+
+  <!-- UP -->
+  <div *ngIf="invoice.Source == 'UP'" class="row col-xl-12">
+    <div class="col-xl-4">
+      <strong class="text-dark">Invoice Details</strong>
+      <br>
+      <span>
+        #{{invoice.InvoiceNo}}
+      </span>
+      <br>
+      <span>
+        <i class="fe fe-user"></i>
+        {{invoice.customer?.name || '-'}}
+      </span>
+      <br>
+      <span>
+        <i class="fe fe-phone"></i>
+        {{invoice.customer?.phone || '-'}}
+      </span>
+      <br>
+      <span>
+        <i class="fe fe-book"></i>
+        {{invoice.customer?.address.line_1 || '-'}}
+      </span>
+      <br>
+      <!-- <span>
+              <i class="fe fe-tag"></i>
+              <span *ngFor="let kot of invoice.KOTS">
+                  <button class="btn btn-link font-larger" (click)="viewItems(kot)">#{{kot.KOTNo}}</button>
+              </span>
+          </span> -->
+      <!-- <br> -->
+      <!-- <br>
+          <span *ngFor="let transaxn of invoice.transactions">
+              <span class="text-dark">₹{{transaxn.Amount}} on <strong>{{transaxn.SPT}}</strong></span> <br>
+              <span class="ml-4">- {{transaxn.TransDateTime | date:"MMM d, y hh:mm a"}}</span>
+          </span> -->
+    </div>
+    <div class="col-xl-8">
+      <nz-table class="kit__utils__table mb-4 border border-info" #invoiceDetailTable [nzShowPagination]="false"
+        [nzPageSize]="25" [nzData]="invoice.order.items">
+        <thead>
+          <tr>
+            <td class="p-3" colspan="2">
+              <div>
+                <strong class="text-dark">Status</strong>
+                <span class="px-1 mx-1 text-white bg-{{invoice.statusclass}}">{{invoice.statusname}}</span>
+                <span class="px-1 mx-1 text-white bg-{{invoice.payment_class}}">{{invoice.payment_status}}</span>
+              </div>
+            </td>
+            <td class="p-3" colspan="2">
+              <div class="float-right">
+                <button class="btn btn-link" (click)="print(invoice)">
+                  <i class="fe fe-printer"></i>
+                </button>
+                <span>|</span>
+                <!-- <button *ngIf="roleid == 1" class="btn btn-link"
+                                  (click)="mode = 'VIEW_LIST'">Cancel</button>
+                              <span *ngIf="roleid == 1">|</span> -->
+                <button class="btn btn-link" (click)="mode = 'VIEW_LIST'">Back</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="p-3"><strong class="text-dark">Item</strong></td>
+            <td class="p-3"><strong class="text-dark">Quantity</strong></td>
+            <td class="p-3 text-right"><strong class="text-dark">GST</strong></td>
+            <td class="p-3 text-right"><strong class="text-dark">Price</strong></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-dark" *ngFor="let data of invoiceDetailTable.data">
+            <td>{{data.title}}</td>
+            <td>{{data.quantity}}</td>
+            <td class="text-right">₹{{data.total_with_tax - data.total | number:".2"}}</td>
+            <td class="text-right">₹{{data.total | number:".2"}}</td>
+          </tr>
+          <tr class="text-dark">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="text-dark">Subtotal</strong></td>
+            <td class="text-right">₹{{invoice.order.details.order_subtotal | number:".2"}}</td>
+          </tr>
+          <tr *ngIf="invoice.order.details.discount > 0" class="text-dark">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="text-dark">Discount</strong></td>
+            <td class="text-right">-₹{{invoice.order.details.discount -
+              invoice.order.details.total_external_discount | number:".2"}}</td>
+          </tr>
+          <tr *ngIf="invoice.order.details.total_taxes > 0" class="text-dark">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="tex-dark">CGST</strong></td>
+            <td class="text-right">₹{{invoice.order.details.total_taxes/2 | number:".2"}}</td>
+          </tr>
+          <tr *ngIf="invoice.order.details.total_taxes > 0" class="text-dark">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="text-dark">SGST</strong></td>
+            <td class="text-right">₹{{invoice.order.details.total_taxes/2 | number:".2"}}</td>
+          </tr>
+          <tr *ngFor="let charge of invoice.order.details.charges" class="text-dark">
+            <td colspan="2"></td>
+            <td class="text-right"><strong class="text-dark">{{charge.title}}</strong></td>
+            <td class="text-right">₹{{charge.value | number:".2"}}</td>
+          </tr>
+          <tr class="text-dark">
+            <td colspan="2"></td>
+            <td class="text-right">Total</td>
+            <td class="text-right">₹{{invoice.BillAmount | number:".2"}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
     </div>
   </div>
 </div>
 
-<ng-template #splitpayment let-modal aria-label="modal-basic-title">
-  <div class="modal d-block position-static overflow-show" tabindex="-1" role="dialog">
-    <div class="modal-dialog ma-0" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">SplitPayment</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div>Rs.{{remaining}}/-<span class="d-block valid-feedback" *ngIf="remaining >= 0">Remaining</span><span
-              class="d-block invalid-feedback" *ngIf="remaining < 0">Exceded</span></div>
-          <div class="row">
-            <div class="col-sm">
-              <form>
-                <div *ngFor="let item of receipts.PaymentType">
-                  <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-4 col-form-label">{{item.Description}}</label>
-                    <div class="col-sm-8">
-                      <div class="input-group mb-3">
-                        <input (input)="sum()" [(ngModel)]="item.Price" name="{{item.Description}}" type="number"
-                          class="form-control">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- {{receipts.PaymentType | json}} -->
-                <!-- <div  class="form-group row">
-                                          <label for="inputEmail3" class="col-sm-4 col-form-label">Card</label>
-                                          <div class="col-sm-8">
-                                              <div class="input-group mb-3">                                            
-                                                  <input [(ngModel)] ="item.Price" name="Card" type="number" class="form-control" aria-label="Amount (to the nearest dollar)">
-                                                </div>
-                                          </div>
-                                        </div>-->
-              </form>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary float-right" [disabled]="remaining < 0"
-            (click)="modal.close();transaction.PaymentTypeId = 5;setPrice()">Save</button>
-        </div>
-      </div>
+<!-- MODALS -->
+<ng-template #items_modal let-modal>
+  <div class="modal-header" style="border-bottom: none;">
+    <h5 class="modal-title" id="modal-basic-title">#{{KOT.KOTNo}} Items</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <div>
+          <button class="btn btn-link float-right"><i class="fe fe-printer"></i></button>
+      </div> -->
+    <div *ngFor="let item of KOT.Items" class="row w-100">
+      <span class="col-sm-8">{{item.showname}}</span>
+      <span class="col-sm-4">x {{item.Quantity + item.ComplementryQty}}</span>
     </div>
   </div>
-</ng-template>
-
-<ng-template #KOTItem let-modal aria-label="modal-basic-title">
-  <div class="modal d-block position-static overflow-show" tabindex="-1" role="dialog">
-    <div class="modal-dialog ma-0" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Order Ticket</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <!-- <div class="col-xs-12">
-                                      <label class="sp-full-width">
-                                          <span class="glyphicon glyphicon-time icon-grey">MainKitchen</span>
-                                          <span class="pull-right sp-pad-right-10">{{customer.Name}} | {{customer.PhoneNo}}</span>
-                                      </label>
-                                  </div> -->
-            <div class="col-xs-12 col-sm-6" *ngIf="KOTItems.AddedItems.length > 0">
-              <label><span class="badge badge-primary badge-indicator"></span> Added Items</label>
-              <div *ngFor="let item of KOTItems.AddedItems" class="sp - margin-bottom5">
-                <span>{{item.Quantity}} x {{item.Description}}</span>
-              </div>
-            </div>
-            <div class="col-xs-12 col-sm-6" *ngIf="KOTItems.RemovedItems.length > 0">
-              <label><span class="badge badge-danger badge-indicator"></span> Removed Items</label>
-              <div *ngFor="let item of KOTItems.RemovedItems" class="sp - margin-bottom5">
-                <span>{{item.Quantity}} x {{item.Description}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary float-right" (click)="modal.close()">Ok(Esc)</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- </div>   -->
-</ng-template>
-<ng-template #CancelReceipt let-modal aria-label="modal-basic-title">
-  <div class="modal d-block position-static overflow-show" tabindex="-1" role="dialog">
-    <div class="modal-dialog ma-0" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Refund!</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body text-center pl-100">
-          <div class="row">
-            <span>
-              <span class="sp-margin-top20">
-                <span class="sp-option-detail sp-no-user-select" (click)="transaction.PaymentTypeId = 1">
-                  <span *ngIf="transaction.PaymentTypeId == 1"
-                    class="glyphicon glyphicon-ok sp-option-selected"></span>Cash</span></span>
-              <span class="sp-margin-top20">
-                <span class="sp-option-detail sp-no-user-select" (click)="transaction.PaymentTypeId = 2">
-                  <span *ngIf="transaction.PaymentTypeId == 2"
-                    class="glyphicon glyphicon-ok sp-option-selected"></span>Card/Credit</span></span>
-              <span class="sp-margin-top20">
-                <span class="sp-option-detail sp-no-user-select" (click)="transaction.PaymentTypeId = 3">
-                  <span *ngIf="transaction.PaymentTypeId == 3"
-                    class="glyphicon glyphicon-ok sp-option-selected"></span>Others</span></span>
-            </span>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary float-right"
-            (click)="cancel(PaidAmount);modal.close()">Ok(Esc)</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- </div>   -->
+  <!-- <div class="modal-footer" style="border-top: none;">
+      <button type="button" class="btn btn-primary" (click)="modal.close('Save click')">Print</button>
+  </div> -->
 </ng-template>

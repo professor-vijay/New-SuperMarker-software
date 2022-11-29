@@ -58,7 +58,8 @@ export class SellComponent implements OnInit {
       event.key == 'Escape'
     ) {
       console.log('save counter order')
-      this.saveorder()
+      // this.saveorder()
+      this.draftorderdrawer
 
     } else if (
       this.order &&
@@ -168,6 +169,7 @@ export class SellComponent implements OnInit {
   daterangeshow: string = ''
   datefilterfield = ''
   customerdetaildrawer = false
+  draftorderdrawer = false
   selectedcategoryid = 0
   closeorder: boolean = false
   onlinestatusid = [-1]
@@ -1272,7 +1274,7 @@ export class SellComponent implements OnInit {
       this.model = ''
       console.log(this.model)
       this.QuantityRef['nativeElement'].value = ''
-      this.instance['_elementRef']['nativeElement'].focus()
+      // this.instance['_elementRef']['nativeElement'].focus()
       this.orderlogging('item_add')
     }
     if (this.order.OrderTypeId == 1) {
@@ -1303,7 +1305,6 @@ export class SellComponent implements OnInit {
     this.setcurrentitemprice()
   }
   setcurrentitemprice() {
-    console.log(this.order.Items)
     var singleqtyoptionprice = 0
     this.currentitem.TotalAmount = 0 
     this.currentitem.OptionGroup.forEach(opg => {
@@ -1690,7 +1691,7 @@ export class SellComponent implements OnInit {
     if (this.selectedDraftIndex > -1) {
       this.draftOrders.splice(this.selectedDraftIndex, 1)
       this.draftOrders.forEach((dorder, ind) => {
-        dorder.draftIndex = ind
+        dorder.draftIndex = ind 
       })
       localStorage.setItem('draftOrders', JSON.stringify(this.draftOrders))
       this.selectedDraftIndex = -1
@@ -1699,13 +1700,13 @@ export class SellComponent implements OnInit {
   }
 
   clearorder(typeid) {
+    this.orderlogging('delete')
+    this.clearDraftOrder()
     this.orderlogging('clearing_order')
     this.visible = false
     this.placeorderclicked = false
-    // console.log(typeid)
     if (typeid == 5) {
       this.order = null
-      // this.clearDraftOrder(this.batchproduct)
       this.createorder(typeid)
     } else if (typeid == 1) {
       var tablekey = this.order.diningtablekey
@@ -2043,7 +2044,6 @@ export class SellComponent implements OnInit {
     console.log(this.options)
     this.model = ''
     this.QuantityRef['nativeElement'].value = ''
-    // this.instance['_elementRef']['nativeElement'].focus()
     this.modalService.dismissAll()
     this.orderlogging('current_item_add_save')
     if (this.order.OrderTypeId == 1) {

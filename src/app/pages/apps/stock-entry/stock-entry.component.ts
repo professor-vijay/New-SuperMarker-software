@@ -97,6 +97,8 @@ export class StockEntryComponent implements OnInit {
   searchbybatchno() {
     this.modalService.open(this.batchnomodel, { centered: true, size: 'lg' })
     this.batchesbybatchno = this.products.filter(x => x.batchNo == this.stockentry.batchno)
+    this.batchesbybatchno = this.products.filter(x => x.batchNo == this.stockentry.batchno)
+
   }
 
   addstockbybatch() {

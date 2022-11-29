@@ -548,7 +548,7 @@
 <div [hidden]="sectionid != 2" style="padding-top: 0%;">
     <span class="f9info text-danger"><i>* Press F9 to reprint the receipt of the last placed order</i></span>
     <div class="row">
-        <div class="btn-group mr-2 mb-2">
+        <div class="btn-group mr-2 mb-2" style="margin-left: 15px;">
             <button type="button" class="btn" (click)="createorder(5)">Quick Order</button>
             <button type="button" class="btn" (click)="vieworderlist(1)">Dine In </button>
             <button type="button" class="btn" (click)="vieworderlist(2)">Takeaway </button>
@@ -556,7 +556,7 @@
             <button type="button" class="btn" (click)="vieworderlist(4)">PickUp</button>
             <button type="button" class="btn" (click)="vieworderlist(6)">Online Order</button>
         </div>
-        <div *ngIf="order" class="d-flex flex-row-reverse" style="padding-left:2%;">
+        <div *ngIf="order" class="d-flex flex-row-reverse" style="padding-left:33%;">
             <div class="row pl-4 pt-1">
                 <a (click)="openCustomClass(bulkdiscount)">
                     Bulk Discount |
@@ -567,7 +567,7 @@
                 <a (click)="openCustomClass(Additioncharge)">
                     &nbsp; Addition Charge |
                 </a>
-                <a (click)="clearorder(order.OrderTypeId)">
+                <a (click)="clearorder(order.OrderTypeId);clearDraftOrder()">
                     &nbsp; Clear Order
                 </a>
                 <!-- <input type="checkbox" [(ngModel)]="order.istaxinclusive" (change)="order.setbillamount()"> -->
@@ -584,14 +584,16 @@
                 </span>
             </div>
         </div>
-        <div *ngFor="let dorder of draftOrders" class="btn-group" style="margin-left: 29px">
-            <ul class="list-group">
-                <a style="height: 35px;" href="javascript:void(0);" (click)="loadDraftOrder(dorder)"
-                    [class.cat-active]="selectedDraftIndex == dorder.draftIndex" class="btn btn-outline-danger">
-                    <code>[{{dorder.draftIndex}}]</code>{{dorder.draftName}}
-                </a>
-            </ul>
+        <div style="margin-left: 27px;margin-top: -3px;">
+            <!-- <strong style="color:rgb(220, 49, 19) ;">Draft</strong> -->
+            <!-- <nz-switch (click)="draftorderdrawer = true" style="margin-left: 6px;"></nz-switch> -->
+            <button class="btn btn-link" (click)="draftorderdrawer = true"
+                style="margin-left: 6px;color:rgb(220, 49, 19) "> <span nz-icon nzType="arrow-right"
+                    nzTheme="outline"></span>
+                <strong style="margin-left:5px ;">Draft Order</strong> </button>
+
         </div>
+
     </div>
 
     <div class="row text-center">
@@ -618,12 +620,12 @@
                 <div style="position: sticky; top: 0; z-index: 555;">
                     <div class="row">
                         <!-- Search filter  -->
-                        <div style="width: 70%;">
+                        <div style="width: 70%;    height: 42px;">
                             <ng-template class="w-100" #rt let-r="result" let-t="term">
                                 <ngb-highlight [result]="r.product" [term]="t"></ngb-highlight>
                             </ng-template>
                             <div style="height: 84%; position: relative;">
-                                <input #productautocomplete id="typeahead-template" style="height: 100%;"
+                                <input #productautocomplete id="typeahead-template" style="height: 106%;"
                                     onfocus="this.select()" type="text" class="form-control" [(ngModel)]="model"
                                     placeholder="Search Product..." [ngbTypeahead]="search" [resultTemplate]="rt"
                                     [inputFormatter]="formatter"
@@ -633,21 +635,19 @@
                             </div>
                         </div>
                         <!-- Quantity -->
-                        <div style="width: 30%;">
-                            <div class="input-group">
+                        <div style="width: 29%;">
+                            <div class="input-group"
+                                style="border: solid 1px #c3c6cb; margin-left: 1px; border-radius: 5px;">
                                 <nz-input-group nzSearch [nzAddOnAfter]="Quantity">
-                                    <!-- <input type="number" (keyup.enter)="addproductbyautocomplete()" nz-input
-                                        placeholder="Quantity" #quantityref /> -->
-                                    <input #quantityref type="number"
+                                    <input #quantityref type="number" style="border: none;"
                                         [ngClass]="{'is-invalid':submitted &&temporaryItem.Quantity <= 0 || temporaryItem.Quantity > temporaryItem.quantity}"
                                         [(ngModel)]="temporaryItem.Quantity" onfocus="this.select()" placeholder="Qty"
                                         class="form-control" (keyup.enter)="addItem('user')" min="1" />
                                 </nz-input-group>
                                 <ng-template #Quantity>
                                     <button nz-button [class.white]="isDisabled"
-                                        [disabled]="temporaryItem.Quantity <= 0" nzType="default" style="    height: 32px;
-                                        width: 36px;color: black;background-color: #afafaf;" nzSize="small"
-                                        (click)="addItem('user')">
+                                        [disabled]="temporaryItem.Quantity <= 0" nzType="default" style="height: 32px;                                        
+                                        width: 36px;" nzSize="small" (click)="addItem('user')">
                                         <i class="fe fe-plus fa-lg mb-1"></i></button>
                                 </ng-template>
 
@@ -661,7 +661,7 @@
                     <div class="col-sm-4" *ngFor="let product of groupedProducts | productfilter: selectedcategoryid"
                         (click)="addProduct(product)">
                         <a>
-                            <div class="card" > 
+                            <div class="card">
                                 <div class="card-body px-0 py-0 pt-2">
                                     <div class="prod-item mb-xl-0 mb-3">
                                         <div class="desc">
@@ -718,9 +718,9 @@
                                     (click)="item.Quantity = item.Quantity + 1;orderlogging('quantity_plus');order.setbillamount();savetblorder();"
                                     (click)="quantitychange(item);">
                                     +
-                                </button>/
-                                <span style="font-size: x-large;">{{item.maxQty - item.Quantity -
-                                    item.ComplementryQty}}</span>/
+                                </button>
+                                <!-- <span style="font-size: x-large;">{{item.maxQty - item.Quantity -
+                                    item.ComplementryQty}}</span>/ -->
                             </td>
                             <td>
                                 <button class="btn btn-xs btn-white btn-outline-light"
@@ -733,8 +733,8 @@
                                 <a href="javascript: void(0);" class="btn btn-sm btn-link"
                                     (click)="itemdetails(item)"><i class="fe fe-edit-2"></i></a>
                                 <a href="javascript: void(0);" class="btn btn-sm btn-link text-danger"
-                                    (click)="item.Quantity = 0;item.ComplementryQty = 0; order.setbillamount();orderlogging('deleting_item');clearDraftOrder(i)"
-                                    (click)="delete(i)"><i class="fe fe-trash-2"></i></a>
+                                    (click)="item.Quantity = 0;item.ComplementryQty = 0; order.setbillamount();orderlogging('deleting_item');clearDraftOrder()"><i
+                                        class="fe fe-trash-2"></i></a>
                             </td>
                         </tr>
                         <tr *ngIf="order.OrderTotDisc + order.AllItemTotalDisc">
@@ -937,9 +937,11 @@
                 <textarea class="form-control" id="note" rows="3" name="NOTE" type="text"></textarea>
             </div>
             <br>
+
             <label style="color: black;"><b>QUANTITY</b></label>
             <div class="input-group">
                 <input min="1" max="100" step="1" type="number" (input)="setcurrentitemprice()"
+                    [ngClass]="{'is-invalid':submitted &&currentitem.Quantity <= 0 || currentitem.Quantity > currentitem.maxQty}"
                     [(ngModel)]="currentitem.Quantity" class="form-control">
             </div>
             <br>
@@ -998,7 +1000,8 @@
             <h5 class="float-left"> Price : </h5>
             <h5 class="float-right ml-1"><b> {{currentitem.TotalAmount + currentitem.Extra}} </b></h5>
         </div>
-        <button type="button" class="btn btn-primary" (click)="addcurrentitem()">Save Changes</button>
+        <button type="button" class="btn btn-primary" [class.white]="isDisabled"
+            [disabled]="currentitem.Quantity > currentitem.maxQty" (click)="addcurrentitem()">Save Changes</button>
     </div>
 </ng-template>
 
@@ -1135,7 +1138,7 @@
                 <span class="text-danger" *ngIf="splitpaymenttotal > order.BillAmount"
                     style="font-size: 10px; position: absolute;">* Total Amount EXCEEDING the Ammount
                     Payable</span>
-                <span class="text-danger" *ngIf="splitpaymenttotal == 0" style="font-size: 10px; position: absolute;">*
+                <span class="text-danger" *ngIf="splitpaymenttotal <= 0" style="font-size: 10px; position: absolute;">*
                     Amount can't be ZERO or LESSER</span>
             </div>
             <button class="btn btn-danger" (click)="resetsplitpayment()">Reset</button>
@@ -1144,13 +1147,13 @@
     <br>
     <nz-footer class="float-right" *ngIf="order">
         <button class="btn mr-3 btn-secondary" (click)="cancelsplitpayment()">Back</button>
-        <button [disabled]="splitpaymenttotal == 0 || splitpaymenttotal > order.BillAmount" class="btn btn-success"
-            (click)="confirmsplitpayment()">OK</button>
+        <button [disabled]="splitpaymenttotal !== order.BillAmount || splitpaymenttotal > order.BillAmount"
+            class="btn btn-success" (click)="confirmsplitpayment()">OK</button>
     </nz-footer>
 </nz-drawer>
 
-<nz-drawer [nzClosable]="false" [nzVisible]="customerdetaildrawer" nzPlacement="right" nzTitle="Customer Details"
-    (nzOnClose)="modalclose()" [nzWidth]="360" [nzMaskClosable]="true" [nzMask]="true">
+<nz-drawer [nzClosable]="true" [nzVisible]="customerdetaildrawer" nzPlacement="right" nzTitle="Customer Details"
+    (nzOnClose)="customerdetaildrawer = false" [nzWidth]="360" [nzMaskClosable]="true" [nzMask]="true">
     <div class="container" *ngIf="order">
         <div class="col-sm pr-0">
             <label class="text-dark"><b>Customer Name</b></label>
@@ -1193,6 +1196,27 @@
             (&#8377; {{order.PaidAmount}})</button> -->
     </nz-footer>
 </nz-drawer>
+
+
+
+<nz-drawer [nzClosable]="true" [nzVisible]="draftorderdrawer" nzPlacement="right" nzTitle="Draft Details"
+    (nzOnClose)="draftorderdrawer = false" [nzWidth]="360" [nzMaskClosable]="true" [nzMask]="true">
+    <div *ngFor="let dorder of draftOrders" class="btn-group" style="margin-left: 29px">
+        <ul class="list-group">
+            <a style="height: 35px;" href="javascript:void(0);" (click)="loadDraftOrder(dorder)"
+                (click)="draftorderdrawer = false" [class.cat-active]="selectedDraftIndex == dorder.draftIndex"
+                class="btn btn-outline-danger">
+                <code>[{{dorder.draftIndex}}]</code>{{dorder.draftName}}
+            </a>
+        </ul>
+    </div>
+
+    <nz-footer style="margin-left:250px ;" *ngIf="order">
+        <button class="btn mr-3 btn-secondary" (click)="draftorderdrawer = false">Done</button>
+
+    </nz-footer>
+</nz-drawer>
+
 
 
 <!-- Modal for Customer Edit -->

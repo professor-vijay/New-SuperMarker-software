@@ -157,9 +157,8 @@ export class OrderModule {
   // ADD PRODDUCT
   additem(product, options) {
     if (product.isorderitem) {
+      console.log("isorderitem: ", true)
       this.mergeitem(product, options)
-      console.log(product)
-      console.log(options)
       this.setbillamount()
       return
     }
@@ -195,27 +194,25 @@ export class OrderModule {
     var oldkey = product.ProductKey
     var productkey = this.productkeygenerator(product)
     var showname = this.getshowname(product)
-    var index = this.Items.findIndex(x => x.ProductKey == oldkey && x.Quantity > 0)
+    var index = this.Items.findIndex(x => x.ProductKey == oldkey && (x.Quantity + x.ComplementryQty) > 0)
     console.log(index, oldkey, productkey)
     options.key = productkey
+    options.frqty = this.Items[index].ComplementryQty
     this.Items[index].Quantity = 0
-    // console.log(this.Items[index].showname)
-    // console.log(this.Items[index].ProductKey)
+    this.Items[index].ComplementryQty = 0
     this.Items[index].OptionGroup.forEach(opg => {
       opg.Option.forEach(op => {
         if (op.selected) {
-          // console.log(op.Name)
         }
       })
     })
     console.log('----------------------------------')
-    // console.log(product, this.Items[index])
+    console.log(product)
     this.Items.push(new OrderItemModule(product, options, showname))
-    // this.Items[index] = new OrderItemModule(product, options, showname)
   }
 
   productkeygenerator(product) {
-    console.log(product)
+    // console.log(product)
     var key = ''
     key = product.ProductId ? product.ProductId.toString() : product.productId ? product.productId.toString() : product.Id.toString()
     if (product.OptionGroup) {
@@ -526,7 +523,7 @@ export class OrderItemModule {
     this.Id = 0
     this.CompanyId = 1
     this.CategoryId = product.categoryId || product.CategoryId
-    this.ComplementryQty = product.complementryQty ? product.ComplementryQty : 0
+    this.ComplementryQty = product.ComplementryQty ? product.ComplementryQty : 0
     this.MinimumQty = product.minimumQty || product.MinimumQty
     this.DiscAmount = product.discAmount || product.DiscAmount
     this.DiscPercent = product.discPercent || product.DiscPercent
@@ -808,6 +805,8 @@ export class CurrentItemModule {
       this.TotalAmount -= this.DiscAmount
     } else if (this.DiscType == 2) {
       this.TotalAmount -= (this.TotalAmount * this.DiscPercent) / 100
+
+      console.log(this.TotalAmount)
     }
   }
 }
@@ -857,6 +856,9 @@ export class Transaction {
   TransDate: string
   UserId: number
   Remaining: number
+  TransModeId: number
+  CreatedBy: number
+  CreatedDate: string
 
   constructor() {
     this.Id = 0
@@ -873,6 +875,9 @@ export class Transaction {
     this.TranstypeId = 0
     this.TransDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
     this.TransDate = moment().format('YYYY-MM-DD HH:mm:ss')
+    this.TransModeId = 0
+    this.CreatedBy = 0
+    this.CreatedDate = moment().format('YYYY-MM-DD HH:mm:ss')
   }
 }
 

@@ -302,3 +302,39 @@
 // LOADING
 
 
+.bg-gradient-red {
+  background: linear-gradient(87deg,#f5365c 0,#f56036 100%)!important;
+}
+
+.icon-shape {
+  padding: 12px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.text-white {
+  color: #fff!important;
+}
+
+.icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.form-control{
+  border-color: #c3c6cb;
+}
+.ant-btn {
+  color: #000000;
+  background-color: #4189f6;
+  border-color: #b9b9b9;
+}
+.btn-group, .btn-group-vertical {
+  position: relative;
+  /* display: inline-flex; */
+  /* vertical-align: middle; */
+  padding: inherit;
+}

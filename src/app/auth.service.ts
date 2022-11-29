@@ -1191,26 +1191,49 @@ export class AuthService {
     return this.http.post(this.base_url1 + 'TransactionRpt/EditTransaction', body)
   }
 
-  GetReceipts(storeId, companyId, startId, Type, dataType, fromdate, todate, invoice) {
+  GetReceipts(companyid, storeid, fromdate, todate, startid, endid, invoice) {
     return this.http.get(
       this.base_url1 +
-      'Receipt/Get?StoreId=' +
-      storeId +
-      '&CompanyId=' +
-      companyId +
-      '&StartId=' +
-      startId +
-      '&type=' +
-      Type +
-      '&dataType=' +
-      dataType +
+      'Receipt/Get?companyid=' +
+      companyid +
+      '&storeid=' +
+      storeid +
       '&fromdate=' +
       fromdate +
       '&todate=' +
       todate +
+      '&startid=' +
+      startid +
+      '&endid=' +
+      endid +
       '&invoice=' +
       invoice,
     )
+  }
+
+  // getInvoices(companyid, storeid, fromdate, todate, startid, endid, invoice) {
+  //   return this.http.get(
+  //     this.base_url +
+  //       'Receipt/Invoices' +
+  //       '?companyid=' +
+  //       companyid +
+  //       '&storeid=' +
+  //       storeid +
+  //       '&fromdate=' +
+  //       fromdate +
+  //       '&todate=' +
+  //       todate +
+  //       '&startid=' +
+  //       startid +
+  //       '&endid=' +
+  //       endid +
+  //       '&invoice=' +
+  //       invoice,
+  //   )
+  // }
+
+  cancelorder(orderid, payload) {
+    return this.http.post(this.base_url1 + 'POSOrder/cancellorder?orderid=${orderid}', payload)
   }
 
 }
