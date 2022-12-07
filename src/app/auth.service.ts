@@ -1043,9 +1043,7 @@ export class AuthService {
     return this.http.post(this.dburl + 'savetblorder', order)
   }
   swapTableOrders(fromkey, tokey) {
-    return this.http.get(
-      this.dburl + 'swaptableorders?fromtablekey=' + fromkey + '&totablekey=' + tokey,
-    )
+    return this.http.get( this.dburl + 'swaptableorders?fromtablekey=' + fromkey + '&totablekey=' + tokey,)
   }
   deletetblorder(diningtablekey) {
     return this.http.get(this.dburl + 'deletetblorder?diningtablekey=' + diningtablekey)

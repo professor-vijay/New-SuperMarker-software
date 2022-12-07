@@ -58,6 +58,7 @@ export class AdditionalChargeComponent implements OnInit {
 
     this.Auth.Getadditional(this.loginfo.companyId).subscribe(data => {
       this.additionalcharge = data;
+      console.log(this.additionalcharge)
       this.addtnchrg = this.additionalcharge.addtncharges;
       console.log(this.addtnchrg);
       for (let i = 0; i < this.additionalcharge.addtncharges.length; i++) {
@@ -133,6 +134,14 @@ export class AdditionalChargeComponent implements OnInit {
 
   back() {
     this.show = !this.show
+  }
+  term
+  filteredvalues = [];
+  filtersearch(): void {
+    this.addtnchrg = this.term
+      ? this.additionalcharge.addtncharges.filter(x => x.description.toLowerCase().includes(this.term.toLowerCase()))
+      : this.additionalcharge.addtncharges;
+    console.log(this.addtnchrg)
   }
 
 }

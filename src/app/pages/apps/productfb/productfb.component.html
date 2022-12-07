@@ -2,15 +2,17 @@
   <div [hidden]="!show">
 
     <div class="cui__utils__heading">
-      <strong>Products</strong>
+      <strong 
+      style="margin-left: 37px;font-size: 23px;font-family: 'Poppins', sans-serif;">Products</strong>
     </div>
 
-    <div class="card col-lg-12">
+    <div class="card col-lg-12" style="border-radius:39px;">
       <div class="card-header card-header-flex">
 
         <div class="d-flex flex-column justify-content-center mr-auto">
           <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-            <input type="text" nz-input placeholder="Search Products" [(ngModel)]="term" (input)="filtersearch()" style="width: 468px;" />
+            <input type="text" nz-input placeholder="Search Products" [(ngModel)]="term" (input)="filtersearch()"
+              style="width: 468px;" />
           </nz-input-group>
           <ng-template #suffixIconButton>
             <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
@@ -19,7 +21,8 @@
 
         <div class="col-sm-auto row">
           <div class="mx-5 py-3">
-            <a class="btn btn-success" (click)="openDetailpopup(contentdetail1)" href="javascript: void(0);" style="margin-right:-46px; width: 100px;">
+            <a class="btn btn-success" (click)="openDetailpopup(contentdetail1)" href="javascript: void(0);"
+              style="margin-right:-46px; width: 100px;">
               Import
             </a>
           </div>
@@ -85,8 +88,7 @@
               </span>
               <span *ngIf="product.productTypeId == 4" class="badge border border-secondary" style="width: 20px;
               height: 20px;">
-                <nz-badge nzStatus="Processing
-                " style="margin-left:2px ;"></nz-badge>
+                <nz-badge nzColor="#108ee9" style="margin-left:2px ;"></nz-badge>
               </span>
               <span *ngIf="product.productTypeId == 3" class="badge border border-warning" style="width: 20px;
               height: 20px;">
@@ -116,336 +118,308 @@
     </div>
   </div>
 
-  <div [hidden]="show" *ngIf="product" class="card">
-    <div class="cui__utils__heading">
-      <strong *ngIf="!(product.id > 0)">Add Product</strong>
-      <strong *ngIf="product.id > 0" style="margin-left: 30px;">Edit <strong
-          style="color:#eecda3 → #ef629f ;">Product:</strong>
-        <a class="btn btn-sm btn-light" href="javascript: void(0);"
-          style="font-size: x-large; font-weight: 900;color: black;font-style: italic;">
-          {{product?.description}}
-        </a> </strong>
-    </div>
-    <div class="card">
-      <div class="card-header card-header-flex">
-        <div class="d-flex flex-column justify-content-center mr-auto">
-          <div class="hk-pg-wrapper">
-            <div *ngIf="products1" class="container">
-              <div class="cui__utils__heading">
-              </div>
-              <form name="form" id="prodForm" #f="ngForm" novalidate>
-                <div class="col-xl-12 pl-0 pr-0">
-                  <section class="hk-sec-wrapper">
-                    <div class="row">
-                      <div class="col-xl-4">
-                        <div class="image-div">
-                          <!-- liveimage -->
-                          <img class="mt-20" style="border-radius: 25px;" height=auto width="350">
-                          <button class="btn"></button>
-                          <!-- droppedimage -->
-                          <img id="droppedimage" class="mt-20" style="border-radius: 25px;" height=auto width="350">
-                          <button class="btn" type="button"></button>
-                          <!-- emptyimage -->
-                          <img id="noimage" class="mt-20"
-                            style="border: 46px solid white;border-radius: 59px; margin-left:-7%;"
-                            src="assets/dist/img/img-thumb.jpg" height=auto width="350"><br>
-                        </div>
-                        <div id="imageupload" class="fileupload" appDragDropFileUpload (click)="fileField.click()"
-                          (fileDropped)="upload($event)">
-                          <span class="ddinfo">Choose a file or drag here</span>
-                          <input type="file" accept="image/*" name="avatars" #fileField
-                            (change)="upload($event.target.files)" hidden multiple>
-                        </div><br>
-                        <!-- <div class="text-center">
-                      <ngx-barcode [bc-value]="products1.ProductCode" [bc-display-value]="true"></ngx-barcode>
-                    </div> -->
-                      </div>
-                      <div class="col-xl-6">
-                        <div class="row">
-                          <div class="col-md-3 mt-15" *ngFor="let item of productTypes">
-                            <div class="custom-control custom-radio mb-5">
-                              <input type="radio" [(ngModel)]="products1.ProductTypeId" [value]="item.id"
-                                id="{{item.id}}" name="{{item.description}}" class="custom-control-input">
-                              <label class="custom-control-label" for="{{item.id}}">{{item.description}}</label>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label for="firstName"><strong>Product Name<span class="text-danger">*</span></strong></label>
-                          <input type="text" class="form-control" placeholder="Enter Product Name" name="name"
-                            [(ngModel)]="products1.Name" #name="ngModel"
-                            [ngClass]="{'is-invalid': f.submitted && name.invalid}" required />
-                          <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
-                            <div *ngIf="name.errors.required">Product Name is required</div>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label for="firstName"><strong>Description<span class="text-danger">*</span></strong></label>
-                          <textarea class="form-control mt-15" name="description" [(ngModel)]="products1.Description"
-                            rows="3" #description="ngModel" placeholder="Textarea"></textarea>
-                          <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
-                            <div *ngIf="description.errors.required">Description is required</div>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label for="firstName"><strong>Product Code</strong></label>
-                          <input type="text" class="form-control" placeholder="Enter Product Code" name="productCode"
-                            [(ngModel)]="products1.ProductCode" #productCode="ngModel" />
-                        </div>
+  <div [hidden]="show" *ngIf="product" class="card" style="background-color: #f9f9f9;">
+    <div class="container-fluid py-4">
+      <form name="form" autocomplete="false" id="prodForm" #f="ngForm" novalidate>
+        <div class="row">
+          <!-- <div class="col-lg-12"> -->
+          <div class="col-6">
+            <strong *ngIf="!(product.id > 0)" class="text"
+              style="margin-left: 37px;font-size: 23px;font-family: 'Poppins', sans-serif;">Add Product</strong>
+            <strong *ngIf="product.id > 0" style="margin-left: 30px;"> <strong>Edit Product:</strong>
+              <a class="btn btn-sm btn-light" href="javascript: void(0);" class="text"
+                style="margin-left: 5px;font-size: 23px;font-family: 'Poppins', sans-serif;">
+                {{product?.description}}
+              </a> </strong>
+          </div>
+          <div class="col-6">
+            <button class="btn btn-secondary btn-sm mx-10 w-10" (click)="back()"
+              style="margin-left: 600px; padding: inherit; height: 34px;">Back</button>&nbsp;&nbsp;
+            <button type="submit" class="btn btn-success btn-sm mx-10 w-10" style="  height: 34px;"
+              (click)="focus();products1.categoryId != 0&&f.form.valid && saveProduct()">Save
+              Product</button>
+          </div>
+          <!-- <div class="cui__utils__heading"> -->
 
-                        <!-- <div class="mb-3" >
-                          <label for="firstName"><strong>Barcode</strong></label>
-                          <input type="text" class="form-control" placeholder="Enter Barcode..."
-                            [ngClass]="{'is-invalid': submitted && products1.barCode == null}"
-                            [(ngModel)]="products1.BarCode" />
-                          <span *ngIf="submitted && products1.BarCode ==null" class="text-danger">barcode cannot be
-                            Empty*</span>
-                        </div> -->
+          <!-- </div> -->
 
-                        <div class="form-group">
-                          <label for="firstName"><strong>Barcode<span class="text-danger"></span></strong></label>
-                          <input type="text" class="form-control" placeholder="Enter Product Barcode" name="barcode"
-                            [(ngModel)]="products1.Barcode" #barcode="ngModel"
-                            [ngClass]="{'is-invalid': f.submitted && name.invalid}" required />
-                          <div *ngIf="f.submitted && barcode.invalid" class="invalid-feedback">
-                            <div *ngIf="barcode.errors.required">barcode cannot be
-                              Empty*</div>
-                          </div>
-                        </div>
+          <!-- </div> -->
 
-                        <div class="form-group">
-                          <label for="firstName"><strong>Category</strong></label>
-                          <select class="form-control custom-select" [(ngModel)]="products1.CategoryId"
-                            [ngModelOptions]="{standalone: true}" name="categoryName"
-                            [ngClass]="{'is-invalid': f.submitted && products1.CategoryId  == 0}">
-                            <option value="0">Select Category</option>
-                            <option *ngFor="let item of categories" value="{{item.id}}">{{item.description}}</option>
-                          </select>
-                          <div *ngIf="f.submitted && products1.CategoryId  == 0" class="invalid-feedback">
-                            <div *ngIf="products1.CategoryId  == 0">Product Name is required</div>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label for="firstName"><strong>KOT Group</strong></label>
-                          <select class="form-control custom-select">
-                            <option value=0>No KOT Group</option>
-                            <option></option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="firstName"><strong>TaxGroup</strong></label>
-                          <select class="form-control custom-select" [(ngModel)]="products1.TaxGroupId"
-                            [ngModelOptions]="{standalone: true}">
-                            <option *ngFor="let item of taxgroups" value="{{item.id}}">{{item.description}}</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="firstName"><strong>Unit</strong></label>
-                          <select class="form-control custom-select" [(ngModel)]="products1.UnitId"
-                            [ngModelOptions]="{standalone: true}">
-                            <option *ngFor="let item of units" value="{{item.id}}">{{item.description}}</option>
-                          </select>
-                        </div>
-                        <div class="form-group row">
-                          <div class="form-group col-xl-6">
-                            <strong>Sort Order</strong>
-                            <input type="number" class="form-control" placeholder="Enter Product SortOrder"
-                              name="sortOrder" [(ngModel)]="products1.SortOrder" #sortOrder="ngModel"
-                              [ngClass]="{'is-invalid':f.submitted && sortOrder.invalid}" required />
-                            <div *ngIf="sortOrder.invalid" class="invalid-feedback">
-                              <div *ngIf="sortOrder.errors.required">SortOrder can't be empty!</div>
-                            </div>
-                          </div>
-                          <div class="form-group row" style="margin-left: 10px;">
-                            <div class="form-group">
-                              <strong>Recommended</strong>
-                              <div class="col-sm-6" style="margin-top: 10px;margin-left: 30px;">
-                                <input type="checkbox" placeholder="Enter Product Recomended" name="recomended"
-                                  [(ngModel)]="products1.Recomended" #recomended="ngModel" />
-                              </div>
-                            </div>
+        </div>
 
-                            <div class="form-group">
-                              <strong>&nbsp; IsSaleProdGroup</strong>
-                              <div class="col-sm-6" style="margin-top: 10px;margin-left: 30px;">
-                                <input type="checkbox" placeholder="Enter" name="isSaleProdGroup"
-                                  [(ngModel)]="products1.IsSaleProdGroup" #isSaleProdGroup="ngModel" />
-                              </div>
-                            </div>
+        <div class="row mt-4" *ngIf="products1">
+          <div class="col-lg-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="font-weight-bolder">Product Image</h5>
+                <div class="row">
+                  <div class="col-10">
 
-                            <div class="form-group">
-                              <strong>&nbsp; StockMaintained</strong>
-                              <div class="col-sm-6" style="margin-top: 10px;margin-left: 30px;">
-                                <input type="checkbox" placeholder="Enter" name="isStockMaintained"
-                                  [(ngModel)]="products1.IsStockMaintained" #isStockMaintained="ngModel" />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                          <div class="form-group col-xl-6">
-                            <strong>Min Quantity</strong>
-                            <input type="number" class="form-control" placeholder="Enter Product minquantity"
-                              name="minquantity" [(ngModel)]="products1.minquantity" #minquantity="ngModel" />
-                          </div>
-                          <div class="form-group col-xl-6">
-                            <strong>Min Block</strong>
-                            <input type="number" class="form-control" placeholder="Enter Product minblock"
-                              name="minblock" [(ngModel)]="products1.minblock" #minblock="ngModel" />
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div>
-                            <div class="form-group row">
-                              <div class="col-sm-3">
-                                <strong>Dine Price</strong>
-                              </div>
-                              <div class="col-sm-3">
-                                <strong>Takeaway Price</strong>
-                              </div>
-                              <div class="col-sm-3">
-                                <strong>Delivery Price</strong>
-                              </div>
-                              <div class="col-sm-3">
-                                <strong>Up Price</strong>
-                              </div>
+                    <img class="mt-20" style="border-radius: 25px;" height=auto width="350">
+                    <button class="btn"></button>
 
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <div class="form-group row">
-                              <div class="col-sm-3">
-                                <input type="number" class="form-control" placeholder="Enter Product Price" name="Price"
-                                  [(ngModel)]="products1.Price" #Price="ngModel"
-                                  [ngClass]="{'is-invalid':f.submitted && Price.invalid}" required />
-                                <div *ngIf="Price.invalid" class="invalid-feedback">
-                                  <div *ngIf="Price.errors.required">Price can't be empty!</div>
-                                </div>
-                              </div>
-                              <div class="col-sm-3">
-                                <input type="number" class="form-control" placeholder="Enter Product TakeawayPrice"
-                                  name="TakeawayPrice" [(ngModel)]="products1.TakeawayPrice" #TakeawayPrice="ngModel"
-                                  [ngClass]="{'is-invalid':f.submitted && TakeawayPrice.invalid}" required />
-                                <div *ngIf="TakeawayPrice.invalid" class="invalid-feedback">
-                                  <div *ngIf="TakeawayPrice.errors.required">TakeawayPrice can't be empty!</div>
-                                </div>
-                              </div>
-                              <div class="col-sm-3">
-                                <input type="number" class="form-control" placeholder="Enter Product DeliveryPrice"
-                                  name="DeliveryPrice" [(ngModel)]="products1.DeliveryPrice" #DeliveryPrice="ngModel"
-                                  [ngClass]="{'is-invalid':f.submitted && DeliveryPrice.invalid}" required />
-                                <div *ngIf="DeliveryPrice.invalid" class="invalid-feedback">
-                                  <div *ngIf="DeliveryPrice.errors.required">DeliveryPrice can't be empty!</div>
-                                </div>
-                              </div>
-                              <div class="col-sm-3">
-                                <input type="number" class="form-control" placeholder="Enter Product UPPrice"
-                                  name="UPPrice" [(ngModel)]="products1.UPPrice" #UPPrice="ngModel"
-                                  [ngClass]="{'is-invalid':f.submitted && UPPrice.invalid}" required />
-                                <div *ngIf="UPPrice.invalid" class="invalid-feedback">
-                                  <div *ngIf="UPPrice.errors.required">UPPrice can't be empty!</div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      
-                        <div class="form">
-                          <ng-multiselect-dropdown #multiSelect [placeholder]="'Select OptionGroup'"
-                            [(ngModel)]="selectedItems" name="optionGroups" [data]="products.optionGroups"
-                            [settings]="settings" [disabled]="false" (onFilterChange)="onFilterChange($event)"
-                            (onSelect)="onItemSelect($event)" (onDeSelect)="onDeSelect($event)"
-                            (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeSelectAll($event)">
-                          </ng-multiselect-dropdown>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-xl-12 px-0 pt-20 text-right">
-                      <button class="btn btn-secondary btn-sm mx-10 w-10" (click)="back()"
-                        style="margin-top: 20px;">Back</button>&nbsp;&nbsp;
-                      <button type="submit" class="btn btn-success btn-sm mx-10 w-10" style="margin-top: 20px;"
-                        (click)="focus();products1.categoryId != 0&&f.form.valid && saveProduct()">Save
-                        Product</button>
-                    </div>
-                  </section>
+                    <img id="droppedimage" class="mt-20" style="border-radius: 25px;" height=auto width="350">
+                    <button class="btn" type="button"></button>
+
+                    <img class="w-100 border-radius-lg shadow-lg mt-3" id="noimage"
+                      src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/product-page.jpg"
+                      alt="product_image"><br>
+
+                  </div>
+
                 </div>
-              </form>
-              <br>
+                <div id="imageupload" class="fileupload" appDragDropFileUpload (click)="fileField.click()"
+                  (fileDropped)="upload($event)">
+                  <span class="ddinfo">Choose a file or drag here</span>
+                  <input type="file" accept="image/*" name="avatars" #fileField (change)="upload($event.target.files)"
+                    hidden multiple>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-8 mt-lg-0 mt-4">
 
-              <div class="card">
-                <section class="hk-sec-wrapper">
-                  <h4>Predefined Quantities</h4>
-                  <div class="col-xl-12 col-sm-12 row mt-30">
-                    <div class="col-xl-3 col-sm-3">
-                      <input type="checkbox">
-                      <strong class="ml-2">Name</strong>
-                    </div>
-                    <div class="col-xl-3 col-sm-3">
-                      <strong>Quantity</strong>
-                    </div>
-                    <div class="col-xl-3 col-sm-3">
-                      <strong>FreeQuantity</strong>
-                    </div>
-                    <div class="col-xl-3 col-sm-3">
-                      <strong>Price</strong>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="font-weight-bolder">Product Information</h5>
+                <div class="row">
+                  <div class="col-md-3 mt-15" *ngFor="let item of productTypes">
+                    <div class="custom-control custom-radio mb-5">
+                      <input type="radio" [(ngModel)]="products1.ProductTypeId" [value]="item.id" id="{{item.id}}"
+                        name="{{item.description}}" class="custom-control-input">
+                      <label class="custom-control-label" for="{{item.id}}">{{item.description}}</label>
                     </div>
                   </div>
-                  <div class="row col-sm-12 col-xl-12 mt-15" *ngFor="let qty of cakeQuantities; let i = index">
-                    <div class="col-xl-3 col-sm-3 py-2">
-                      <input type="checkbox" class="pdqcb" [(ngModel)]="qty.saved"
-                        (change)="shiftpressed&&bulkSelect(i);">
-                      <span class="text-center ml-2">{{qty.QuantityText}}</span>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-sm-6">
+
+                    <label for="firstName"><strong>Product Name<span class="text-danger">*</span></strong></label>
+                    <input type="text" class="form-control" placeholder="Enter Product Name" name="name"
+                      autocomplete="false" [(ngModel)]="products1.Name" #name="ngModel"
+                      [ngClass]="{'is-invalid': f.submitted && name.invalid}" required />
+                    <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
+                      <div *ngIf="name.errors.required">Product Name is required</div>
                     </div>
-                    <div class="col-xl-3 col-sm-3 py-2">
-                      <span class="text-center">{{qty.Quantity}}</span>
-                    </div>
-                    <div class="col-xl-3 col-sm-3 py-2">
-                      <span class="text-center">{{qty.FreeQuantity}}</span>
-                    </div>
-                    <div class="col-xl-3 col-sm-3 py-2">
-                      <div class="input-group">
-                        <input type="text" class="form-control form-control-sm" placeholder="Price"
-                          [(ngModel)]="qty.Price">
-                        <div class="input-group-append">
-                          <button class="btn btn-light btn-sm" (click)="basePriceAlgo(qty)" type="button">base</button>
-                        </div>
-                      </div>
-                      <!-- <input type="number" class="form-control">
-                      <button class="btn btn-sm btn-success">use this as base price</button> -->
+
+                    <!-- <label>Name</label>
+                <input class="form-control" type="text" value="Minimal Bar Stool" onfocus="focused(this)"
+                  onfocusout="defocused(this)"> -->
+                  </div>
+                  <div class="col-12 col-sm-6 mt-3 mt-sm-0">
+                    <label for="firstName"><strong>Barcode<span class="text-danger"></span></strong></label>
+                    <input type="text" class="form-control" placeholder="Enter Product Barcode" name="barcode"
+                      autocomplete="false" [(ngModel)]="products1.Barcode" #barcode="ngModel"
+                      [ngClass]="{'is-invalid': f.submitted && name.invalid}" required />
+                    <div *ngIf="f.submitted && barcode.invalid" class="invalid-feedback">
+                      <div *ngIf="barcode.errors.required">barcode cannot be
+                        Empty*</div>
                     </div>
                   </div>
-                  <div class="col-xl-12 px-0 pt-20 text-right">
-                    <button type="submit" class="btn btn-success btn-sm mx-10 w-10" style="margin-right:10px;"
-                      (click)="savePredefQty()">Save</button>
+                </div> <br>
+                <div class="row">
+                  <div class="col-3">
+                    <label for="firstName"><strong>Description<span class="text-danger">*</span></strong></label>
+                    <textarea class="form-control mt-15" name="description" [(ngModel)]="products1.Description" rows="3"
+                      #description="ngModel" placeholder="Textarea"></textarea>
+                    <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
+                      <div *ngIf="description.errors.required">Description is required</div>
+                    </div>
                   </div>
-                </section>
+                  <div class="col-3">
+                    <label for="firstName"><strong>Product Code</strong></label>
+                    <input type="text" class="form-control" placeholder="Enter Product Code" name="productCode"
+                      autocomplete="false" [(ngModel)]="products1.ProductCode" #productCode="ngModel" />
+                  </div>
+                  <div class="col-3">
+                    <label for="firstName"><strong>Sort Order</strong></label>
+                    <input type="number" class="form-control" placeholder="Enter Product SortOrder" name="sortOrder"
+                      [(ngModel)]="products1.SortOrder" #sortOrder="ngModel"
+                      [ngClass]="{'is-invalid':f.submitted && sortOrder.invalid}" required />
+                    <div *ngIf="sortOrder.invalid" class="invalid-feedback">
+                      <div *ngIf="sortOrder.errors.required">SortOrder can't be empty!</div>
+                    </div>
+                  </div>
+                </div><br>
+                <div class="row">
+
+                  <div class="col-sm-6">
+                    <label for="firstName"><strong>Category</strong></label>
+                    <select class="form-control custom-select" [(ngModel)]="products1.CategoryId"
+                      [ngModelOptions]="{standalone: true}" name="categoryName"
+                      [ngClass]="{'is-invalid': f.submitted && products1.CategoryId  == 0}">
+                      <option value="0">Select Category</option>
+                      <option *ngFor="let item of categories" value="{{item.id}}">{{item.description}}</option>
+                    </select>
+                    <div *ngIf="f.submitted && products1.CategoryId  == 0" class="invalid-feedback">
+                      <div *ngIf="products1.CategoryId  == 0">Product Name is required</div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6 mt-3 mt-sm-0">
+                    <label for="firstName"><strong>TaxGroup</strong></label>
+                    <select class="form-control custom-select" [(ngModel)]="products1.TaxGroupId"
+                      [ngModelOptions]="{standalone: true}">
+                      <option *ngFor="let item of taxgroups" value="{{item.id}}">{{item.description}}</option>
+                    </select>
+                  </div>
+                </div><br>
+                <div class="row">
+
+                  <div class="col-sm-6">
+                    <label for="firstName"><strong>Unit</strong></label>
+                    <select class="form-control custom-select" [(ngModel)]="products1.UnitId"
+                      [ngModelOptions]="{standalone: true}">
+                      <option *ngFor="let item of units" value="{{item.id}}">{{item.description}}</option>
+                    </select>
+                  </div>
+                  <div class="col-12 col-sm-6 mt-3 mt-sm-0">
+                    <label for="firstName"><strong>KOT Group</strong></label>
+                    <select class="form-control custom-select">
+                      <option value=0>No KOT Group</option>
+                      <option></option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-body" *ngIf="products1">
+                <h5 class="font-weight-bolder">Option Groups</h5> <br>
+
+                <div class="row">
+
+                  <div class="col-4">
+                    <strong>Recommended</strong>
+                    <div class="col-sm-6" style="margin-top: 10px;margin-left: 30px;">
+                      <input type="checkbox" placeholder="Enter Product Recomended" name="recomended"
+                        [(ngModel)]="products1.Recomended" #recomended="ngModel" />
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <strong>&nbsp; IsSaleProdGroup</strong>
+                    <div class="col-sm-6" style="margin-top: 10px;margin-left: 30px;">
+                      <input type="checkbox" placeholder="Enter" name="isSaleProdGroup"
+                        [(ngModel)]="products1.IsSaleProdGroup" #isSaleProdGroup="ngModel" />
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <strong>&nbsp; StockMaintained</strong>
+                    <div class="col-sm-6" style="margin-top: 10px;margin-left: 30px;">
+                      <input type="checkbox" placeholder="Enter" name="isStockMaintained"
+                        [(ngModel)]="products1.IsStockMaintained" #isStockMaintained="ngModel" />
+                    </div>
+                  </div> <br>
+                </div><br>
+
+                <div class="row">
+                  <div class="col-12">
+                    <strong>Select Option Group</strong>
+                    <ng-multiselect-dropdown 
+                      class="multiselect-dropdown dropdown-btn" #multiSelect [placeholder]="'Select OptionGroup'" 
+                      [(ngModel)]="selectedItems" name="optionGroups" [data]="products.optionGroups"
+                      [settings]="settings" [disabled]="false" (onFilterChange)="onFilterChange($event)"
+                      (onSelect)="onItemSelect($event)" (onDeSelect)="onDeSelect($event)"
+                      (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeSelectAll($event)">
+                    </ng-multiselect-dropdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8 mt-sm-0 mt-4" *ngIf="products1">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="font-weight-bolder">Pricing</h5> <br>
+                <div class="row">
+
+                  <div class="col-4">
+                    <strong>Min Quantity</strong>
+                    <input type="number" class="form-control" placeholder="Enter Product minquantity" name="minquantity"
+                      [(ngModel)]="products1.minquantity" #minquantity="ngModel" />
+
+                  </div>
+                  <div class="col-5">
+                    <strong>Min Block</strong>
+                    <input type="number" class="form-control" placeholder="Enter Product minblock" name="minblock"
+                      [(ngModel)]="products1.minblock" #minblock="ngModel" />
+                  </div>
+                </div><br>
+                <div class="row">
+                  <!-- <div class="col-12"> -->
+                  <div class="col-3">
+                    <strong>Dine Price</strong>
+                    <input type="number" class="form-control" placeholder="Enter Product Price" name="Price"
+                      [(ngModel)]="products1.Price" #Price="ngModel"
+                      [ngClass]="{'is-invalid':f.submitted && Price.invalid}" required />
+                    <div *ngIf="Price.invalid" class="invalid-feedback">
+                      <div *ngIf="Price.errors.required">Price can't be empty!</div>
+                    </div>
+                  </div>
+
+                  <div class="col-3">
+                    <strong>Takeaway Price</strong>
+                    <input type="number" class="form-control" placeholder="Enter Product Price" name="Price"
+                      [(ngModel)]="products1.Price" #Price="ngModel"
+                      [ngClass]="{'is-invalid':f.submitted && Price.invalid}" required />
+                    <div *ngIf="Price.invalid" class="invalid-feedback">
+                      <div *ngIf="Price.errors.required">Price can't be empty!</div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <strong>Delivery Price</strong>
+                    <input type="number" class="form-control" placeholder="Enter Product Price" name="Price"
+                      [(ngModel)]="products1.Price" #Price="ngModel"
+                      [ngClass]="{'is-invalid':f.submitted && Price.invalid}" required />
+                    <div *ngIf="Price.invalid" class="invalid-feedback">
+                      <div *ngIf="Price.errors.required">Price can't be empty!</div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <strong>Up Price</strong>
+                    <input type="number" class="form-control" placeholder="Enter Product Price" name="Price"
+                      [(ngModel)]="products1.Price" #Price="ngModel"
+                      [ngClass]="{'is-invalid':f.submitted && Price.invalid}" required />
+                    <div *ngIf="Price.invalid" class="invalid-feedback">
+                      <div *ngIf="Price.errors.required">Price can't be empty!</div>
+                    </div>
+                    <!-- </div> -->
+                  </div>
+                </div> <br>
+
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 
 
   <ng-template #contentdetail1 let-modal>
     <div class="modal d-block position-static overflow-show" tabindex="-1" role="dialog">
-        <div class="modal-dialog ma-0" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <input type="file" class="btn-text" accept=".csv" (change)="csv2Array($event)"
-                        placeholder="Upload file">
+      <div class="modal-dialog ma-0" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <input type="file" class="btn-text" accept=".csv" (change)="csv2Array($event)" placeholder="Upload file">
 
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success btn-sm mx-10 w-20" (click)="Upload();modal.close()">Upload</button>
-                    <button class="btn btn-danger btn-sm mx-10 w-20" (click)="modal.close()">Cancel</button>
-                </div>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-sm mx-10 w-20" (click)="Upload();modal.close()">Upload</button>
+            <button class="btn btn-danger btn-sm mx-10 w-20" (click)="modal.close()">Cancel</button>
+          </div>
         </div>
+      </div>
     </div>
 
-</ng-template>
+  </ng-template>
 
   <!-- <ng-template #contentDetail1 let-modal>
     <div class="modal d-block position-static overflow-show" tabindex="-1" role="dialog">
@@ -580,3 +554,76 @@
     </div>
   </ng-template>
 </div>
+
+
+
+
+
+
+<!-- <div class="row mt-4">
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="font-weight-bolder">Product Image</h5>
+        <div class="row">
+          <div class="col-12">
+            <img class="w-100 border-radius-lg shadow-lg mt-3"
+              src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/product-page.jpg"
+              alt="product_image">
+          </div>
+          <div class="col-12 mt-5">
+            <div class="d-flex">
+              <button class="btn btn-primary btn-sm mb-0 me-2" type="button" name="button">Edit</button>
+              <button class="btn btn-outline-dark btn-sm mb-0" type="button" name="button">Remove</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8 mt-lg-0 mt-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="font-weight-bolder">Product Information</h5>
+        <div class="row">
+          <div class="col-12 col-sm-6">
+            <label>Name</label>
+            <input class="form-control" type="text" value="Minimal Bar Stool" onfocus="focused(this)"
+              onfocusout="defocused(this)">
+          </div>
+          <div class="col-12 col-sm-6 mt-3 mt-sm-0">
+            <label>Weight</label>
+            <input class="form-control" type="number" value="2" onfocus="focused(this)" onfocusout="defocused(this)">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <label class="mt-4">Collection</label>
+            <input class="form-control" type="text" value="Summer" onfocus="focused(this)" onfocusout="defocused(this)">
+          </div>
+          <div class="col-3">
+            <label class="mt-4">Price</label>
+            <input class="form-control" type="text" value="$90" onfocus="focused(this)" onfocusout="defocused(this)">
+          </div>
+          <div class="col-3">
+            <label class="mt-4">Quantity</label>
+            <input class="form-control" type="number" value="50" onfocus="focused(this)" onfocusout="defocused(this)">
+          </div>
+        </div>
+        <div class="row">
+
+          <div class="col-sm-6">
+            <label class="mt-4">Category</label>
+            <div class="choices" data-type="select-one" tabindex="0" role="listbox" aria-haspopup="true"
+              aria-expanded="false">
+
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+

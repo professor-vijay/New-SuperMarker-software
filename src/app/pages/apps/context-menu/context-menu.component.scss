@@ -1,0 +1,22 @@
+.menu-link {
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .menu-link:hover {
+    background-color: #3f4042;
+  }
+  // .menu-link:not(:last-child):after{
+  //     content :"";
+  //     display: block;
+  //     // width: 20px;
+  //     height: 1px;
+  //     padding-top: 1px;
+  //     padding-bottom: 1px;
+  //     background: red;
+  // }
+  
+  .menu-container {
+    background: #292a2d;
+    min-width: 100px;
+  }

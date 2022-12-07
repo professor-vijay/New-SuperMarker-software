@@ -116,7 +116,7 @@ export class ProductModule {
   OptionGroup: Array<OptionGroupModule>;
   Option: Array<OptionModule>;
  
-  ProductOptionGroups: Array<any>;
+  ProductOptionGroups: Array<any>
   ProductOptions: Array<any>;
   ImgUrl: string;
   ProductCode: string;

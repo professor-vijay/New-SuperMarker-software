@@ -49,7 +49,7 @@
 }
 // modal animation
 .cart-div {
-  min-height: 56vh;
+  min-height: 65vh;
   max-height: 56vh;
   overflow: auto;
 }
@@ -337,4 +337,8 @@
   /* display: inline-flex; */
   /* vertical-align: middle; */
   padding: inherit;
+}
+
+.table-menu {
+  position: absolute;
 }

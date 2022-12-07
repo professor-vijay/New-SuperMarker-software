@@ -145,6 +145,8 @@
                             class="btn">Empty</button>
                         <button type="button" [class.active]="tablefilterid == 1" (click)="tablefilterid = 1"
                             class="btn">Seated</button>
+                        <button type="button" [(ngModel)]="checked" [class.active]=" tablefilterid == 2"
+                            (click)="tablefilterid = 2" class="btn">UnHide</button>
                     </div>
                 </div>
             </div>
@@ -159,21 +161,25 @@
             </div> -->
 
                 <a *ngFor="let table of diningtables | diningtable: currentDiningArea.Id : tablefilterid"
-                    class="col-xl-3 col-lg-3">
+                    class="col-xl-3 col-lg-3" (contextmenu)="displayContextMenu($event, table.TableKey); (false)">
                     <div class="card">
                         <div class="card-body" [class.table-occupied]="table.TableStatusId == 1">
                             <div *ngIf="table.TableStatusId == 1 || table.TableKey.includes('_')"
-                                class="hover table-card-menu">
-                                <button *ngIf="!table.TableKey.includes('_')" class="btn btn-link text-success"
+                                class="position-relative" style="height: 30px;">
+                                <button *ngIf="!table.TableKey.includes('_')" style="right: 0;"
+                                    class="btn btn-link text-success position-absolute"
                                     (click)="splittable(table.Id, table.LastSplitTableId)">split</button>
                                 <button *ngIf="table.TableKey.includes('_') && table.TableStatusId != 1"
-                                    class="btn btn-link text-danger" (click)="removeplittable(table.TableKey)"><i
-                                        class="fe fe-trash"></i></button>
+                                    class="btn btn-link text-danger position-absolute" style="right: 0;"
+                                    (click)="removeplittable(table.TableKey)"><i class="fe fe-trash"></i></button>
+                                <button *ngIf="!table.TableKey.includes('_')"
+                                    class="btn btn-link text-success position-absolute"
+                                    (click)="handleTableSwap(table.TableKey)" style="margin-right :110px;">Swap</button>
                             </div>
                             <div class="item mb-xl-0 mb-3 mouseover"
                                 (click)="createtableorder(table.Id, table.TableKey)">
                                 <span class="icon">
-                                    <img src="./assets/images/Extra/table-2.0.png" alt="" width="35%">
+                                    <img src="./assets/images/Extra/table-2.0.png" alt="" width="205%">
                                 </span>
                                 <br>
                                 <div class="desc" style="padding-left: 25%;">
@@ -183,9 +189,20 @@
                                 <br>
                                 <div *ngIf="table.TableStatusId == 0" class="line bg-secondary"></div>
                                 <div *ngIf="table.TableStatusId > 0" class="line bg-success"></div>
+
+
+                                <!-- <div *ngIf="table.TableStatusId == 0" nz-col nzSpan="8" (nzOnChange)="log($event)"
+                                    (click)="displayContextMenu()" [(ngModel)]="checked" style=" margin-left: 200px;">
+                            
+                                    <input type="checkbox" [(ngModel)]="myVar1" />
+                                </div> -->
                             </div>
+
                         </div>
                     </div>
+                    <app-context-menu *ngIf="rightClickMenuItems.length > 0 && isDisplayContextMenu"
+                        [ngStyle]="getRightClickMenuStyle()" [contextMenuItems]="rightClickMenuItems"
+                        (onContextMenuItemClick)="handleMenuItemClick($event)"></app-context-menu>
                 </a>
             </div>
         </div>
@@ -556,7 +573,7 @@
             <button type="button" class="btn" (click)="vieworderlist(4)">PickUp</button>
             <button type="button" class="btn" (click)="vieworderlist(6)">Online Order</button>
         </div>
-        <div *ngIf="order" class="d-flex flex-row-reverse" style="padding-left:33%;">
+        <div *ngIf="order" class="d-flex flex-row-reverse" style="padding-left:27%;">
             <div class="row pl-4 pt-1">
                 <a (click)="openCustomClass(bulkdiscount)">
                     Bulk Discount |
@@ -567,9 +584,10 @@
                 <a (click)="openCustomClass(Additioncharge)">
                     &nbsp; Addition Charge |
                 </a>
-                <a (click)="clearorder(order.OrderTypeId);clearDraftOrder()">
+                <a (click)="clearorder(order.OrderTypeId);clearDraftOrder(order.OrderTypeId)">
                     &nbsp; Clear Order
                 </a>
+
                 <!-- <input type="checkbox" [(ngModel)]="order.istaxinclusive" (change)="order.setbillamount()"> -->
             </div>
 
@@ -587,7 +605,7 @@
         <div style="margin-left: 27px;margin-top: -3px;">
             <!-- <strong style="color:rgb(220, 49, 19) ;">Draft</strong> -->
             <!-- <nz-switch (click)="draftorderdrawer = true" style="margin-left: 6px;"></nz-switch> -->
-            <button class="btn btn-link" (click)="draftorderdrawer = true"
+            <button *ngIf="order?.OrderTypeId == 5" class="btn btn-link" (click)="draftorderdrawer = true"
                 style="margin-left: 6px;color:rgb(220, 49, 19) "> <span nz-icon nzType="arrow-right"
                     nzTheme="outline"></span>
                 <strong style="margin-left:5px ;">Draft Order</strong> </button>
@@ -658,8 +676,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-sm-4" *ngFor="let product of groupedProducts | productfilter: selectedcategoryid"
-                        (click)="addProduct(product)">
+                    <div class="col-sm-4" *ngFor="let product of groupedProducts" (click)="addProduct(product)">
                         <a>
                             <div class="card">
                                 <div class="card-body px-0 py-0 pt-2">
@@ -678,7 +695,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="sectionid == 2" class="col-sm max-h-65">
+        <div *ngIf="sectionid == 2" class="col-sm max-h-70">
             <div class="cart-div">
                 <table class="table">
                     <thead>
@@ -1007,8 +1024,8 @@
 
 
 <!-- Take Away Right side Drawer -->
-<nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="right" nzTitle="Check Out" (nzOnClose)="modalclose()"
-    [nzWidth]="720">
+<nz-drawer [nzClosable]="true" [nzVisible]="visible" nzPlacement="right" nzTitle="Check Out"
+    (nzOnClose)="visible = false" [nzWidth]="720">
     <div class="container" *ngIf="order">
         <div class="row">
             <div class="col-sm pr-0">
@@ -1103,26 +1120,30 @@
     <br>
     <nz-footer class="float-right" *ngIf="order">
         <button class="btn mr-3 btn-secondary" (click)="visible = false">Back</button>
-        <button class="btn btn-success" [disabled]="order.PaidAmount > order.BillAmount" (click)="saveorder()">Receive
+        <button class="btn btn-success" [disabled]="order.StorePaymentTypeId <= 0" (click)="saveorder()">Receiveeee
             (&#8377; {{order.PaidAmount}})</button>
     </nz-footer>
 </nz-drawer>
 
 
-<nz-drawer [nzClosable]="false" [nzVisible]="issplitpaymentdrawer" nzPlacement="right" nzTitle="Split Payment"
-    (nzOnClose)="modalclose()" [nzWidth]="720">
+<nz-drawer [nzClosable]="true" [nzVisible]="issplitpaymentdrawer" nzPlacement="right" nzTitle="Split Payment"
+    (nzOnClose)="issplitpaymentdrawer = false" [nzWidth]="720">
     <div class="container" *ngIf="order">
         <div class="card card-body" style="background-color: rgb(235, 246, 249, 1); border-color: rgb(72, 166, 182);">
             <div class="card-body">
                 <div class="col-lg-12 row" style="align-items: center;">
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <strong>Bill Amount: </strong> <span>{{order.BillAmount}}</span>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <strong>Total Split Amount: </strong> <span>{{splitpaymenttotal}}</span>
                     </div>
+                    <div class="col-lg-4">
+                        <strong>Balance Amount: </strong> <span>{{splitpaymenttotal - order.BillAmount}}</span>
+                    </div>
                 </div>
-                <div class="col-lg-12 row" *ngFor="let transaxn of storePaymentTypes" style="align-items: center;">
+                <div class="col-lg-12 row" *ngFor="let transaxn of storePaymentTypes"
+                    style="align-items: center;margin-top: 33px;">
                     <div class="col-lg-6 pl-0">
                         <label [style.color]="transaxn.Amount>0 ? '#48a6b6' : 'black'"
                             class="form-check-lable">{{transaxn.name}}
@@ -1206,7 +1227,7 @@
             <a style="height: 35px;" href="javascript:void(0);" (click)="loadDraftOrder(dorder)"
                 (click)="draftorderdrawer = false" [class.cat-active]="selectedDraftIndex == dorder.draftIndex"
                 class="btn btn-outline-danger">
-                <code>[{{dorder.draftIndex}}]</code>{{dorder.draftName}}
+                <code>[{{dorder.draftIndex}}]</code> <strong>{{dorder.draftName}}</strong>
             </a>
         </ul>
     </div>
@@ -2116,7 +2137,36 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <!-- <div class="modal-body">
+</ng-template>
+<ng-template #tableorderswapmodal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Swap Table Order
+        </h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngFor="let area of diningareas" class="mb-5">
+            <h5>{{ area.DiningArea }}</h5>
+            <hr>
+            <button [ngClass]="{'active': swapConfig.toTableKey == table.TableKey}"
+                *ngFor="let table of diningtables | diningtable: area.Id:-1" class="btn mx-2"
+                (click)="swapConfig.toTableKey = table.TableKey">
+                {{table.TableName}}
+            </button>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Save click')">
+            Back
+        </button>
+        <button type="button" class="btn btn-success" (click)="swapTblOrder()">Swap</button>
+    </div>
+</ng-template>
+
+<!-- <div class="modal-body">
         <div *ngFor="let charge of order.additionalchargearray">
             <label style="color: black;"><b>{{charge.Description}} {{charge.ChargeType == 1 ? '' : '%'}}</b></label>
             <br>

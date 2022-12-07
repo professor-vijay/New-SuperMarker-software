@@ -1,0 +1,33 @@
+.text {
+    text-transform: uppercase;
+    background: linear-gradient(to right, #e71493  0%, #330867 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  
+  }
+
+  .btn.btn-light {
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+
+.ms-sm-auto {
+    margin-left: auto!important;
+}
+
+.me-sm-0 {
+    margin-right: 0!important;
+}
+
+.my-sm-auto {
+    margin-top: auto!important;
+    margin-bottom: auto!important;
+}
+
+.end-0 {
+    right: 0!important;
+}
+
+.position-relative {
+    position: relative!important;
+}

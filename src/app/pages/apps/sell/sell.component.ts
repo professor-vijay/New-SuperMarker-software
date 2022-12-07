@@ -35,6 +35,7 @@ export class SellComponent implements OnInit {
   @ViewChild('viewordermodal', { static: true }) viewordermodal: ElementRef
   @ViewChild('split_payment_modal', { static: true }) split_payment_modal: ElementRef
   @HostListener('window:keyup', ['$event'])
+  @ViewChild('tableorderswapmodal', { static: true }) tableorderswapmodal: ElementRef
   keyEvent(event: KeyboardEvent) {
     event.preventDefault()
     if (event.key == 'F9') {
@@ -153,6 +154,7 @@ export class SellComponent implements OnInit {
   //   datastatus: ''
   // }
   tablefilterid = -1
+  checked = true;
   currentDiningArea = { Id: 0, DiningArea: 'Loading...' }
   currenttimestamp: number = new Date().getTime()
   orderstatusfilterid: number = -5
@@ -170,6 +172,7 @@ export class SellComponent implements OnInit {
   datefilterfield = ''
   customerdetaildrawer = false
   draftorderdrawer = false
+  // issplitpaymentdrawer = false
   selectedcategoryid = 0
   closeorder: boolean = false
   onlinestatusid = [-1]
@@ -210,6 +213,9 @@ export class SellComponent implements OnInit {
   autocompletevalidation: boolean = true
   typeheadSelected: any
 
+
+
+
   constructor(
     private modalService: NgbModal,
     private auth: AuthService,
@@ -229,6 +235,8 @@ export class SellComponent implements OnInit {
 
 
   ) {
+
+
     // config.backdrop = 'static';
     // config.keyboard = false;
   }
@@ -466,6 +474,21 @@ export class SellComponent implements OnInit {
     })
   }
 
+  ReadMore: boolean = true
+
+  //hiding info box
+  // visible:boolean = false
+
+  log(value) {
+    console.log(value);
+    this.checked
+    console.log(this.checked)
+  }
+
+  onclick() {
+    this.ReadMore = !this.ReadMore
+    this.visible = !this.visible
+  }
 
   ngOnInit(): void {
 
@@ -499,6 +522,8 @@ export class SellComponent implements OnInit {
     } else {
       localStorage.setItem('draftOrders', '[]')
     }
+
+
 
 
   }
@@ -598,12 +623,11 @@ export class SellComponent implements OnInit {
   StoreId: any
   tabledata = []
   getdata() {
-    this.auth.getdbdata(['additionalchargesdb', 'stores', 'loginfo', 'orderkeydb', 'printersettings', 'diningtabledb', 'diningareadb', 'preorders']).subscribe(data => {
+    this.auth.getdbdata(['additionalchargesdb', 'stores', 'loginfo', 'orderkeydb', 'diningtabledb', 'tableordersdb', 'diningareadb', 'preorders']).subscribe(data => {
       console.log(data)
       this.loginfo = data['loginfo'][0]
       this.orderkey = data["orderkeydb"][0]
       this.charges = data['additionalchargesdb']
-      this.printersettings = data['printersettings'][0]
       this.diningareas = data['diningareadb']
       this.diningtables = data['diningtabledb']
       this.preorders = data['preorders']
@@ -699,11 +723,7 @@ export class SellComponent implements OnInit {
     })
   }
 
-  swapTblOrder(fromtablekey, totablekey) {
-    this.auth.swapTableOrders(fromtablekey, totablekey).subscribe(data => {
-      this.gettblorders()
-    })
-  }
+
 
 
   removeplittable(splitetablekey) {
@@ -1003,7 +1023,7 @@ export class SellComponent implements OnInit {
         if (item.Quantity > 0) {
           item.Quantity--
           item.ComplementryQty++
-          
+
         }
       }
     })
@@ -1149,7 +1169,7 @@ export class SellComponent implements OnInit {
       console.log(this.products)
       this.products.forEach(prod => {
         prod.maxqty = prod.quantity
-        if(typeof prod.OptionGroup == "string"){
+        if (typeof prod.OptionGroup == "string") {
           prod.OptionGroup = JSON.parse(prod.OptionGroup)
         }
       });
@@ -1161,7 +1181,7 @@ export class SellComponent implements OnInit {
     console.log("group products")
     var helper = {};
     this.groupedProducts = this.products.reduce((r, o) => {
-    
+
       var key = o.barcodeId + '-'
 
       if (!helper[key]) {
@@ -1257,7 +1277,7 @@ export class SellComponent implements OnInit {
     var options = {
       quantity: 1,
       key: '',
-    }    
+    }
     if (product.OptionGroup && product.OptionGroup.length > 0) {
       console.log(product.OptionGroup)
       this.currentitem = new CurrentItemModule(product)
@@ -1306,7 +1326,7 @@ export class SellComponent implements OnInit {
   }
   setcurrentitemprice() {
     var singleqtyoptionprice = 0
-    this.currentitem.TotalAmount = 0 
+    this.currentitem.TotalAmount = 0
     this.currentitem.OptionGroup.forEach(opg => {
       if (opg.selected) {
         opg.Option.forEach(option => {
@@ -1365,7 +1385,7 @@ export class SellComponent implements OnInit {
 
   selectedproduct(product) {
     console.log(product)
-    Object.keys(product).forEach(key => { 
+    Object.keys(product).forEach(key => {
       this.temporaryItem[key] = product[key]
     })
     this.modalService.dismissAll()
@@ -1687,11 +1707,14 @@ export class SellComponent implements OnInit {
     })
   }
 
-  clearDraftOrder() {
+  clearDraftOrder(typeid) {
+    console.log(typeid)
+    typeid = 5
+
     if (this.selectedDraftIndex > -1) {
       this.draftOrders.splice(this.selectedDraftIndex, 1)
       this.draftOrders.forEach((dorder, ind) => {
-        dorder.draftIndex = ind 
+        dorder.draftIndex = ind
       })
       localStorage.setItem('draftOrders', JSON.stringify(this.draftOrders))
       this.selectedDraftIndex = -1
@@ -1701,7 +1724,7 @@ export class SellComponent implements OnInit {
 
   clearorder(typeid) {
     this.orderlogging('delete')
-    this.clearDraftOrder()
+    this.clearDraftOrder(typeid)
     this.orderlogging('clearing_order')
     this.visible = false
     this.placeorderclicked = false
@@ -2056,7 +2079,7 @@ export class SellComponent implements OnInit {
     console.log(Items)
 
     var prod = this.products.filter(x => x.stockBatchId == Items.stockBatchId)[0]
-    console.log(Items.Quantity,Items.ComplementryQty, prod.maxqty)
+    console.log(Items.Quantity, Items.ComplementryQty, prod.maxqty)
     console.log(this.products)
     if (Items.Quantity && Items.Quantity <= prod.maxqty) {
       console.log('%c GOOD! ', 'color: #bada55')
@@ -2091,6 +2114,75 @@ export class SellComponent implements OnInit {
     this.order.Items.splice(index, 1)
     this.order.setbillamount()
     this.orderlogging('delete')
+  }
+
+
+  freetables: any
+
+
+
+  swapConfig = {
+    fromTableKey: '',
+    toTableKey: '',
+  }
+
+  handleTableSwap(tableId) {
+    console.log("handleTableSwap", tableId)
+    this.freetables = this.diningtables
+    this.swapConfig.fromTableKey = tableId
+    this.modalService.open(this.tableorderswapmodal, { centered: true, size: 'lg' })
+  }
+
+  swapTblOrder() {
+    this.modalService.dismissAll()
+    this.auth.swapTableOrders(this.swapConfig.fromTableKey, this.swapConfig.toTableKey).subscribe(data => {
+      console.log(data)
+      this.gettblorders()
+    })
+  }
+
+
+  // Custom menu
+  isDisplayContextMenu: boolean
+  rightClickMenuItems: Array<ContextMenuModel> = []
+  rightClickMenuPositionX: number
+  rightClickMenuPositionY: number
+
+
+  // custom menu
+  getRightClickMenuStyle() {
+    return {
+      position: 'fixed',
+      left: `${this.rightClickMenuPositionX}px`,
+      top: `${this.rightClickMenuPositionY}px`,
+    }
+  }
+  displayContextMenu(event, tablekey) {
+    this.isDisplayContextMenu = true
+
+    this.rightClickMenuItems = [
+      {
+        menuText: 'Hide',
+        menuEvent: 'table_hide',
+        icon: 'fe fe-trash',
+        extraData: tablekey,
+      },
+    ]
+
+    this.rightClickMenuPositionX = event.clientX
+    this.rightClickMenuPositionY = event.clientY
+  }
+
+
+  handleMenuItemClick(event) {
+    console.log(event)
+    switch (event.data.menuEvent) {
+      case this.rightClickMenuItems[0].menuEvent:
+        console.log(event.data)
+        break
+      case this.rightClickMenuItems[1].menuEvent:
+        console.log('To handle formatting')
+    }
   }
 
 
@@ -2326,4 +2418,13 @@ export class SellComponent implements OnInit {
       this.printservice.print(printtemplate, [this.printersettings.receiptprinter])
     }
   }
+}
+
+
+
+interface ContextMenuModel {
+  menuText: string
+  menuEvent: string
+  icon: string
+  extraData: any
 }

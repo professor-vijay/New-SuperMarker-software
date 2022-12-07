@@ -231,10 +231,10 @@ export class OrderService {
   CompanyId: any
   StoreId: any
   getData() {
-    this.auth.getdbdata(['orderkey', 'loginfo', 'printersettings','diningtabledb','diningareadb']).subscribe(data => {
-        this.orderkey = data['orderkey'][0]
-        this.loginfo = data['loginfo'][0]
-        this.printersettings = data['printersettings'][0]
+    this.auth.getdbdata(['orderkeydb', 'loginfo', 'diningtabledb','diningareadb']).subscribe(data => {
+      console.log(data)
+        this.orderkey = data['orderkeydb'][0]
+        this.loginfo = data['loginfo'][0]        
         this.diningAreas = data['diningareadb']
         this.diningTables = data['diningtabledb']
         this.CompanyId = this.loginfo.companyId

@@ -156,7 +156,7 @@ app.get('/getWeight', function (req, res) {
 // });
 
 app.get('/products', function (req, res) {
-    db.productdb.find( {  }, function (err, docs) {
+    db.productdb.find({}, function (err, docs) {
         res.send(docs)
     });
 })
@@ -573,7 +573,7 @@ app.post('/syncproducts', function (req, res) {
 })
 app.get('/getorders', function (req, res) {
     console.dir(req.body);
-    db.orderdb.find({ status: "N" } , function (err1, docs) {   // Callback is optional
+    db.orderdb.find({ status: "N" }, function (err1, docs) {   // Callback is optional
         res.send(docs)
     })
 })

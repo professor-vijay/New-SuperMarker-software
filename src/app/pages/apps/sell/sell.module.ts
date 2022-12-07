@@ -596,14 +596,11 @@ export class KOTModule {
   invoiceno: string
   ordertypeid: number
   constructor(items: Array<OrderItemModule>, kotno) {
-    // // console.log( moment().format('YYYY-MM-DD HH:MM'), moment().format('YYYY-MM-DD hh:mm A'))
     this.KOTStatusId = 0
     this.Instruction = ''
     this.KOTNo = kotno
     this.OrderId = null
-    // this.CreatedDate = moment().format('YYYY-MM-DD HH:MM')
     this.Items = []
-    // this.ModifiedDate = moment().format('YYYY-MM-DD HH:MM')
     this.CompanyId = 0
     this.StoreId = 0
     this.KOTGroupId = items[0].KOTGroupId > 0 ? items[0].KOTGroupId : null

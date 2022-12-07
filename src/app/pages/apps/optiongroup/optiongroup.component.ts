@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/auth.service'
 export class OptiongroupComponent implements OnInit {
 
   show = true
-  optiondata: any;
+  optiondata: any = [];
   loginfo
   CompanyId: any = 0
   StoreId: any
@@ -44,10 +44,12 @@ export class OptiongroupComponent implements OnInit {
 
     
   }
-
+  optiondatatype =[]
   getoption() {
     this.Auth.getOption(this.loginfo.companyId).subscribe(data => {
       this.optiondata = data;
+      this.optiondatatype = this.optiondata
+    
       console.log(this.optiondata);
     });
   }
@@ -134,6 +136,15 @@ export class OptiongroupComponent implements OnInit {
         
       });
     }
+  }
+
+  term
+  filteredvalues = [];
+  filtersearch(): void {
+    this.optiondatatype = this.term
+      ? this.optiondata.filter(x => x.OptionGroup.toLowerCase().includes(this.term.toLowerCase()))
+      : this.optiondata;
+    console.log(this.optiondatatype)
   }
 
 

@@ -24,14 +24,67 @@
   background: lightgrey;
 }
 
-.input[type=checkbox]:checked + b:before {
+.input[type=checkbox]:checked+b:before {
   content: "\2713";
   font-family: ux-icons;
 
 }
 
-.input[type=checkbox]:indeterminate + b:before {
+.input[type=checkbox]:indeterminate+b:before {
   content: "\f067";
   font: 14px/1 DXIcons;
 }
 
+.text {
+  text-transform: uppercase;
+  background: linear-gradient(to right, #e71493  0%, #330867 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+}
+
+
+
+.form-control {
+  border-color: #c3c6cb;
+}
+
+
+.ant-table-small .ant-table-thead>tr>th {
+  background-color: #c1e7f6;
+}
+
+// .dropdown-btn {
+//   display: inline-block;  
+//   width: 100%;
+//   padding: 6px 12px;
+//   margin-bottom: 0;
+//   font-weight: 400; 
+//   text-align: left;
+//   vertical-align: middle;
+//   cursor: pointer;
+//   background-image: none;
+//   border-radius: 4px;
+// }
+
+// .multiselect-dropdown[_ngcontent-mvr-c606] .dropdown-btn[_ngcontent-mvr-c606] {
+//     display: inline-block;
+//     border: 1px solid #e90d0d;
+//     width: 100%;    
+//     margin-bottom: 0;
+//     font-weight: 400;
+//     line-height: 1.52857143;
+//     text-align: left;
+//     vertical-align: middle;
+//     cursor: pointer;
+//     background-image: none;
+//     border-radius: 4px;
+// }
+
+// .dropdown-multiselect --active {
+//   color: white;
+// }
+
+// .ng-star-inserted {
+//   color: white;
+// }

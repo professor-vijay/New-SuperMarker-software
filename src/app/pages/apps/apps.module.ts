@@ -99,6 +99,7 @@ import { ProductfbComponent } from './productfb/productfb.component'
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { DineinComponent } from './dinein/dinein.component';
 import { PricebookComponent } from './pricebook/pricebook.component';
+import { ContextMenuComponent } from './context-menu/context-menu.component';
 
 
 const COMPONENTS = [
@@ -208,6 +209,7 @@ const COMPONENTS = [
     ProductfbComponent,
     DineinComponent,
     PricebookComponent,
+    ContextMenuComponent,
 
     
   ],

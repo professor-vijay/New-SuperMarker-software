@@ -20,7 +20,7 @@ export class DineinComponent implements OnInit {
   loginfo: any
   CompanyId: any = []
   StoreId: any
-  dining: any
+  dining: any = []
   status: number;
   errorMsg: string = '';
   term;
@@ -72,10 +72,11 @@ export class DineinComponent implements OnInit {
 
     }
   }
-
+  dinetable = []
   getTable() {
     this.Auth.getdining(this.loginfo.companyId).subscribe(data => {
       this.dining = data;
+      this.dinetable = this.dining
       console.log(this.dining);
       this.show = true
     })
@@ -205,6 +206,14 @@ export class DineinComponent implements OnInit {
         j++
       }
     }
+  }
+
+
+  filtersearch(): void {
+    this.dining = this.term
+      ? this.dinetable.filter(x => x.StoreName.toLowerCase().includes(this.term.toLowerCase()))
+      : this.dinetable
+    console.log(this.dining)
   }
 
 }

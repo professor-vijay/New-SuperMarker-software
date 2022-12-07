@@ -153,7 +153,7 @@ export class ProductfbComponent implements OnInit {
     private modalService: NgbModal,
     private Auth: AuthService,
     private notification: NzNotificationService,
-    private multiSelect:NgMultiSelectDropDownModule,
+    private multiSelect: NgMultiSelectDropDownModule,
     public location: Location,
     private fb: FormBuilder,
     private http: HttpClient, private sanitizer: DomSanitizer
@@ -178,7 +178,7 @@ export class ProductfbComponent implements OnInit {
       this.getCategories();
       this.getproducttype();
       this.gettax();
-      this.getUnits();     
+      this.getUnits();
       // this.getoption();
       this.newpdquantity = new PredefinedQuantityModule({ companyid: this.CompanyId, productid: this.prodId })
       this.settings = {
@@ -192,7 +192,7 @@ export class ProductfbComponent implements OnInit {
         limitSelection: -1,
         clearSearchFilter: true,
         maxHeight: 200,
-        itemsShowLimit: 3,
+        itemsShowLimit: 1,
         searchPlaceholderText: 'Search',
         noDataAvailablePlaceholderText: 'No Stores Found',
         closeDropDownOnSelection: false,
@@ -200,8 +200,8 @@ export class ProductfbComponent implements OnInit {
         defaultOpen: false
       };
       // console.log(this.settings)
-
     })
+
 
   }
 
@@ -605,6 +605,25 @@ export class ProductfbComponent implements OnInit {
     console.log(this.selectedItems);
     console.log(this.products1.ProductOptionGroups);
   }
+
+  // this.fb.group({})
+
+
+  // MoveToTop(lst) {
+  //   var selected = new Array();
+  //   var selectedItems = lst.getElementsByTagName("selectedItems");
+  //   for (var i = 0; i < selectedItems.length; i++) {
+  //     if (selectedItems[i].selected) {
+  //       selected.push(selectedItems[i]);
+  //       lst.removeChild(selectedItems[i]);
+  //     }
+  //     console.log(selectedItems)
+  //   }
+  //   for (var i = 0; i < selected.length; i++) {
+  //     lst.insertBefore(selected[i], selectedItems[0]);
+  //   }
+  // };
+
 
   public onFilterChange(item: any) {
     console.log(item);

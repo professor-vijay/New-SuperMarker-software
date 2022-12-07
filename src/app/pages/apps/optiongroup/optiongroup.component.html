@@ -1,13 +1,14 @@
 <div>
     <div [hidden]="!show">
         <div class="cui__utils__heading">
-            <strong>Options</strong>
+            <strong style="margin-left: 37px;font-size: 23px;font-family: 'Poppins', sans-serif;">Options</strong>
         </div>
         <div class="card">
-            <div class="card-header card-header-flex">
-                <div class="d-flex flex-column justify-content-center mr-auto">
+            <div class="card-header card-header-flex" style="padding: 34px;">
+                <div class="d-flex flex-column justify-content-center mr-auto" style="width: 325px;">
                     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                        <input type="text" nz-input placeholder="Search Options" />
+                        <input type="text" nz-input placeholder="Search Options" [(ngModel)]="term"
+                            (input)="filtersearch()" />
                     </nz-input-group>
                     <ng-template #suffixIconButton>
                         <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
@@ -20,7 +21,7 @@
                 </div>
             </div>
             <!-- Tax Grp Table -->
-            <nz-table #basicTable class="kit__utils__table mb-4" nzSize="small" [nzData]="optiondata">
+            <nz-table #basicTable class="kit__utils__table mb-4" nzSize="small" [nzData]="optiondatatype">
                 <thead>
                     <tr>
                         <th style="text-align: center;">
@@ -59,10 +60,12 @@
     <!-- Card Hide & Show -->
     <div [hidden]="show " class="card">
         <h5 class="ml-3 mt-3">
-            <strong *ngIf="OptionGroup.Id==0">Add Option</strong>
-            <strong *ngIf="OptionGroup.Id > 0">Edit Option</strong>
+            <strong class="text" style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 33px;"
+                *ngIf="OptionGroup.Id==0">Add Option</strong>
+            <strong *ngIf="OptionGroup.Id > 0" style="margin-left:31px ;">Edit Option:</strong> <strong class="text"
+                style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 6px;">{{OptionGroup.Description}}</strong>
         </h5>
-        <div class="card col-xl-10 ml-5">
+        <div class="card col-xl-10 ml-5" style="margin-top: 26px;">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3 mt-15" *ngFor="let item of OptionGroupType">
