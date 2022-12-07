@@ -950,6 +950,10 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'Internal/getOrderList?storeId=' + storeId + '&numRecords=50')
   }
 
+  getorder(ordId) {
+    return this.http.post(this.base_url1 + 'Internal/getOrderList', ordId)
+  }
+
   getOrdDisp(storeId, companyId) {
     return this.http.get(this.base_url1 + 'Internal/getDispatchList?storeId=' + storeId + '&companyId=' + companyId)
   }
@@ -962,9 +966,7 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'Internal/GetstorebyId?CompanyId=' + companyId + '&Id=' + Id)
   }
 
-  getorder(ordId) {
-    return this.http.post(this.base_url1 + 'Internal/getOrderList', ordId)
-  }
+
 
   GetDispatchList(companyId, storeId) {
     return this.http.get(this.base_url1 + 'Internal/GetDispatchList?companyId=' + companyId + '&StoreId=' + storeId + '&numRecords=25')
