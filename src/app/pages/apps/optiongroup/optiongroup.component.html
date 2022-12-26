@@ -3,7 +3,7 @@
         <div class="cui__utils__heading">
             <strong style="margin-left: 37px;font-size: 23px;font-family: 'Poppins', sans-serif;">Options</strong>
         </div>
-        <div class="card">
+        <div class="card col-lg-12" style="border-radius:39px;">
             <div class="card-header card-header-flex" style="padding: 34px;">
                 <div class="d-flex flex-column justify-content-center mr-auto" style="width: 325px;">
                     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
@@ -129,8 +129,8 @@
                 </div> <br> <br>
 
 
-                <button type="button" class="btn btn-secondary px-5" (click)="back()">
-                    <i nz-icon nzType="left"></i>Back</button>
+                <button type="button" class="btn btn-secondary px-4" (click)="back()">
+                    <i nz-icon nzType="left" style="margin-right: 6px;"></i>Back</button>
                 <button type="button" class="btn btn-success px-5 pull-right" (click)="saveOption()">Save</button>
             </div>
         </div>

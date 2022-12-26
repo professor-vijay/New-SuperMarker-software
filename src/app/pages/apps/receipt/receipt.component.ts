@@ -66,7 +66,7 @@ export class ReceiptComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getData()   
+    this.getData()
   }
 
   selectToday() {
@@ -141,9 +141,9 @@ export class ReceiptComponent implements OnInit {
         this.endid = 0
         this.invoiceid = ''
         this.getInvoices()
-       
+
       })
-      
+
     // this.auth.getdbdata([ 'loginfo', 'printersettings', 'paymenttypes'])
     //   .subscribe(data => {
     //     console.log(data)      
@@ -177,7 +177,7 @@ export class ReceiptComponent implements OnInit {
     console.log(this.invoiceid)
     this.getInvoices()
   }
-  
+
 
   KOT = null
   viewItems(kot) {
@@ -251,7 +251,7 @@ export class ReceiptComponent implements OnInit {
       )
     }
   }
-receipt =[]
+  receipt = []
   getInvoices() {
     this.auth
       .GetReceipts(
@@ -272,6 +272,7 @@ receipt =[]
         this.total = 0
         this.paid = 0
         if (data['invoices'].length) {
+          console.log(data)
           this.firstid = data['invoices'][0].firstid
           this.lastid = data['invoices'][0].lastid
         }
@@ -293,37 +294,39 @@ receipt =[]
               x.Source == null
                 ? 'POS'
                 : x.Source == 'zomato'
-                ? 'UP'
-                : x.Source == 'swiggy'
-                ? 'UP'
-                : 'FB',
+                  ? 'UP'
+                  : x.Source == 'swiggy'
+                    ? 'UP'
+                    : 'FB',
             SourceId: x.sourceId,
             transactions: JSON.parse(x.transactions),
             icon:
               x.Source == null
                 ? pos_icon
                 : x.Source == 'zomato'
-                ? zom_icon
-                : x.Source == 'swiggy'
-                ? swi_icon
-                : null,
+                  ? zom_icon
+                  : x.Source == 'swiggy'
+                    ? swi_icon
+                    : null,
             statusname: this.orderstatus[x.orderStatusId.toString()].name,
             statusclass: this.orderstatus[x.orderStatusId.toString()].class,
             payment_status:
               x.billAmount == x.paidAmount
                 ? 'Paid'
                 : x.billAmount > x.paidAmount
-                ? 'Pending'
-                : 'Refundable',
+                  ? 'Pending'
+                  : 'Refundable',
             payment_class:
               x.billAmount == x.paidAmount
                 ? 'success'
                 : x.billAmount > x.paidAmount
-                ? 'warning'
-                : 'danger',
+                  ? 'warning'
+                  : 'danger',
           }
           console.log(this.orderstatus, this.orderstatus[x.orderStatusId.toString()].name)
-          obj = { ...JSON.parse(x.orderJson), ...obj }
+          try{
+            obj = { ...JSON.parse(x.orderJson), ...obj }
+          } catch(error) {}
           obj.OrderStatusId = x.orderStatusId
           obj.payment_status = obj.OrderStatusId == -1 ? 'Refunded' : obj.payment_status
           obj.payment_class = obj.OrderStatusId == -1 ? 'danger' : obj.payment_class

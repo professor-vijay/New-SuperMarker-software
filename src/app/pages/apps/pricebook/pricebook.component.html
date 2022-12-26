@@ -1,4 +1,4 @@
-<h2  style="margin-left: 37px;font-size: 23px;font-family: 'Poppins', sans-serif;">
+<h2 style="margin-left: 37px;font-size: 23px;font-family: 'Poppins', sans-serif;">
     Pricebook
 </h2>
 <div class="card">
@@ -38,7 +38,8 @@
                             <td>
                                 <ng-container>
                                     <!-- *ngIf="!editCache[data.Id].edit; else nameInputTpl"> -->
-                                    {{ data.name ? data.name : data.description}} // {{data.id}}
+                                    <span style="color: #ec391e;">{{ data.name ? data.name : data.description}} //
+                                        {{data.id}}</span>
                                     <br>
                                     <span class="font-italic text-secondary" placement="right"
                                         ngbTooltip=(SPID{{data.id}}-PID{{data.productId}})>
@@ -60,7 +61,7 @@
                             <td class="text-center">
                                 <ng-container *ngIf="!editCache[data.id].edit; else takeawayprice">
                                     {{ data.takeawayPrice }}
-                                </ng-container>
+                                </ng-container> 
                                 <ng-template #takeawayprice>
                                     <input type="text" nz-input [(ngModel)]="editCache[data.id].data.takeawayPrice" />
                                 </ng-template>

@@ -647,6 +647,7 @@
                                     onfocus="this.select()" type="text" class="form-control" [(ngModel)]="model"
                                     placeholder="Search Product..." [ngbTypeahead]="search" [resultTemplate]="rt"
                                     [inputFormatter]="formatter"
+                                    [ngClass]="{'is-invalid':submitted && !temporaryItem.productId}"
                                     (selectItem)="selectedItem($event.item,batchproductmodal, $event.item.barcodeId)" />
                                 <span *ngIf="model != ''" class="search-clear" aria-hidden="true"
                                     (click)="model = ''">×</span>

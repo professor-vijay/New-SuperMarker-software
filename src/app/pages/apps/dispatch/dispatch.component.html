@@ -1,21 +1,20 @@
 <div *ngIf="!isEditting">
-    <div class="container">
-        <div class="row">
-            <div class="col">
+
+
+
+    <div class="card col-lg-12" style="padding: 20px;">
+        <div class="card-header card-header-flex">
+            <div class="d-flex flex-column justify-content-center mr-auto" style="width: 335px;margin-bottom: 0;">
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
                     <input type="text" nz-input placeholder="input search text" [(ngModel)]="term"
                         (input)="filtersearch()" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
-                    <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+                    <button nz-button nzType="primary" nzSearch style="margin-bottom: 0;"><i nz-icon nzType="search"></i></button>
                 </ng-template>
-            </div>
+              </div>
         </div>
-    </div>
-    <br>
-
-    <div>
-        <nz-table #basicTable class="kit__utils__table mb-4" nzSize="small" [nzData]="Tabledata">
+        <nz-table #basicTable class="kit__utils__table mb-4"  [nzData]="Tabledata">
             <thead>
                 <tr>
                     <th> #</th>
@@ -269,29 +268,29 @@
                                 </td>
                             </tr>
                         </tbody>
-                    </nz-table>                   
+                    </nz-table>
                 </div>
-                
-            <div *ngIf="order&&order.Items.length" class="text-right font-size-18 text-dark p-4 rounded bg-light">
-                <div>
-                  Sub - Total amount: <span class="font-weight-bold">&#8377; {{order.Subtotal}}</span>
-                </div>
-                <div>
-                  Tax: <span class="font-weight-bold">&#8377; {{order.TaxAmount}}</span>
-                </div>
-                <!-- <div>
+
+                <div *ngIf="order&&order.Items.length" class="text-right font-size-18 text-dark p-4 rounded bg-light">
+                    <div>
+                        Sub - Total amount: <span class="font-weight-bold">&#8377; {{order.Subtotal}}</span>
+                    </div>
+                    <div>
+                        Tax: <span class="font-weight-bold">&#8377; {{order.TaxAmount}}</span>
+                    </div>
+                    <!-- <div>
                   Discount: <span class="font-weight-bold">&#8377;
                     <input #discel [(ngModel)]="order.DiscAmount" (input)="order.setbillamount()" placeholder="DiscAmount..."
                       type="number" style="border: none;width: 25%;" /></span>
                 </div> -->
-                <div>
-                  Grand Total: <span class="font-weight-bold font-size-24">&#8377; {{order.BillAmount }}</span>
-                </div>
-          
-                <!-- <a href="javascript: void(0);" class="btn btn-success mt-3" (click)="saveOrder()">
+                    <div>
+                        Grand Total: <span class="font-weight-bold font-size-24">&#8377; {{order.BillAmount }}</span>
+                    </div>
+
+                    <!-- <a href="javascript: void(0);" class="btn btn-success mt-3" (click)="saveOrder()">
                   Recieve (₹ {{order.PaidAmount}} /-)
                 </a> -->
-              </div>
+                </div>
             </div>
 
         </div>

@@ -765,10 +765,10 @@ export class DispatchComponent implements OnInit {
       numRecordsStr: this.numRecordsStr,
       // dispatchStatus: this.dispatchStatus,
     })
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.popupData = data
-      console.log('popupData', this.popupData)
-    })
+    // this.Auth.getorder(this.Ordprd).subscribe(data => {
+    //   this.popupData = data
+    //   console.log('popupData', this.popupData)
+    // })
     this.TotalProductSale = 0
     this.TotalPrdQty = 0
 

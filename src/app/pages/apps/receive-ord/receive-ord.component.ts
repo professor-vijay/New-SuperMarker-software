@@ -270,12 +270,12 @@ export class ReceiveOrdComponent implements OnInit {
       NumRecords: this.numRecordsStr,
       dispatchStatus: this.dispatchStatus
     })
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.ordDetails = data;
-      if (this.billStatus == 3) {
+    // this.Auth.getorder(this.Ordprd).subscribe(data => {
+    //   this.ordDetails = data;
+    //   if (this.billStatus == 3) {
 
-      }
-    })
+    //   }
+    // })
   }
   recStatus(Value) {
     console.log("recStatus", Value)

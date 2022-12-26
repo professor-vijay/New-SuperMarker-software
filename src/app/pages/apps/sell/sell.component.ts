@@ -35,7 +35,7 @@ export class SellComponent implements OnInit {
   @ViewChild('viewordermodal', { static: true }) viewordermodal: ElementRef
   @ViewChild('split_payment_modal', { static: true }) split_payment_modal: ElementRef
   @HostListener('window:keyup', ['$event'])
-  @ViewChild('tableorderswapmodal', { static: true }) tableorderswapmodal: ElementRef
+  @ViewChild('tableorderswapmodal', { static: true }) Tableorderswapmodal: ElementRef
   keyEvent(event: KeyboardEvent) {
     event.preventDefault()
     if (event.key == 'F9') {
@@ -1195,18 +1195,7 @@ export class SellComponent implements OnInit {
     console.log(this.groupedProducts);
   }
 
-  // addproductbyautocomplete() {
-  //   if (this.QuantityRef['nativeElement'].value) {
-  //     var options = {
-  //       quantity: +this.QuantityRef['nativeElement'].value,
-  //       key: '',
-  //     }
-  //     this.order.additem(this.acselectedpd, options)
-  //     this.model = ''
-  //     this.QuantityRef['nativeElement'].value = ''
-  //     this.instance['_elementRef']['nativeElement'].focus()
-  //   }
-  // }
+
 
   validation() {
     var isvalid = true
@@ -1219,39 +1208,7 @@ export class SellComponent implements OnInit {
   // options : any
 
 
-  addItem(from) {
-    this.submitted = true
-    this.barcodeMode = false
-    if (this.validation()) {
-      // var options = {
-      //   quantity: +this.QuantityRef['nativeElement'].value,
-      //   key: '',
-      // }
-      console.log("add item")
-      if (this.order.Items.some(x => x.stockBatchId == this.temporaryItem['stockBatchId'])) {
-        this.order.Items.filter(x => x.stockBatchId == this.temporaryItem['stockBatchId'],)[0].Quantity += this.temporaryItem.Quantity
-        this.order.setbillamount()
-      } else {
-        this.order.additem(this.temporaryItem, this.options)
-      }
-      this.products.forEach(product => {
-        if (product.stockBatchId == this.temporaryItem['stockBatchId']) {
-          product.quantity -= this.temporaryItem.Quantity
-          Object.keys(product).forEach(key => {
-            this.temporaryItem[key] = product[key]
-          })
-        }
-      })
-      this.temporaryItem = { DiscAmount: 0, Quantity: null, DiscPercent: 0 }
-      if (from == "user")
-        this.productinput['nativeElement'].focus()
-      this.model = ''
-      this.filteredvalues = []
-      this.submitted = false
-      this.groupProduct()
-      return
-    }
-  }
+
   filteredvalues = []
 
   crossclick() {
@@ -1275,7 +1232,8 @@ export class SellComponent implements OnInit {
   addProduct(product) {
     console.log(product)
     var options = {
-      quantity: 1,
+      quantity : this.temporaryItem,
+      
       key: '',
     }
     if (product.OptionGroup && product.OptionGroup.length > 0) {
@@ -1287,7 +1245,9 @@ export class SellComponent implements OnInit {
         windowClass: 'modal-holder',
         centered: true,
       })
+
       this.orderlogging('item_with_option_add')
+
     } else {
       this.order.additem(product, options)
       console.log(options)
@@ -1297,8 +1257,58 @@ export class SellComponent implements OnInit {
       // this.instance['_elementRef']['nativeElement'].focus()
       this.orderlogging('item_add')
     }
+    // if (this.order.Items.some(x => x.stockBatchId == this.temporaryItem['stockBatchId'] , x => x.productId == this.temporaryItem.productId)) {
+    //   this.order.Items.filter(x => x.stockBatchId == this.temporaryItem['stockBatchId'],)[0].Quantity += this.temporaryItem.Quantity
+    //   console.log(this.order.Items)
+    //   // this.order.setbillamount()
+    // } else {
+    //   // this.order.additem(this.temporaryItem, options)
+    //   console.log(this.temporaryItem)
+    //   console.log(options)
+    // }
+
+
     if (this.order.OrderTypeId == 1) {
       this.savetblorder()
+    }
+  }
+
+  addItem(from) {
+    this.submitted = true
+    this.barcodeMode = false
+    if (this.validation()) {
+      var options = {
+        quantity: 1,
+        key: '',
+      }
+      this.addProduct(this.temporaryItem)
+      console.log(this.temporaryItem)
+      console.log("add item")
+      // if (this.order.Items.some(x => x.stockBatchId == this.temporaryItem['stockBatchId'])) {
+      //   this.order.Items.filter(x => x.stockBatchId == this.temporaryItem['stockBatchId'],)[0].Quantity += this.temporaryItem.Quantity
+      //   console.log(this.order.Items)
+      //   // this.order.setbillamount()
+      // } else {
+      //   this.order.additem(this.temporaryItem, options)
+      //   console.log(this.temporaryItem)
+      //   console.log(options)
+      // }
+      this.products.forEach(product => {
+        if (product.stockBatchId == this.temporaryItem['stockBatchId']) {
+          product.quantity -= this.temporaryItem.Quantity
+          Object.keys(product).forEach(key => {
+            this.temporaryItem[key] = product[key]
+          })
+        }
+      })
+      this.temporaryItem = { DiscAmount: 0, Quantity: null, DiscPercent: 0 }
+      if (from == "user")
+        this.productinput['nativeElement'].focus()
+      this.model = ''
+      this.filteredvalues = []
+      this.submitted = false
+      this.groupProduct()
+      return
     }
   }
 
@@ -1709,7 +1719,7 @@ export class SellComponent implements OnInit {
 
   clearDraftOrder(typeid) {
     console.log(typeid)
-    typeid = 5
+    // typeid = 5
 
     if (this.selectedDraftIndex > -1) {
       this.draftOrders.splice(this.selectedDraftIndex, 1)
@@ -2100,7 +2110,6 @@ export class SellComponent implements OnInit {
       this.order.setbillamount()
     }
 
-    // this.addItem()
     console.log(Items.Quantity)
   }
 
@@ -2130,7 +2139,7 @@ export class SellComponent implements OnInit {
     console.log("handleTableSwap", tableId)
     this.freetables = this.diningtables
     this.swapConfig.fromTableKey = tableId
-    this.modalService.open(this.tableorderswapmodal, { centered: true, size: 'lg' })
+    this.modalService.open(this.Tableorderswapmodal, { centered: true, size: 'lg' })
   }
 
   swapTblOrder() {

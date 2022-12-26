@@ -10,6 +10,12 @@ export const getMenuData: any[] = [
     icon: 'fa fa-area-chart',
     url: '/apps/dashboard',
   },
+  {
+    title: 'Sell',
+    key: 'appsProfile',
+    icon: 'fe fe-shopping-cart',
+    url: '/apps/sell',
+  },
   // {
   //   title: 'Sale',
   //   key: 'appsProfile',
@@ -22,12 +28,7 @@ export const getMenuData: any[] = [
     icon: 'fa fa-server',
     children: [
 
-      {
-        title: 'Sell',
-        key: 'appsProfile',
-        icon: 'fe fe-shopping-cart',
-        url: '/apps/sell',
-      },
+    
 
       {
         title: 'Productfb',

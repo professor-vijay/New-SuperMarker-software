@@ -8,7 +8,12 @@
     <div class="form-group row" *ngFor="let prd of  ordPrdDetails.order">
         <label class="col-md-4 col-form-label" for="baseFullname">Supplied By:</label>
         <div class="col-md-6">
-            <input type="text" class="form-control" placeholder="Enter SuppliedBy..." [(ngModel)]="prd.suppliedBy" />
+            <ng-template class="w-100" #ot let-o="result" let-t="term">
+                <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <input style="height: 33px;" [(ngModel)]="prd.suppliedById" #instance="ngbTypeahead" type="text"
+                class="form-control" [ngbTypeahead]="searchsupplier" [resultTemplate]="ot"
+                [inputFormatter]="formattersupplier" (selectItem)="selectedsupplieritem($event.item)" />
         </div>
     </div>
 
@@ -35,16 +40,17 @@
                 <ng-template class="w-100" #rt let-r="result" let-t="term">
                     <ngb-highlight [result]="r.product" [term]="t"></ngb-highlight>
                 </ng-template>
-                <input id="typeahead-template" [ngClass]="{'is-invalid':submitted && !temporaryItem.productId}"
+                <input id="typeahead-template" [ngClass]="{'is-invalid':submitted &&temporaryItem.product == ''}"
                     [(ngModel)]="model" #productautocomplete style="height: 84%;" #instance="ngbTypeahead" type="text"
                     class="form-control" placeholder="Search Product..." [ngbTypeahead]="search" [resultTemplate]="rt"
                     [inputFormatter]="formatter" (selectItem)="selectedItem($event.item)" />
             </div>
             <br>
             <div>
-                <input #quantityel type="number" [ngClass]="{'is-invalid':submitted &&temporaryItem.DispatchQty <= 0}"
-                    [(ngModel)]="temporaryItem.DispatchQty" onfocus="this.select()" placeholder="Qty"
-                    class="form-control" (keyup.enter)="price.focus()" min="1" />
+                <input #quantityel type="number"
+                    [ngClass]="{'is-invalid':submitted &&temporaryItem.Quantity <= 0 || temporaryItem.Quantity > temporaryItem.quantity}"
+                    [(ngModel)]="temporaryItem.Quantity" onfocus="this.select()" placeholder="Qty" class="form-control"
+                    (keyup.enter)="addItem()" min="1" />
             </div>
             <br>
             <div>
@@ -133,7 +139,7 @@
                             </td>
                             <td><input type="text" nz-input nzSize='small' [(ngModel)]="prod.name"
                                     style="width: 150px;"></td>
-                          
+
                             <td class="text-right">
                                 <a href="javascript: void(0);" (click)="delete(prod)"
                                     class="btn btn-sm btn-light pull-left" slot="actions">
@@ -141,14 +147,14 @@
                                 </a>
                             </td>
                         </tr>
-                        <tr *ngFor="let product of order.Items; let i = index">
+                        <tr *ngFor="let product of order.orderItem; let i = index">
 
                             <td>{{i+1}}</td>
                             <td>
                                 <a class="btn btn-sm btn-light" href="javascript: void(0);">
                                     {{product.ProductName}}
                                 </a>
-                                            
+
                             </td>
                             <td>
                                 <input type="number" style="width: 50px;" nz-input nzSize='small'

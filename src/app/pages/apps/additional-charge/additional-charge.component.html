@@ -11,7 +11,8 @@
 
                 <div class="d-flex flex-column justify-content-center mr-auto" style="width: 335px;">
                     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                        <input type="text" [(ngModel)]="term" nz-input placeholder="Search Additional-Charge" (input)="filtersearch()" />
+                        <input type="text" [(ngModel)]="term" nz-input placeholder="Search Additional-Charge"
+                            (input)="filtersearch()" />
                     </nz-input-group>
                     <ng-template #suffixIconButton>
                         <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
@@ -86,69 +87,74 @@
 
 
     <!-- <div class="col-lg-8 mt-lg-0 mt-4" style="margin-left: 188px;background-color: #f9f9f9;"> -->
-        <div [hidden]="show" class="card">
-            <!-- <h4 style="text-align: center;"><strong>Additional-Charge</strong></h4> -->
+    <div [hidden]="show" class="card">
+        <!-- <h4 style="text-align: center;"><strong>Additional-Charge</strong></h4> -->
 
 
-            <h5 class="ml-3 mt-3">
-                <strong  class="text" style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 34px;" *ngIf="additionalcharges.id==0">Add
-                    Additional</strong>
-                <strong style="margin-left: 33px;" *ngIf="additionalcharges.id > 0">Edit
-                    Additional:  <strong class="text" style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 6px;"> {{additionalcharges.description}}</strong> </strong>
+        <h5 class="ml-3 mt-3">
+            <strong class="text" style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 34px;"
+                *ngIf="additionalcharges.id==0">Add
+                Additional</strong>
+            <strong style="margin-left: 33px;" *ngIf="additionalcharges.id > 0">Edit
+                Additional: <strong class="text"
+                    style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 6px;">
+                    {{additionalcharges.description}}</strong> </strong>
 
-            </h5>
+        </h5>
 
 
-            <div class="card col-xl-10 ml-5" style="margin-top: 26px;">
-                <div class="card-body">
-                    <div class="car-body p-4 mr-1">
-                        <div class="form-group">
-                            <strong for="" class="mb-2">Description:</strong>
-                            <input class="form-control" [(ngModel)]="additionalcharges.description" />
-                        </div>
-                        <br>
-                        <strong class="mb-2">Charge Type:{{additionalcharges.chargeType}}</strong>
-                        <nz-select nzAllowClear nzPlaceHolder="Select Role" [(ngModel)]="additionalcharges.chargeType">
-                            <!-- <nz-option nzLabel="Percentage" nzValue="'1'"></nz-option>
-                            <nz-option nzLabel="Cash" nzValue="'2'"></nz-option> -->
-                            <nz-option *ngFor="let option of types" style="width: 522px;" [nzLabel]="option.name"
-                                [nzValue]="option.id">
-                            </nz-option>
-                        </nz-select>
-                        <br>
-                        <br>
-
-                        <div class="form-group">
-                            <strong for="" class="mb-2">Charge Value:</strong>
-                            <input class="form-control" [(ngModel)]="additionalcharges.chargeValue" />
-                        </div>
-                        <br>
-
-                        <strong for="" class="mb-2">Select GST:</strong>
-                        <nz-select nzShowSearch [(ngModel)]="additionalcharges.taxGroupId">
-                            <nz-option *ngFor="let option of tax" style="width: 522px;" [nzLabel]="option.description"
-                                [nzValue]="option.id">
-                            </nz-option>
-                        </nz-select>
-                        <br>
-
+        <div class="card col-xl-10 ml-5" style="margin-top: 26px;">
+            <div class="card-body">
+                <div class="car-body p-4 mr-1">
+                    <div class="form-group">
+                        <strong for="" class="mb-2">Description:</strong>
+                        <input class="form-control" [(ngModel)]="additionalcharges.description" />
                     </div>
+                    <br>
+                    <strong class="mb-2">Charge Type:{{additionalcharges.chargeType}}</strong>
+                    <nz-select nzAllowClear nzPlaceHolder="Select Role" [(ngModel)]="additionalcharges.chargeType">
+                        <!-- <nz-option nzLabel="Percentage" nzValue="'1'"></nz-option>
+                            <nz-option nzLabel="Cash" nzValue="'2'"></nz-option> -->
+                        <nz-option *ngFor="let option of types" style="width: 522px;" [nzLabel]="option.name"
+                            [nzValue]="option.id">
+                        </nz-option>
+                    </nz-select>
+                    <br>
+                    <br>
+
+                    <div class="form-group">
+                        <strong for="" class="mb-2">Charge Value:</strong>
+                        <input class="form-control" [(ngModel)]="additionalcharges.chargeValue" />
+                    </div>
+                    <br>
+
+                    <strong for="" class="mb-2">Select GST:</strong>
+                    <nz-select nzShowSearch [(ngModel)]="additionalcharges.taxGroupId">
+                        <nz-option *ngFor="let option of tax" style="width: 522px;" [nzLabel]="option.description"
+                            [nzValue]="option.id">
+                        </nz-option>
+                    </nz-select>
+                    <br>
 
                 </div>
-            </div>
-
-
-
-
-            <div style="height: 58px;margin-left: 1100px;">
-                <button class="btn btn-success btn-sm mx-10 w-20" style="margin-left: 40px;width: 112px;"
-                    (click)="addadditional()">Save</button>
-                <button class="btn btn-indigo btn-sm mx-10 w-20" style="width: 100px;margin-left: 22px;"
-                    (click)="back()">Back</button>
 
             </div>
+        </div>
+
+
+
+
+        <div style="height: 58px;margin-left: 1100px;">
+            <button type="button" class="btn btn-secondary px-3" style="width: 100px;margin-left: 22px;"
+                (click)="back()"><i nz-icon nzType="left" style="margin-right: 6px;"></i>Back</button>
+            <button class="btn btn-success btn-sm mx-10 w-20" style="margin-left: 40px;width: 104px;height: 35px;"
+                (click)="addadditional()">Save</button>
+
 
         </div>
+
+
+    </div>
     <!-- </div> -->
 
 

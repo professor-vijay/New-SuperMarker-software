@@ -2,22 +2,23 @@
   <div>
     <div class="card" *ngIf="isTable">
       <div class="card-header card-header-flex">
-        <!-- <div class=" justify-content-center mr-2 mt-3">
-          <input nz-input type="number" [(ngModel)]="ordNo" placeholder="Order No" min="1" />
+        <!-- <div class=" justify-content-center mr-2 mt-4">
+           <input nz-input type="number" [(ngModel)]="ordNo" placeholder="Order No"  /> 
         </div> -->
         <ng-template class="w-100" #ot let-o="result" let-t="term">
           <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
         </ng-template>
         <input #Supplierautocomplete style="height: 33px; width: 200px; margin-top: 15px; margin-left: 20px;"
-          #instance="ngbTypeahead" type="text" class="form-control" placeholder="Search Supplier..."
+          #instance="ngbTypeahead" type="text" class="form-control" placeholder="Search Supplier"
           [ngbTypeahead]="searchsupplier" [resultTemplate]="ot" [inputFormatter]="formattersupplier"
-          (selectItem)="selectedsupplieritem($event.item)" />
+          (selectItem)="selectedsupplieritem($event.item)" [disabled]="isDisabled"
+          (keyup.enter)="temporaryItem.product&&prod.focus()" />
         <br>
         <br>
-        <ng-template class="w-100" #ot let-o="result" let-t="term">
+        <!-- <ng-template class="w-100" #ot let-o="result" let-t="term">
           <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
         </ng-template>
-        <!-- <input #Receiverautocomplete style="height: 33px; width: 200px; margin-top: 15px; margin-left: 20px;"
+        <input #Receiverautocomplete style="height: 33px; width: 200px; margin-top: 15px; margin-left: 20px;"
           #instance="ngbTypeahead" type="text" class="form-control" placeholder="Search Receiver..."
           [ngbTypeahead]="searchreceiver" [resultTemplate]="ot" [inputFormatter]="formatterreceiver"
           (selectItem)="selectedreceiveritem($event.item)" /> -->
@@ -42,39 +43,43 @@
     <div class="row">
       <nz-card style="height: 90% ;width:25%;" nzTitle="Select Product" [nzExtra]="extraTemplate" *ngIf="isTable">
         <div>
-          <ng-template class="w-100" #rt let-r="result" let-t="term">
-            <ngb-highlight [result]="r.product" [term]="t"></ngb-highlight>
-          </ng-template>
-          <input id="typeahead-template" [ngClass]="{'is-invalid':submitted &&temporaryItem.product == ''}"
-            [(ngModel)]="model" #productautocomplete style="height: 84%;" #instance="ngbTypeahead" type="text"
-            class="form-control" placeholder="Search Product..." [ngbTypeahead]="search" [resultTemplate]="rt"
-            [inputFormatter]="formatter" (selectItem)="selectedItem($event.item)" />
+          <label nz-checkbox [checked]="checkbox" [(ngModel)]="testid" value="" name="example_name"
+            (change)="changefilters($event.target.checked)" (click)="isDisabled = false"> Show All Product
+          </label>
         </div>
         <br>
         <div>
-          <input #quantityel type="number" [ngClass]="{'is-invalid':submitted &&temporaryItem.Quantity <= 0 || temporaryItem.Quantity > temporaryItem.quantity}"
+          <ng-template class="w-100" #rt let-r="result" let-t="term">
+            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+          </ng-template>
+          <input id="typeahead-template" #prod [ngClass]="{'is-invalid':submitted &&temporaryItem.product == ''}"
+            #productautocomplete style="height: 84%;" #instance="ngbTypeahead" type="text" [(ngModel)]="model"
+            class="form-control" placeholder="Search Product" [ngbTypeahead]="searchproduct" [resultTemplate]="rt"
+            [inputFormatter]="formatter"  (selectItem)="selectedItem($event.item,stock, $event.item.barcodeId)" (ngModelChange)="selectproduct()" />
+        </div>
+        <br>
+        <div>
+          <input #quantityel type="number"
+            [ngClass]="{'is-invalid':submitted &&temporaryItem.Quantity <= 0 || temporaryItem.Quantity > temporaryItem.quantity}"
             [(ngModel)]="temporaryItem.Quantity" onfocus="this.select()" placeholder="Qty" class="form-control"
             (keyup.enter)="addItem()" min="1" />
-            <!-- {{temporaryItem.quantity}}
-            {{temporaryItem.Quantity}}
-            {{submitted}} -->
         </div>
         <br>
 
         <div>
-          <input #price placeholder="price..." [ngClass]="{'is-invalid':submitted &&temporaryItem.price <= 0}"
+          <input #price placeholder="Price" [ngClass]="{'is-invalid':submitted &&temporaryItem.price <= 0}"
             onfocus="this.select()" [(ngModel)]="temporaryItem.price" min="1" type="number" class="form-control"
             (keyup.enter)="tax1.focus()" />
         </div>
         <br>
 
         <div>
-          <input #tax1 [(ngModel)]="temporaryItem.tax1" onfocus="this.select()" placeholder="tax1..." type="number"
+          <input #tax1 [(ngModel)]="temporaryItem.tax1" onfocus="this.select()" placeholder="Tax1" type="number"
             class="form-control" (keyup.enter)="addItem()" />
         </div>
         <br>
         <div>
-          <input #tax2 [(ngModel)]="temporaryItem.tax2" onfocus="this.select()" placeholder="tax2..." type="number"
+          <input #tax2 [(ngModel)]="temporaryItem.tax2" onfocus="this.select()" placeholder="Tax2" type="number"
             class="form-control" (keyup.enter)="addItem()" />
         </div>
 
@@ -134,6 +139,7 @@
     </div>
   </div>
 </div>
+
 <div>
   <div *ngIf="isShown" class="container">
     <div class="row">
@@ -228,28 +234,28 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let ord of OrderDetail.itemDetails">
+      <tr *ngFor="let ord of OrderDetail.itemDetails.Items">
         <td>{{ord.ProductName}}</td>
         <td>{{ord.OrderQuantity}}</td>
-        <td class="text-right">&#8377;{{ord.Price | number:".2"}}</td>
+        <td class="text-right">&#8377;{{ord.TotalAmount | number:".2"}}</td>
       </tr>
-      <!-- <tr>
+      <tr>
         <td></td>
         <td> <strong>CGST</strong> </td>
-        <td class="text-right"> {{OrderDetail.Tax1 | number:".2"}}</td>
+        <td class="text-right"> {{OrderDetail.tax1 | number:".2"}}</td>
       </tr>
       <tr>
         <td></td>
         <td> <strong>SGST</strong> </td>
-        <td class="text-right"> {{OrderDetail.Tax2 | number:".2"}} </td>
-      </tr> -->
+        <td class="text-right"> {{OrderDetail.tax2 | number:".2"}} </td>
+      </tr>
 
-      <!-- <tr>
+      <tr>
         <td></td>
         <td> <strong>TotalAmt</strong> </td>
         <td class="text-right"> &#8377; <strong class="font-weight-bold">{{OrderDetail.billAmount1 |
             number:".2"}}</strong></td>
-      </tr> -->
+      </tr>
     </tbody>
   </nz-table>
   <div class="modal-footer">
@@ -257,32 +263,46 @@
   </div>
 </ng-template>
 
-<ng-template #batchproductmodal let-c="close" let-d="dismiss">
+<ng-template #stock let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h5 class="modal-title" id="modal-basic-title"> Select Batch Product</h5>
+    <h5 class="modal-title" id="modal-basic-title"> Select Product</h5>
     <button type="button" class="close" aria-label="Close" (click)="crossclick();d('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <nz-table #smallTable nzSize="small" [nzData]="batchproducts" [nzShowPagination]="false">
+    <nz-table #smallTable nzSize="small" [nzData]="selectedprod" [nzShowPagination]="false">
       <thead>
         <tr>
           <th>Name</th>
           <th>AvailableQty</th>
           <th>Price</th>
-          <th>BatchDate</th>
+          <th>Quantity</th>
+          <th>Expiary Date</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let product of smallTable.data" (click)="product.quantity>0&&selectedproduct(product)"
-          [ngClass]="{'pointer': product.quantity>0,'na' : product.quantity==0}">
-          <td>{{ product.product }}</td>
-          <td>{{ product.quantity }}</td>
-          <td>&#8377; {{ product.price }}</td>
-          <td>{{ product.createdDate | date: 'MMM d, y' }}</td>
+        <tr *ngFor="let product of smallTable.data">
+          <td>{{product.name}}</td>
+          <td>{{product.quantity}}</td>
+          <td>{{product.price}}</td>
+          <td>
+            <input type="number" nz-input nzSize='small' style="width:50px;" [(ngModel)]="temporaryItem.Quantity"
+              min="1" (input)="settotalprice(i,product.quantity)">
+          </td>
+          <td>{{product.expiaryDate}}</td>
+          <td>
+            <label nz-checkbox name="{{product.productId}}" (click)="product.quantity>0&&selectedproducttest(product)" ></label>
+          </td>
         </tr>
       </tbody>
     </nz-table>
   </div>
+  <div class="modal-footer">
+    <!-- <span *ngIf="submitted && !stockmodalvalid" class="text-danger text-center">Select One of the
+      Product*</span>  -->
+    <button type="button" class="btn btn-primary" (click)="addItem();crossclick();d('Cross click')">OK</button>
+  </div>
+
 </ng-template>

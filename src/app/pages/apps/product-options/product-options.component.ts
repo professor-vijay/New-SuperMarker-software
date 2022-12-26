@@ -9,7 +9,7 @@ import { NzNotificationService } from 'ng-zorro-antd'
   styleUrls: ['./product-options.component.scss']
 })
 export class ProductOptionsComponent implements OnInit {
-  buttonname = 'Add Variant';
+  buttonname = '';
   currenttab = 'variant'
   show = true;
   CompanyId: number;

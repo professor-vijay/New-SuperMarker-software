@@ -16,8 +16,9 @@ import {
   OrderItemDetailModule,
   OrderstatusDetails,
 } from './internal-transfer.module'
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast'
 import { Location } from '@angular/common'
+import { StateObservable } from '@ngrx/store'
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast'
 
 @Component({
   selector: 'app-internal-transfer',
@@ -26,12 +27,14 @@ import { Location } from '@angular/common'
 })
 export class InternalTransferComponent implements OnInit {
   @ViewChild('instance', { static: true }) instance: NgbTypeahead
-  @ViewChild('quantityel', { static: false }) public quantityel: TemplateRef<any> //productinput
+  @ViewChild('quantityel', { static: false }) public quantityel: TemplateRef<any>
+  //productinput
+  @ViewChild('prod', { static: false }) public prod: TemplateRef<any>
   @ViewChild('discper', { static: false }) public discperel: TemplateRef<any>
   @ViewChild('disc', { static: false }) public discel: TemplateRef<any>
   @ViewChild('productautocomplete', { static: false }) public productinput: TemplateRef<any>
   @ViewChild('scrollframe', { static: false }) scrollFrame: ElementRef
-  @ViewChild('batchproductmodal', { static: false }) batchproductmodal: ElementRef
+  @ViewChild('stock', { static: false }) public stockmodel: TemplateRef<any>;//productinput
 
   model: any = 'QWERTY'
   order: OrderModule
@@ -46,7 +49,7 @@ export class InternalTransferComponent implements OnInit {
       map(term =>
         term === ''
           ? []
-          : this.groupedProducts
+          : this.products
             .filter(
               v =>
                 v.product.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
@@ -56,7 +59,7 @@ export class InternalTransferComponent implements OnInit {
       ),
     )
 
-  formatter = (x: { product: string }) => x.product
+  formatter = (x: { name: string }) => x.name
 
   searchstore = (text$: Observable<string>) =>
     text$.pipe(
@@ -64,36 +67,27 @@ export class InternalTransferComponent implements OnInit {
       map(term =>
         term === ''
           ? []
-          : this.stores.storelist
+          : this.stores.storeList
             .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
             .slice(0, 10),
       ),
     )
 
-  formatterstore = (x: { name: string }) => x.name
-  selectedsupplieritem(item) {
-    console.log('item', item)
-    this.SuppliedById = item.id
-    this.getStoreProducts()
-  }
-  getStoreProducts() {
-    this.Auth.getStoreProducts(this.loginfo.storeId).subscribe(data => {
-      console.log(data)
-      this.products = data["products"]
-      console.log(this.products)
-      var helper = {}
-      this.groupedProducts = this.products.reduce((r, o) => {
-        var key = o.barcodeId + '-'
-        if (!helper[key]) {
-          helper[key] = Object.assign({}, o) // create a copy of o
-          r.push(helper[key])
-        }
-        return r
-      }, [])
-      console.log(this.groupedProducts)
+  // searchsupplier = (text$: Observable<string>) =>
+  //   text$.pipe(
+  //     debounceTime(200), 
+  //     map(term =>
+  //       term === ''
+  //         ? []
+  //         : this.stores.storeList
+  //           .filter(
+  //             v => 
+  //             (v.name.toLowerCase().indexOf(term.toLowerCase()) > -1) && 
+  //             )
+  //           .slice(0, 10),
+  //     ),
+  //   )
 
-    })
-  }
   searchsupplier = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -101,30 +95,37 @@ export class InternalTransferComponent implements OnInit {
         term === ''
           ? []
           : this.stores.storelist
-            .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
+            .filter(
+              v =>
+              (v.name.toLowerCase().indexOf(term.toLowerCase()) > -1 &&
+                v != this.storeId?.toLowerCase().indexOf(term.toLowerCase()))
+            )
             .slice(0, 10),
       ),
     )
 
   formattersupplier = (x: { name: string }) => x.name
 
-  selectedreceiveritem(item) {
-    console.log('item', item)
-    this.OrderedById = item.id
-  }
-  searchreceiver = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      map(term =>
-        term === ''
-          ? []
-          : this.stores.storelist
-            .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
-            .slice(0, 10),
-      ),
-    )
+  // Master
+  // 14-06-2022
+  // selectedreceiveritem(item) {
+  //   console.log('item', item)
+  //   this.OrderedById = item.id
+  // }
 
-  formatterreceiver = (x: { name: string }) => x.name
+  // searchreceiver = (text$: Observable<string>) =>
+  //   text$.pipe(
+  //     debounceTime(200),
+  //     map(term =>
+  //       term === ''
+  //         ? []
+  //         : this.stores.storeList
+  //             .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
+  //             .slice(0, 10),
+  //     ),
+  //   )
+
+  // formatterreceiver = (x: { name: string }) => x.name
 
   // @ViewChild('cardnumber', { static: false }) cardnumber: ElementRef;
   buffer = ''
@@ -149,14 +150,13 @@ export class InternalTransferComponent implements OnInit {
       this.buffer = ''
       this.setproductbybarcode(data)
     }
-    // console.log(event)
+    // console.log(event) 
   }
+
   draft = false
   dispatchStatus = 1
   scrollContainer: any
   products: any = []
-  groupedProducts: any = []
-  batchproducts: any = []
   OrdData: any = []
   popupData: any = []
   stores: any = []
@@ -277,22 +277,19 @@ export class InternalTransferComponent implements OnInit {
   Items: Array<OrderItemModule> = []
 
   ngOnInit(): void {
-    this.Auth.getdbdata(['loginfo']).subscribe(data => {
-      this.loginfo = data['loginfo'][0]
-      this.CompanyId = this.loginfo.companyId
-      this.StoreId = this.loginfo.storeId
-      console.log(this.loginfo)
-      this.order = new OrderModule(2)
-      this.products = []
-      this.getBarcodeProduct()
-      this.getStoreList()
-      this.Getorderlist()
-      this.getStoreProducts()
-    })
-
-    // this.products = JSON.parse(localStorage.getItem("Product"));
+    const user = JSON.parse(localStorage.getItem('user'))
+    const store = JSON.parse(localStorage.getItem('store'))
+    this.CompanyId = user.companyId
+    this.StoreId = user.storeid
+    this.order = new OrderModule(2)
+    this.products = []
+    this.getBarcodeProduct()
+    this.getStoreList()
+    this.Getorderlist()
+    this.getallprod()
+    // this.groupProducts()
+ 
     this.products.forEach(product => {
-      console.log(product)
       product.quantity = null
       product.tax = 0
       product.amount = 0
@@ -317,7 +314,7 @@ export class InternalTransferComponent implements OnInit {
     this.Auth.editInternalord(id).subscribe(data => {
       console.log(data)
     })
-    // this.isRxve = ! this.isRxve;  
+    // this.isRxve = ! this.isRxve;
     // this.isNRxve =!this.isNRxve;
   }
   open(content) {
@@ -341,9 +338,7 @@ export class InternalTransferComponent implements OnInit {
     //   orderId:this.ordId
     // });
   }
-  searchbyproduct(event) {
-    console.log('event', event)
-  }
+
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC'
@@ -358,9 +353,8 @@ export class InternalTransferComponent implements OnInit {
     console.log(this.order)
     this.updateorderno()
     this.order.OrderNo = this.orderkey.orderno
-    this.order.StoreId = this.loginfo.storeId
+    this.order.StoreId = this.StoreId
     this.order.BatchNo = this.batchno
-    this.order.OrderId = this.ordId
     this.order.BillDate = moment().format('YYYY-MM-DD HH:MM A')
     this.order.CreatedDate = moment().format('YYYY-MM-DD HH:MM A')
     this.order.BillDateTime = moment().format('YYYY-MM-DD HH:MM A')
@@ -368,13 +362,13 @@ export class InternalTransferComponent implements OnInit {
     this.order.OrderedDateTime = moment().format('YYYY-MM-DD HH:MM A')
     this.order.DeliveryDateTime = moment().format('YYYY-MM-DD HH:MM A')
     this.order.ModifiedDate = moment().format('YYYY-MM-DD HH:MM A')
-    this.order.CompanyId = this.loginfo.companyId
+    this.order.CompanyId = this.CompanyId
     this.order.InvoiceNo = this.InvoiceNo
     this.order.RefundAmount = this.refamt
     this.order.ProdStatus = '1'
     this.order.WipStatus = '1'
     this.order.OrderStatusId = this.OrderStatusId
-    this.order.OrderedById = this.loginfo.storeId
+    this.order.OrderedById = this.StoreId
     this.order.SuppliedById = this.SuppliedById
     this.order.OrderType = this.OrderType
     this.order.SpecialOrder = this.SpecialOrder
@@ -384,17 +378,15 @@ export class InternalTransferComponent implements OnInit {
     this.order.OrderStatus = this.orderstatus
 
     this.order.Items.forEach(item => {
-      item.CompanyId = this.loginfo.companyId
-
+      item.CompanyId = this.CompanyId
     })
     this.order.OrderDetail.forEach(Od => {
-      Od.CompanyId = this.loginfo.companyId
+      Od.CompanyId = this.CompanyId
     })
     console.log(this.Items)
 
     // this.order.OrderStatusDetails = new OrderstatusDetails()
     console.log('save', this.order)
-    console.log(this.RecData)
     this.RecData = new DelModule(
       this.CompanyId,
       this.order.Items,
@@ -440,10 +432,10 @@ export class InternalTransferComponent implements OnInit {
       searchId: this.ordId,
       numRecordsStr: this.numRecordsStr,
     })
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.OrdData = data
-      console.log('OrdData', this.OrdData)
-    })
+    // this.Auth.getorder(this.Ordprd).subscribe(data => {
+    //   this.OrdData = data
+    //   console.log('OrdData', this.OrdData)
+    // })
   }
   setproductbybarcode(code) {
     // console.log("code",code, this.products.filter(x => x.Product == code));
@@ -543,24 +535,31 @@ export class InternalTransferComponent implements OnInit {
   }
   private delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
-
-
   }
-
+  // scrollToBottom(): void {
+  //   var el = document.getElementsByClassName('ant-table-body')[0]
+  //   console.log(el.scrollHeight)
+  //   // this.scrollContainer = this.scrollFrame.nativeElement;
+  //   // console.log(this.scrollContainer, this.scrollFrame)
+  //   el.scroll({
+  //     top: el.scrollHeight + 1000,
+  //     left: 0,
+  //     behavior: 'smooth'
+  //   });
+  // }
   submitted: boolean = false
   addItem() {
+    console.log('temporaryItem', this.temporaryItem)
     this.submitted = true
     console.log(this.validation())
     if (this.validation()) {
       this.order.addproduct(this.temporaryItem)
-      this.products.filter(x => x.stockBatchId == this.temporaryItem.stockBatchId)[0].Quantity -= this.temporaryItem.Quantity
       this.temporaryItem = { DiscAmount: 0, Quantity: null }
       this.productinput['nativeElement'].focus()
       this.model = ''
       this.filteredvalues = []
       this.submitted = false
       console.log('cvcv', this.order)
-      console.log('temporaryItem', this.temporaryItem, this.products, this.products.filter(x => x.stockBatchId == this.temporaryItem.stockBatchId))
     }
     return
   }
@@ -592,7 +591,7 @@ export class InternalTransferComponent implements OnInit {
   deleteOrder(Id) {
     console.log('delete', Id)
     console.log(this.NewArr)
-    this.Auth.deleteItem({ companyId: this.loginfo.companyId, orderId: Id }).subscribe(data => {
+    this.Auth.deleteItem({ companyId: this.CompanyId, orderId: Id }).subscribe(data => {
       this.getorderedList = data
       console.log('delete', data)
       this.Getorderlist()
@@ -628,6 +627,7 @@ export class InternalTransferComponent implements OnInit {
     this.subtotal = +this.subtotal.toFixed(2)
     this.tax = +this.tax.toFixed(2)
     this.discount = +this.discount.toFixed(2)
+    // console.log(this.tax)
   }
   date = new Date()
   onChange(e) {
@@ -654,28 +654,10 @@ export class InternalTransferComponent implements OnInit {
     this.modalService.open(content, { centered: true })
   }
   //////////////////////////////////////////rough////////////////////////////////////////////////////////
-  selectedItem(item) {
-    this.batchproducts = this.products.filter(x => x.barcodeId == item.barcodeId && x.quantity > 0)
-    if (this.batchproducts.length > 1) {
-      this.modalService.open(this.batchproductmodal, { centered: true })
-    } else {
-      this.selectedproduct(item)
-    }
-  }
-  selectedproduct(item) {
-    console.log(item, Object.assign({}, this.temporaryItem))
-    Object.keys(item).forEach(key => {
-      this.temporaryItem[key] = item[key]
-    })
-    console.log(this.temporaryItem)
-    this.quantityel['nativeElement'].focus()
-    this.modalService.dismissAll()
-  }
-  crossclick() {
-    this.modalService.dismissAll()
-  }
+
   selectedstoreitem(item) {
     console.log('item', item)
+    // this.StoreId = item.id
   }
   productbybarcode = []
   barcode = ''
@@ -689,11 +671,39 @@ export class InternalTransferComponent implements OnInit {
     if (!this.temporaryItem.productId) isvalid = false
     if (this.temporaryItem.Quantity <= 0) isvalid = false
     if (this.temporaryItem.Quantity > this.temporaryItem.quantity) isvalid = false
+    // if (this.temporaryItem.Price <= 0) isvalid = false;
     return isvalid
   }
   reloadPage() {
     window.location.reload()
   }
+
+  // order: any = null
+
+  // openDetailpopup(contentdetail, orderId) {
+  //   this.OrdId = orderId
+  //   if (this.OrdId != 0) {
+  //     this.Auth.getOrderIdinternal(this.OrdId).subscribe(data => {
+  //       this.popupData = data
+  //       console.log(this.popupData)
+  //     })
+  //   }
+  //   // for (let i = 0; i < this.popupData.orders.length; i++) {
+  //   //   this.TotalProductSale = this.TotalProductSale + this.popupData.orders[i].billAmount
+  //   //   this.TotalPrdQty = this.TotalPrdQty + this.popupData.orders[i].orderQuantity
+  //   //   this.TotalProductSale = +this.TotalProductSale.toFixed(2)
+  //   //   this.TotalPrdQty = +this.TotalPrdQty.toFixed(2)
+  //   // }
+  //   const modalRef = this.modalService
+  //     .open(contentdetail, {
+  //       ariaLabelledBy: 'modal-basic-title',
+  //       centered: true,
+  //     })
+  //     .result.then(
+  //       result => { },
+  //       reason => { },
+  //     )
+  // }
 
   OrdId: number = 0
   OrderDetail: any = null
@@ -701,14 +711,13 @@ export class InternalTransferComponent implements OnInit {
     this.Auth.getOrderIdinternal(OrdId).subscribe(data => {
       this.popupData = data
       this.popupData.receipts.forEach(rec => {
-        rec.itemDetails = JSON.parse(rec.itemJson)
-        console.log(JSON.parse(rec.itemJson))
-      });
+        rec.itemDetails = JSON.parse(rec.orderJson)
+        console.log(JSON.parse(rec.orderJson))
+      })
       this.OrderDetail = this.popupData.receipts[0]
       console.log(this.popupData)
       this.openDetailpopup(modalRef)
     })
-
   }
 
   orders: any = null
@@ -722,54 +731,50 @@ export class InternalTransferComponent implements OnInit {
   openDetailpopup(contentdetail) {
     const modalRef = this.modalService
       .open(contentdetail, {
-        ariaLabelledBy: "modal-basic-title",
-        centered: true
+        ariaLabelledBy: 'modal-basic-title',
+        centered: true,
       })
       .result.then(
-        result => {
-        },
-        reason => {
-        }
-      );
+        result => { },
+        reason => { },
+      )
   }
-
-
 
   storeIdByInt: any
   getorderedList: any = []
   Getorderlist() {
-    this.Auth.getorderlist(this.loginfo.storeId).subscribe(data => {
+    this.Auth.getorderlist(this.StoreId).subscribe(data => {
       this.getorderedList = data['order']
       this.tabledata = this.getorderedList
       console.log(this.getorderedList)
       // this.StoreByIdInternal(0)
     })
   }
+
+
   tabledata: []
   term: string = ''
   filtersearch(): void {
     this.tabledata = this.term
       ? this.getorderedList.filter(x =>
-        x.description.toLowerCase().includes(this.term.toLowerCase()),
+        x.supplier.toLowerCase().includes(this.term.toLowerCase()),
       )
       : this.getorderedList
     console.log(this.tabledata)
   }
 
+
   compid: any
 
   StoreByIdInternal(storeId) {
-    this.Auth.getstoreIdInternal(this.loginfo.companyId, storeId).subscribe(data => {
-      const stores = data['storelist']
+    this.Auth.getstoreIdInternal(this.CompanyId, storeId).subscribe(data => {
+      const stores = data['storeList']
       this.getorderedList.forEach(order => {
         order.supplier = stores.filter(x => x.id == order.SuppliedById)[0]?.name
         order.receiver = stores.filter(x => x.id == order.OrderedById)[0]?.name
       })
-
     })
   }
-
-
 
   orderkey = { orderno: 1, timestamp: 0, GSTno: '' }
 
@@ -793,4 +798,221 @@ export class InternalTransferComponent implements OnInit {
   editinternalord(id) {
     console.log(id)
   }
+
+  // SuppliedById: any
+  formatterstore = (x: { name: string }) => x.name
+  selectedsupplieritem(item) {
+    console.log('item', item)
+    this.SuppliedById = item.id
+    console.log(this.SuppliedById)
+    this.getallprod()
+  }
+
+  selectproduct() {
+    console.log('selected product', this.model)
+  }
+
+  crossclick() {
+    this.modalService.dismissAll()
+  }
+
+  isDisabled: Boolean = false
+  test: any
+  booltest: boolean = false
+  gprod: any = []
+
+
+  changefilters(bool) {
+    this.booltest = bool
+    this.gprod.batchprod = true
+    console.log('Checkbox', this.booltest)
+    this.getallprod()
+    this.isDisabled = !this.isDisabled
+    // if (bool) {
+    //   this.test = this.gprod.batchprod.filter(x => !x.isactive)
+    //   console.log(this.test)
+    // }
+    // else {
+    //   this.test = this.gprod.product.filter(x => x.isactive)
+    //   console.log(this.test)
+    // }
+  }
+
+  batchprd: any = []
+  product: any
+
+  getallprod() {
+    console.log(this.CompanyId, this.SuppliedById, this.booltest)
+    this.Auth.getintprod(this.CompanyId, this.SuppliedById, this.booltest).subscribe(data => {
+      this.gprod = data
+      console.log(this.gprod)
+      // this.batchprd = this.gprod['batchprod']
+      // console.log(this.batchprd)
+      // this.product = this.gprod['product']
+      // console.log(this.product)
+      this.groupProducts()
+      // this.test = this.gprod.batchprod.filter(x => x.isactive == !this.booltest)
+      // console.log(this.test)
+    })
+  }
+
+  selectedItem(item, selectedprod, barcodeId) {
+    console.log(item)
+    if (item.hasOwnProperty('OptionGroup')) {
+      this.addItem()
+    } else {
+      this.selectedprod = this.gprod.batchprod.filter(x => x.barcodeId == item.barcodeId && x.quantity > 0)
+      console.log(selectedprod)
+      if (this.selectedprod.length > 1) {
+        this.modalService.open(this.stockmodel, { centered: true, size: 'lg' })
+      } else {
+        this.selectedproduct(this.selectedprod[0])
+      }
+      this.quantityel['nativeElement'].focus()
+    }
+  }
+
+
+
+
+  //  selectedproducttest(item) {
+  //   this.prodid = item.productId
+  //   console.log(this.prodid)
+  //   this.modalService.open(this.stockmodel, { centered: true, size: 'lg' })
+
+  //   this.selectedprod = this.gprod.batchprod.filter(x => x.barcodeId == item.barcodeId && x.quantity > 0)
+  //   console.log(this.selectedprod)
+
+  //   if (this.selectedprod > 1) {
+  //     this.modalService.open(this.selectedprod, { centered: true })
+  //   }
+  //   else {
+  //     this.product = this.gprod.product
+  //   }
+  // }
+
+  selectedproduct(product) {
+    console.log(product)
+    Object.keys(product).forEach(key => {
+      this.temporaryItem[key] = product[key]
+    })
+    this.modalService.dismissAll()
+  }
+
+  // selectedItem(item) {
+  //   this.selectedprod = this.gprod.batchprod.filter(x => x.barcodeId == item.barcodeId && x.quantity > 0)
+  //   if (this.selectedprod.length > 1) {
+  //     this.modalService.open(this.stockmodel, { centered: true, size: 'lg'  })
+  //   } else {
+  //     this.selectedproduct(item)
+  //   }
+  // }
+
+  // selectedproduct(item) {
+  //   console.log(item, Object.assign({}, this.temporaryItem))
+  //   Object.keys(item).forEach(key => {
+  //     this.temporaryItem[key] = item[key]
+  //   })
+  //   console.log(this.temporaryItem)
+  //   this.quantityel['nativeElement'].focus()
+  //   this.modalService.dismissAll()
+  // }
+
+
+
+  // selectedItem(item) {
+  //   console.log(item, Object.assign({}, this.temporaryItem))
+  //   Object.keys(item).forEach(key => {
+  //     this.temporaryItem[key] = item[key]
+  //   })
+  //   console.log(this.temporaryItem)
+  //   this.quantityel['nativeElement'].focus()
+  //   this.selectedproducttest(item)
+  // } 
+
+  selectedprod: any = []
+  prodid: any
+ 
+
+ 
+  groupedProducts = []
+  groupProducts() {
+    var helper = {}
+    this.groupedProducts = this.gprod.batchprod.reduce((r, o) => {
+      // console.log(this.groupedProducts)
+      var key = o.barcodeId + '-'
+      if (!helper[key]) {
+        helper[key] = Object.assign({}, o)
+        r.push(helper[key])
+      }
+      return r
+    }, [])
+    console.log('grouped', this.groupedProducts)
+  }
+
+  searchproduct = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      map(term =>
+        term === ''
+          ? []
+          : (this.gprod.product
+            || this.groupedProducts)
+            .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
+            .slice(0, 10),
+      ),
+    )
+
+  getid = ''
+  chked: Boolean = false
+  Selectedbyproduct(bool) {
+    this.chked = bool
+    this.prodid = bool.productId
+    console.log(this.prodid);
+
+    this.chked = this.gprod.batchprod.filter(x => x.productId === x.prodid)
+    console.log(this.chked)
+
+    this.product = this.gprod.batchprod.product
+    console.log(this.product);
+  }
+
+  productreset() {
+    this.gprod.batchprod.forEach(product => {
+      product.selected
+      product.quantity = null
+    });
+  }
+
+  stockmodal = true
+  valid() {
+    this.stockmodal = this.gprod.batchprod.some(x => x.selected == true) &&
+      this.gprod.batchprod.some(x => x.quantity > 0) &&
+      !this.gprod.batchprod.some(x => x.Quantity > x.quantity);
+    console.log(this.stockmodal);
+  }
+
+
+
+  // batchproducts: any = []
+  // selectedItem(item) {
+  //   this.batchproducts = this.gprod.batchprod.filter(x => x.barcodeId == item.barcodeId && x.quantity > 0)
+  //   if (this.batchproducts.length > 1) {
+  //     this.modalService.open(this.stockmodel, { centered: true })
+  //   } else {
+  //     this.selectedproduct(item)
+  //   }
+  // }
+
+  // selectedproduct(item) {
+  //   console.log(item, Object.assign({}, this.temporaryItem))
+  //   Object.keys(item).forEach(key => {
+  //     this.temporaryItem[key] = item[key]
+  //   })
+  //   console.log(this.temporaryItem)
+  //   this.quantityel['nativeElement'].focus()
+  //   this.modalService.dismissAll()
+  // } 
 }
+
+

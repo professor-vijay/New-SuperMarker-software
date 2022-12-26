@@ -138,7 +138,13 @@ export class UserComponent implements OnInit {
     });
   }
 
-
-
+term
+  filteredvalues = [];
+  filtersearch(): void {
+    this.getuser = this.term
+      ? this.getuser.users.filter(x => x.description.toLowerCase().includes(this.term.toLowerCase()))
+      : this.getuser.users;
+    console.log(this.getuser)
+  }
 
 }

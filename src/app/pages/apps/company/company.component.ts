@@ -10,7 +10,7 @@ declare function setHeightWidth(): any;
 })
 export class CompanyComponent implements OnInit {
 
-  companydetails: any 
+  companydetails: any
   loginfo
   CompanyId: number
   StoreId: number
@@ -43,6 +43,7 @@ export class CompanyComponent implements OnInit {
       console.log(this.loginfo)
       this.getcompany()
     })
+    this.getcompany()
     // setHeightWidth();
 
   }

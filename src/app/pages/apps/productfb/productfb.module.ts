@@ -107,7 +107,7 @@ export class ProductModule {
   TakeawayPrice: number;
   TaxGroupId: number;
   CompanyId: number;
-  ProductTypeId: number = 1;
+  ProductTypeId: number;
   UnitId: String;
   AddOnGroup: Array<AddonGroupModule>;
   Addon: Array<AddonModule>;
@@ -115,7 +115,7 @@ export class ProductModule {
   VariantGroup: Array<VariantGroupModule>;
   OptionGroup: Array<OptionGroupModule>;
   Option: Array<OptionModule>;
- 
+
   ProductOptionGroups: Array<any>
   ProductOptions: Array<any>;
   ImgUrl: string;
@@ -191,10 +191,10 @@ export class ProductModule {
       this.OptionGroup = [];
       this.ImgUrl = '';
       this.ProductCode = '';
-      this.Barcode = '';
+      this.Barcode = null;
       this.Recomended = false;
       this.SortOrder = -1;
-      this.UPPrice = 0;      
+      this.UPPrice = 0;
       this.minquantity = 0;
       this.minblock = 0;
       this.IsSaleProdGroup = false;

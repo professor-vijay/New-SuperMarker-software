@@ -365,10 +365,10 @@ export class EditreceiveComponent implements OnInit {
           numRecordsStr:this.numRecordsStr,
           dispatchStatus:this.dispatchStatus
         })
-        this.Auth.getorder(this.Ordprd).subscribe(data => {
-        this.ordDetails = data;
-        console.log("datarrr",this.ordDetails)
-      })
+      //   this.Auth.getorder(this.Ordprd).subscribe(data => {
+      //   this.ordDetails = data;
+      //   console.log("datarrr",this.ordDetails)
+      // })
   }
 }
 
@@ -413,10 +413,10 @@ export class EditreceiveComponent implements OnInit {
     //   billStatus:this.billStatus,
     //   NumRecords:this.numRecordsStr,
     // })
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.OrdData = data;
-      console.log("OrdData", this.OrdData)
-    })
+    // this.Auth.getorder(this.Ordprd).subscribe(data => {
+    //   this.OrdData = data;
+    //   console.log("OrdData", this.OrdData)
+    // })
   }
 
   setproductbybarcode(data) {
@@ -710,10 +710,10 @@ settotalprice(i, qty) {
           numRecordsStr:this.numRecordsStr,
           dispatchStatus:this.dispatchStatus
     })
-   this.Auth.getorder(this.Ordprd).subscribe(data => {
-     this.popupData = data;
-     console.log("popupData",this.popupData)
-   })
+  //  this.Auth.getorder(this.Ordprd).subscribe(data => {
+  //    this.popupData = data;
+  //    console.log("popupData",this.popupData)
+  //  })
    this.TotalProductSale =0;
    this.TotalPrdQty =0;
 

@@ -104,6 +104,9 @@ export class AuthService {
   getcategorybyid(id) {
     return this.http.get(this.base_url1 + 'Category/getcategorybyid?CategoryId=' + id)
   }
+  getorderitembyid(id) {
+    return this.http.get(this.base_url1 + 'Internal/orderitemsbyid?OrderId=' + id)
+  }
   getcategoryvariants(id) {
     return this.http.get(this.base_url1 + 'Product/getcategoryvariants?categoryid=' + id)
   }
@@ -1235,6 +1238,12 @@ export class AuthService {
   cancelorder(orderid, payload) {
     return this.http.post(this.base_url1 + 'POSOrder/cancellorder?orderid=${orderid}', payload)
   }
+
+  
+getintprod(CompanyId, StoreId, testid) {
+  return this.http.get(this.base_url1 + 'Internal/GetInternalproduct?CompanyId=' + CompanyId + '&StoreId=' + StoreId + '&testid=' + testid) 
+}
+
 
 }
 

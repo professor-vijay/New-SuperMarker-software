@@ -48,17 +48,26 @@ export class EditInternalOrderComponent implements OnInit {
 
   model: any = 'QWERTY'
   order: OrderModule
-  orderitems:OrderItemModule
+  orderitems: OrderItemModule
   inputValue: string = '';
   focus$ = new Subject<string>()
   click$ = new Subject<string>()
 
   search = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      map(term => term === '' ? []
-        : this.products.filter(v => v.product.toLowerCase().indexOf(term.toLowerCase()) > -1 || v.barCode?.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
-    )
+  text$.pipe(
+    debounceTime(200),
+    map(term =>
+      term === ''
+        ? []
+        : this.groupedProducts
+          .filter(
+            v =>
+              v.product.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+              v.barCode?.toLowerCase().indexOf(term.toLowerCase()) > -1,
+          )
+          .slice(0, 10),
+    ),
+  )
 
   formatter = (x: { product: string }) => x.product;
 
@@ -180,7 +189,7 @@ export class EditInternalOrderComponent implements OnInit {
   OrdId = 0;
   dispatchTypeId = 1;
   StkContainerName = '';
-  StoreId :any;
+  StoreId: any;
   // ContainerName ='';
   act = 'Chk'
   users = [];
@@ -240,16 +249,43 @@ export class EditInternalOrderComponent implements OnInit {
     console.log("item", item)
     this.ProductId = item.productId;
   }
+  formatterstore = (x: { name: string }) => x.name
   selectedsupplieritem(item) {
-    console.log("item", item);
-    this.SuppliedById = item.id;
+    console.log('item', item)
+    this.SuppliedById = item.id
+    this.getStoreProducts()
+  }
+  groupedProducts: any = []
+
+  getStoreProducts() {
+    this.Auth.getStoreProducts(this.SuppliedById).subscribe(data => {
+      console.log(data)
+      this.products = data["products"]
+      console.log(this.products)
+      var helper = {}
+      this.groupedProducts = this.products.reduce((r, o) => {
+        var key = o.barcodeId + '-'
+        if (!helper[key]) {
+          helper[key] = Object.assign({}, o) // create a copy of o
+          r.push(helper[key])
+        }
+        return r
+      }, [])
+      console.log(this.groupedProducts)
+
+    })
   }
   searchsupplier = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      map(term => term === '' ? []
-        : this.stores.cusList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
-    )
+  text$.pipe(
+    debounceTime(200),
+    map(term =>
+      term === ''
+        ? []
+        : this.stores.storelist
+          .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
+          .slice(0, 10),
+    ),
+  )
 
   formattersupplier = (x: { name: string }) => x.name;
 
@@ -312,9 +348,9 @@ export class EditInternalOrderComponent implements OnInit {
         //   element["StorageStoreId"] = element.SuppliedById;
         //   this.array[0].StorageStoreId = element["StorageStoreId"]
         // })
-        this.ordPrdDetails.orderProd.forEach(element => {
-          element.name += (this.ordPrdDetails.variants.filter(x => x.barcodeId == element.barcodeId).map(x => x.name).length ? ' /' : '') + this.ordPrdDetails.variants.filter(x => x.barcodeId == element.barcodeId).map(x => x.name).join(' /')
-        });
+        // this.ordPrdDetails.orderProd.forEach(element => {
+        //   element.name += (this.ordPrdDetails.variants.filter(x => x.barcodeId == element.barcodeId).map(x => x.name).length ? ' /' : '') + this.ordPrdDetails.variants.filter(x => x.barcodeId == element.barcodeId).map(x => x.name).join(' /')
+        // });
 
 
         console.log("array2", this.array)
@@ -332,56 +368,56 @@ export class EditInternalOrderComponent implements OnInit {
         numRecordsStr: this.numRecordsStr,
         dispatchStatus: this.dispatchStatus
       })
-      this.Auth.getorder(this.Ordprd).subscribe(data => {
-        this.ordDetails = data;
-        // this.ordPrdDetails.dispatchList.forEach(element => {
-        //   element.Action = "Chk";
-        //   element["StorageStoreId"] = element.order.storeId
-        //   element["DispatchProductId"] = element.product.id
-        //   element["ProductId"] = element.product.id
-        //   element["Dispatchprd"] = element.product.name
-        //   element["ProductName"] = element.product.name
-        //   element["Price"] = element.product.price
-        //   element["Tax1"] = element.tax1
-        //   element["Tax2"] = element.tax2
-        //   element["Tax3"] = element.tax3
-        //   element["Tax4"] = element.tax4
-        //   element["Action"] = 'Chk'
-        //   this.StoreId = element.order.storeId;
-        //   this.array.push({
-        //     StorageStoreId: element["StorageStoreId"],
-        //     companyId: element["companyId"],
-        //     ContainerId: element["containerId"],
-        //     ContainerWeight: element["containerWeight"],
-        //     OpenQty: element["openQuantity"],
-        //     GrossQty: element["openQuantity"],
-        //     DispatchQty: element["openQuantity"],
-        //     OrderQuantity: element["openQuantity"],
-        //     DispatchProductId: element["DispatchProductId"],
-        //     ProductId: element["ProductId"],
-        //     Dispatchprd: element["Dispatchprd"],
-        //     ProductName: element["ProductName"],
-        //     Price: element["price"],
-        //     Tax1: element["Tax1"],
-        //     Tax2: element["Tax2"],
-        //     Tax3: element["Tax3"],
-        //     Tax4: element["Tax4"],
-        //     Action: element["Action"],
-        //   })
-        // })
-        // this.ordPrdDetails.orderItem.forEach(element => {
-        //   element["OrderItemId"] = element.id;
-        //   element["OrderId"] = element.orderId;
-        //   this.array[0].OrderItemId = element["OrderItemId"]
-        //   this.array[0].OrderId = element["OrderId"]
-        //   this.array[1].OrderItemId = element["OrderItemId"]
-        //   this.array[1].OrderId = element["OrderId"]
-        //   this.array[2].OrderItemId = element["OrderItemId"]
-        //   this.array[2].OrderId = element["OrderId"]
-        //   this.array[3].OrderItemId = element["OrderItemId"]
-        //   this.array[3  ].OrderId = element["OrderId"]
-        // })
-      })
+      // this.Auth.getorder(this.Ordprd).subscribe(data => {
+      //   this.ordDetails = data;
+      //   // this.ordPrdDetails.dispatchList.forEach(element => {
+      //   //   element.Action = "Chk";
+      //   //   element["StorageStoreId"] = element.order.storeId
+      //   //   element["DispatchProductId"] = element.product.id
+      //   //   element["ProductId"] = element.product.id
+      //   //   element["Dispatchprd"] = element.product.name
+      //   //   element["ProductName"] = element.product.name
+      //   //   element["Price"] = element.product.price
+      //   //   element["Tax1"] = element.tax1
+      //   //   element["Tax2"] = element.tax2
+      //   //   element["Tax3"] = element.tax3
+      //   //   element["Tax4"] = element.tax4
+      //   //   element["Action"] = 'Chk'
+      //   //   this.StoreId = element.order.storeId;
+      //   //   this.array.push({
+      //   //     StorageStoreId: element["StorageStoreId"],
+      //   //     companyId: element["companyId"],
+      //   //     ContainerId: element["containerId"],
+      //   //     ContainerWeight: element["containerWeight"],
+      //   //     OpenQty: element["openQuantity"],
+      //   //     GrossQty: element["openQuantity"],
+      //   //     DispatchQty: element["openQuantity"],
+      //   //     OrderQuantity: element["openQuantity"],
+      //   //     DispatchProductId: element["DispatchProductId"],
+      //   //     ProductId: element["ProductId"],
+      //   //     Dispatchprd: element["Dispatchprd"],
+      //   //     ProductName: element["ProductName"],
+      //   //     Price: element["price"],
+      //   //     Tax1: element["Tax1"],
+      //   //     Tax2: element["Tax2"],
+      //   //     Tax3: element["Tax3"],
+      //   //     Tax4: element["Tax4"],
+      //   //     Action: element["Action"],
+      //   //   })
+      //   // })
+      //   // this.ordPrdDetails.orderItem.forEach(element => {
+      //   //   element["OrderItemId"] = element.id;
+      //   //   element["OrderId"] = element.orderId;
+      //   //   this.array[0].OrderItemId = element["OrderItemId"]
+      //   //   this.array[0].OrderId = element["OrderId"]
+      //   //   this.array[1].OrderItemId = element["OrderItemId"]
+      //   //   this.array[1].OrderId = element["OrderId"]
+      //   //   this.array[2].OrderItemId = element["OrderItemId"]
+      //   //   this.array[2].OrderId = element["OrderId"]
+      //   //   this.array[3].OrderItemId = element["OrderItemId"]
+      //   //   this.array[3  ].OrderId = element["OrderId"]
+      //   // })
+      // })
     }
   }
   getBarcodeProduct() {
@@ -415,6 +451,7 @@ export class EditInternalOrderComponent implements OnInit {
       this.getStoreList();
       this.getord();
       this.getorderPrd();
+      this.getStoreProducts()
     })
 
 
@@ -431,10 +468,10 @@ export class EditInternalOrderComponent implements OnInit {
       numRecordsStr: this.numRecordsStr,
     })
     console.log("fsf", this.Ordprd)
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.OrdData = data;
-      console.log("OrdData", this.OrdData)
-    })
+    // this.Auth.getorder(this.Ordprd).subscribe(data => {
+    //   this.OrdData = data;
+    //   console.log("OrdData", this.OrdData)
+    // })
   }
 
   setproductbybarcode(data) {
@@ -554,7 +591,7 @@ export class EditInternalOrderComponent implements OnInit {
         this.order.Items.filter(x => x.BarcodeId == this.temporaryItem["barcodeId"])[0].OrderQuantity += this.temporaryItem.Quantity
         this.order.Items.filter(x => x.BarcodeId == this.temporaryItem["barcodeId"])[0].OrderQuantity += this.temporaryItem.Quantity
         this.order.setbillamount()
-      } else {        
+      } else {
         this.order.OrderType = this.OrderType;
         this.order.SpecialOrder = this.SpecialOrder;
         this.order.DiscAmount = this.DiscAmount;
@@ -593,8 +630,8 @@ export class EditInternalOrderComponent implements OnInit {
   }
 
   getStoreList() {
-    this.Auth.getstores(this.loginfo.companyId).subscribe(data => {
-      this.stores = data;
+    this.Auth.getstores(this.CompanyId).subscribe(data => {
+      this.stores = data
       console.log(this.stores)
     })
   }
@@ -686,10 +723,10 @@ export class EditInternalOrderComponent implements OnInit {
   // }
 
   Update() {
-    
+
     this.order.Items.forEach(item => {
-          item.CompanyId = this.loginfo.companyId
-        })
+      item.CompanyId = this.loginfo.companyId
+    })
 
     this.Auth.Update(this.order).subscribe(data => {
       console.log("temporry", data)
@@ -715,10 +752,10 @@ export class EditInternalOrderComponent implements OnInit {
       numRecordsStr: this.numRecordsStr,
       dispatchStatus: this.dispatchStatus
     })
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.popupData = data;
-      console.log("popupData", this.popupData)
-    })
+    // this.Auth.getorder(this.Ordprd).subscribe(data => {
+    //   this.popupData = data;
+    //   console.log("popupData", this.popupData)
+    // })
     this.TotalProductSale = 0;
     this.TotalPrdQty = 0;
 

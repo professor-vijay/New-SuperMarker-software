@@ -2,8 +2,7 @@
   <div [hidden]="!show">
 
     <div class="cui__utils__heading">
-      <strong 
-      style="margin-left: 37px;font-size: 23px;font-family: 'Poppins', sans-serif;">Products</strong>
+      <strong style="margin-left: 37px;font-size: 23px;font-family: 'Poppins', sans-serif;">Products</strong>
     </div>
 
     <div class="card col-lg-12" style="border-radius:39px;">
@@ -95,7 +94,7 @@
                 <nz-badge nzStatus="warning" style="margin-left:2px ;"></nz-badge>
               </span>
               <strong> <a class="btn btn-sm btn-light" (click)="getproduct(product.id)" (click)="show = !show"
-                  style="color: #1ebccd !important;font-size:16px;">
+                  style="color: #05b40e !important;font-size:16px;">
                   {{product.name}}</a>
               </strong>
             </td>
@@ -132,18 +131,15 @@
                 {{product?.description}}
               </a> </strong>
           </div>
+
           <div class="col-6">
             <button class="btn btn-secondary btn-sm mx-10 w-10" (click)="back()"
-              style="margin-left: 600px; padding: inherit; height: 34px;">Back</button>&nbsp;&nbsp;
-            <button type="submit" class="btn btn-success btn-sm mx-10 w-10" style="  height: 34px;"
+              style="margin-left: 405px; padding: inherit; height: 34px;"><i nz-icon nzType="left"
+                style="margin-right: 6px;"></i>Back</button>&nbsp;&nbsp;
+            <button type="submit" class="btn btn-success btn-sm mx-10 w-10" style="  height: 34px;margin-left: 41px;"
               (click)="focus();products1.categoryId != 0&&f.form.valid && saveProduct()">Save
               Product</button>
           </div>
-          <!-- <div class="cui__utils__heading"> -->
-
-          <!-- </div> -->
-
-          <!-- </div> -->
 
         </div>
 
@@ -155,11 +151,11 @@
                 <div class="row">
                   <div class="col-10">
 
-                    <img class="mt-20" style="border-radius: 25px;" height=auto width="350">
+                    <!-- <img class="mt-20" style="border-radius: 25px;" height=auto width="350">
                     <button class="btn"></button>
 
                     <img id="droppedimage" class="mt-20" style="border-radius: 25px;" height=auto width="350">
-                    <button class="btn" type="button"></button>
+                    <button class="btn" type="button"></button> -->
 
                     <img class="w-100 border-radius-lg shadow-lg mt-3" id="noimage"
                       src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/product-page.jpg"
@@ -179,7 +175,7 @@
           </div>
           <div class="col-lg-8 mt-lg-0 mt-4">
 
-            <div class="card">
+            <div class="card" style="margin-bottom: 0;">
               <div class="card-body">
                 <h5 class="font-weight-bolder">Product Information</h5>
                 <div class="row">
@@ -209,11 +205,9 @@
                   <div class="col-12 col-sm-6 mt-3 mt-sm-0">
                     <label for="firstName"><strong>Barcode<span class="text-danger"></span></strong></label>
                     <input type="text" class="form-control" placeholder="Enter Product Barcode" name="barcode"
-                      autocomplete="false" [(ngModel)]="products1.Barcode" #barcode="ngModel"
-                      [ngClass]="{'is-invalid': f.submitted && name.invalid}" required />
-                    <div *ngIf="f.submitted && barcode.invalid" class="invalid-feedback">
-                      <div *ngIf="barcode.errors.required">barcode cannot be
-                        Empty*</div>
+                      autocomplete="false" [(ngModel)]="products1.Barcode" />
+                    <div>
+
                     </div>
                   </div>
                 </div> <br>
@@ -291,7 +285,7 @@
         <div class="row mt-4">
           <div class="col-sm-4">
             <div class="card">
-              <div class="card-body" *ngIf="products1">
+              <div class="card-body" *ngIf="products1"> 
                 <h5 class="font-weight-bolder">Option Groups</h5> <br>
 
                 <div class="row">
@@ -299,8 +293,8 @@
                   <div class="col-4">
                     <strong>Recommended</strong>
                     <div class="col-sm-6" style="margin-top: 10px;margin-left: 30px;">
-                      <input type="checkbox" placeholder="Enter Product Recomended" name="recomended"
-                        [(ngModel)]="products1.Recomended" #recomended="ngModel" />
+                      <input type="checkbox" placeholder="Enter Product Recomended" name="Recomended"
+                        [(ngModel)]="products1.Recomended" #Recomended="ngModel" />
                     </div>
                   </div>
                   <div class="col-4">
@@ -322,12 +316,12 @@
                 <div class="row">
                   <div class="col-12">
                     <strong>Select Option Group</strong>
-                    <ng-multiselect-dropdown 
-                      class="multiselect-dropdown dropdown-btn" #multiSelect [placeholder]="'Select OptionGroup'" 
-                      [(ngModel)]="selectedItems" name="optionGroups" [data]="products.optionGroups"
-                      [settings]="settings" [disabled]="false" (onFilterChange)="onFilterChange($event)"
-                      (onSelect)="onItemSelect($event)" (onDeSelect)="onDeSelect($event)"
-                      (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeSelectAll($event)">
+                    <ng-multiselect-dropdown class="multiselect-dropdown dropdown-btn" #multiSelect
+                      [placeholder]="'Select OptionGroup'" [(ngModel)]="selectedItems" name="optionGroups"
+                      [data]="products.optionGroups" [settings]="settings" [disabled]="false"
+                      (onFilterChange)="onFilterChange($event)" (onSelect)="onItemSelect($event)"
+                      (onDeSelect)="onDeSelect($event)" (onSelectAll)="onSelectAll($event)"
+                      (onDeSelectAll)="onDeSelectAll($event)">
                     </ng-multiselect-dropdown>
                   </div>
                 </div>
@@ -367,28 +361,28 @@
                   <div class="col-3">
                     <strong>Takeaway Price</strong>
                     <input type="number" class="form-control" placeholder="Enter Product Price" name="Price"
-                      [(ngModel)]="products1.Price" #Price="ngModel"
-                      [ngClass]="{'is-invalid':f.submitted && Price.invalid}" required />
-                    <div *ngIf="Price.invalid" class="invalid-feedback">
-                      <div *ngIf="Price.errors.required">Price can't be empty!</div>
+                      [(ngModel)]="products1.TakeawayPrice" #TakeawayPrice="ngModel"
+                      [ngClass]="{'is-invalid':f.submitted && TakeawayPrice.invalid}" required />
+                    <div *ngIf="TakeawayPrice.invalid" class="invalid-feedback">
+                      <div *ngIf="TakeawayPrice.errors.required">Price can't be empty!</div>
                     </div>
                   </div>
                   <div class="col-3">
                     <strong>Delivery Price</strong>
                     <input type="number" class="form-control" placeholder="Enter Product Price" name="Price"
-                      [(ngModel)]="products1.Price" #Price="ngModel"
-                      [ngClass]="{'is-invalid':f.submitted && Price.invalid}" required />
-                    <div *ngIf="Price.invalid" class="invalid-feedback">
-                      <div *ngIf="Price.errors.required">Price can't be empty!</div>
+                      [(ngModel)]="products1.DeliveryPrice" #DeliveryPrice="ngModel"
+                      [ngClass]="{'is-invalid':f.submitted && DeliveryPrice.invalid}" required />
+                    <div *ngIf="DeliveryPrice.invalid" class="invalid-feedback">
+                      <div *ngIf="DeliveryPrice.errors.required">Price can't be empty!</div>
                     </div>
                   </div>
                   <div class="col-3">
                     <strong>Up Price</strong>
                     <input type="number" class="form-control" placeholder="Enter Product Price" name="Price"
-                      [(ngModel)]="products1.Price" #Price="ngModel"
-                      [ngClass]="{'is-invalid':f.submitted && Price.invalid}" required />
-                    <div *ngIf="Price.invalid" class="invalid-feedback">
-                      <div *ngIf="Price.errors.required">Price can't be empty!</div>
+                      [(ngModel)]="products1.UPPrice" #UPPrice="ngModel"
+                      [ngClass]="{'is-invalid':f.submitted && UPPrice.invalid}" required />
+                    <div *ngIf="UPPrice.invalid" class="invalid-feedback">
+                      <div *ngIf="UPPrice.errors.required">Price can't be empty!</div>
                     </div>
                     <!-- </div> -->
                   </div>
@@ -626,4 +620,3 @@
     </div>
   </div>
 </div> -->
-

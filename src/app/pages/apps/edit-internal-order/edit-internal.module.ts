@@ -6,10 +6,10 @@ export class OrderModule {
     Id: number
     Updated: boolean = false;
     OrderNo: number;
-    InvoiceNo: number;    
+    InvoiceNo: number;
     AggregatorOrderId: string;
     UPOrderId: string;
-    StoreId: number;   
+    StoreId: number;
     OrderStatusId: number;
     PreviousStatusId: number;
     BillAmount: number;
@@ -19,11 +19,11 @@ export class OrderModule {
     Tax1: number;
     Tax2: number;
     Tax3: number;
-    BillStatusId: number;    
+    BillStatusId: number;
     DiscPercent: number;
     DiscAmount: number;
     IsAdvanceOrder: boolean = false;
-    CustomerData: string; 
+    CustomerData: string;
     OrderedDateTime: string;
     OrderedDate: string;
     DeliveryDateTime: string;
@@ -36,26 +36,26 @@ export class OrderModule {
     Closed: boolean = false;
     OrderJson: string;
     ItemJson: string;
-    ChargeJson: string;    
-    ModifiedDate: string;   
+    ChargeJson: string;
+    ModifiedDate: string;
     CompanyId: number;
-    OrderType: number;  
+    OrderType: number;
     CreatedDate: string;
     SuppliedById: number;
-    OrderedById: number; 
+    OrderedById: number;
     SpecialOrder: boolean = false;
     WipStatus: string;
-    ProdStatus: string;   
+    ProdStatus: string;
     Items: Array<OrderItemModule>;
     Subtotal: number
     TaxAmount: number
-    
+
     constructor(ordertype, Id) {
         this.Items = [];
         this.Id = Id;
         this.Updated = false;
         this.OrderNo = 0;
-        this.InvoiceNo = 0;      
+        this.InvoiceNo = 0;
         this.AggregatorOrderId = '';
         this.UPOrderId = '';
         this.StoreId = 0;
@@ -68,11 +68,11 @@ export class OrderModule {
         this.Tax1 = 0;
         this.Tax2 = 0;
         this.Tax3 = 0;
-        this.BillStatusId = 0;        
+        this.BillStatusId = 0;
         this.DiscPercent = 0;
         this.DiscAmount = 0;
         this.IsAdvanceOrder = false;
-        this.CustomerData = '';        
+        this.CustomerData = '';
         this.OrderedDateTime = '';
         this.OrderedDate = '';
         this.DeliveryDateTime = '';
@@ -85,17 +85,17 @@ export class OrderModule {
         this.Closed = false;
         this.OrderJson = '';
         this.ItemJson = '';
-        this.ChargeJson = '';      
-        this.ModifiedDate = '';        
+        this.ChargeJson = '';
+        this.ModifiedDate = '';
         this.CompanyId = 0;
-        this.OrderType = ordertype;        
+        this.OrderType = ordertype;
         this.CreatedDate = '';
         this.SuppliedById = 0;
-        this.OrderedById = 0;       
+        this.OrderedById = 0;
         this.SpecialOrder = false;
         this.WipStatus = '';
         this.ProdStatus = '';
-        
+
     }
     addproduct(product, OrdId, storeId) {
         this.Items.push(new OrderItemModule(product, OrdId, storeId))
@@ -120,7 +120,7 @@ export class OrderModule {
             item.TaxAmount1 = item.Tax1 * item.Amount / 100
             item.TaxAmount2 = item.Tax2 * item.Amount / 100
             item.TaxAmount3 = item.Tax3 * item.Amount / 100
-            item.TaxAmount = item.TaxAmount1 + item.TaxAmount2 + item.TaxAmount3        
+            item.TaxAmount = item.TaxAmount1 + item.TaxAmount2 + item.TaxAmount3
             this.Subtotal += item.Amount
             this.Tax1 += item.TaxAmount1
             this.Tax2 += item.TaxAmount2
@@ -153,7 +153,7 @@ export class OrderItemModule {
     ProductId: number;
     OrderQuantity: number;
     DispatchedQuantity: number;
-    ReceivedQuantity: number;   
+    ReceivedQuantity: number;
     Price: number;
     TaxAmount: number;
     Tax1: number;
@@ -161,8 +161,8 @@ export class OrderItemModule {
     Tax3: number;
     Tax4: number;
     Amount: number;
-    CreatedDate: string;  
-    BillId: number;  
+    CreatedDate: string;
+    BillId: number;
     OldStock: number;
     CompanyId: number;
     VarianceReasonStr: string
@@ -187,13 +187,13 @@ export class OrderItemModule {
         this.TotalAmount = 0;
         this.OptionJson = '';
         this.OrderItemId = 0;
-        this.OrderId = OrdId;       
-        this.ReceivedQuantity = 0;      
+        this.OrderId = OrdId;
+        this.ReceivedQuantity = 0;
         this.TaxAmount = 0;
-        this.Amount = 0;      
-        this.BillId = 0;  
+        this.Amount = 0;
+        this.BillId = 0;
         this.OldStock = 0;
-        this.CompanyId = 0;      
+        this.CompanyId = 0;
         this.BarcodeId = product.barcodeId;
         this.DiscAmount = product.DiscAmount;
         this.ProductName = product.product
@@ -215,10 +215,10 @@ export class OrderItemDetailModule {
     OrderItemDetailId: number;
     Id: number;
     ActualProdId: number;
-    BatchId: number;   
+    BatchId: number;
     OrdProdType: number;
     StorageStoreId: number;
-    ContatinerId: number;   
+    ContatinerId: number;
     Quantity: number;
     UnitPrice: number;
     Tax1: number;
@@ -228,10 +228,10 @@ export class OrderItemDetailModule {
     Date: string;
     DateTime: string;
     RelatedOrderId: string;
-    CreatedDate: string; 
+    CreatedDate: string;
     DiscAmount: number;
     DiscPercent: number;
-    DiscPerQty: number;   
+    DiscPerQty: number;
     CompanyId: number;
     OrderItemRefId: string;
 
@@ -239,9 +239,9 @@ export class OrderItemDetailModule {
         this.OrderItemDetailId = 0;
         this.Id = 0;
         this.ActualProdId = 0;
-        this.BatchId = 0;        
+        this.BatchId = 0;
         this.OrdProdType = 0;
-        this.StorageStoreId = 0;        
+        this.StorageStoreId = 0;
         this.Quantity = 0;
         this.UnitPrice = 0;
         this.Tax1 = 0;
@@ -251,12 +251,12 @@ export class OrderItemDetailModule {
         this.Date = '';
         this.DateTime = '';
         this.RelatedOrderId = '';
-        this.CreatedDate = '';       
+        this.CreatedDate = '';
         this.DiscAmount = 0;
         this.DiscPercent = 0;
-        this.DiscPerQty = 0;      
+        this.DiscPerQty = 0;
         this.CompanyId = 0;
-        this.OrderItemRefId = product.productId + moment().format('YYYY-MM-DD HH:MM A');       
+        this.OrderItemRefId = product.productId + moment().format('YYYY-MM-DD HH:MM A');
     }
 }
 export class CustomerModule {

@@ -154,8 +154,11 @@ export class OrderModule {
     this.deliverytimestamp = 0
   }
 
+
+
   // ADD PRODDUCT
   additem(product, options) {
+    console.log(product)
     if (product.isorderitem) {
       console.log("isorderitem: ", true)
       this.mergeitem(product, options)
@@ -165,15 +168,12 @@ export class OrderModule {
     // console.log("NOT MERGING")
     var productkey = this.productkeygenerator(product)
     var showname = this.getshowname(product)
-    // this.Items.push(new OrderItemModule(product, options, showname))
     console.log(this.Items)
-
     if (this.Items.some(x => x.ProductKey == productkey)) {
       this.Items.filter(x => x.ProductKey == productkey)[0].Quantity += options.quantity
     } else {
       options.key = productkey
       this.Items.push(new OrderItemModule(product, options, showname))
-
       console.log(this.Items)
     }
     this.setbillamount()
@@ -212,9 +212,10 @@ export class OrderModule {
   }
 
   productkeygenerator(product) {
-    // console.log(product)
+    console.log(product)
     var key = ''
     key = product.ProductId ? product.ProductId.toString() : product.productId ? product.productId.toString() : product.Id.toString()
+    key += '_' + product.stockBatchId
     if (product.OptionGroup) {
       product.OptionGroup.forEach(opg => {
         if (opg.selected) {

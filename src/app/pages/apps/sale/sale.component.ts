@@ -239,7 +239,7 @@ export class SaleComponent implements OnInit {
     this.Auth.getproducts().subscribe(data => {
       this.products = data
       console.log(this.products)
-      this.products.forEach(prod => {
+      this.products.forEach(prod => { 
         prod.maxqty = prod.quantity
       })
       this.groupProduct()

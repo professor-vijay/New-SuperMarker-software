@@ -13,7 +13,8 @@
             <div class="card-header card-header-flex" style="padding: 25px;">
                 <div class="d-flex flex-column justify-content-center mr-auto" style="width: 335px;">
                     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                        <input type="text" nz-input placeholder="input search text" [(ngModel)]="term" (input)="filtersearch()" />
+                        <input type="text" nz-input placeholder="input search text" [(ngModel)]="term"
+                            (input)="filtersearch()" />
                     </nz-input-group>
                     <ng-template #suffixIconButton>
                         <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
@@ -65,89 +66,90 @@
     </div>
 
     <!-- <div class="col-lg-8 mt-lg-0 mt-4" style="margin-left: 188px;background-color: #f9f9f9;"> -->
-        <div [hidden]="show" class="card">
-            <div class="hk-pg-header">
-                <h5 class="ml-3 mt-3">
-                    <strong class="text" style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 34px;"
-                        *ngIf="!(edttable?.Id > 0)">Add Dine In</strong>
-                    <strong *ngIf="edttable?.Id > 0" style="margin-left: 33px;">Edit Dine In:
-                        <strong class="text"
-                            style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 6px;">{{edttable.DiningArea}} </strong>
+    <div [hidden]="show" class="card">
+        <div class="hk-pg-header">
+            <h5 class="ml-3 mt-3">
+                <strong class="text" style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 34px;"
+                    *ngIf="!(edttable?.Id > 0)">Add Dine In</strong>
+                <strong *ngIf="edttable?.Id > 0" style="margin-left: 33px;">Edit Dine In:
+                    <strong class="text"
+                        style="font-size: 23px;font-family: 'Poppins', sans-serif;margin-left: 6px;">{{edttable.DiningArea}}
                     </strong>
-                    <!-- <strong >Edit Variant Group</strong> -->
-                </h5>
-            </div>
-            <div class="card col-xl-10 ml-5" style="margin-top: 26px;">
-                <div class="card-body">
-                    <form name="form" (ngSubmit)="DiningArea.StoreId != 0 && f.form.valid && savearea()" #f="ngForm"
-                        id="DineForm" novalidate>
-                        <section class="hk-sec-wrapper">
-                            <div class="col-xl-12">
-                                <div class="form-group">
-                                    <select [(ngModel)]="DiningArea.StoreId" class="required form-control custom-select"
-                                        name="store1" #store1="ngModel"
-                                        [ngClass]="{'is-invalid': f.submitted && DiningArea.StoreId==0}">
-                                        <option value="0" selected>Select Store</option>
-                                        <option value="{{item.id}}" *ngFor="let item of store">{{item.name}}</option>
-                                    </select>
-                                    <div *ngIf="f.submitted && DiningArea.StoreId==0" class="invalid-feedback">
-                                        <div *ngIf="DiningArea.StoreId==0">Select a store !</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <span style="font-weight: bold;">DiningArea</span> <span
-                                        class="text-danger">*</span>
-                                    <input type="text" [(ngModel)]="DiningArea.Description" name="DAName"
-                                        class="form-control" #DAName="ngModel"
-                                        [ngClass]="{'is-invalid': f.submitted && DAName.invalid}" required>
-                                    <div *ngIf="f.submitted && DAName.invalid" class="invalid-feedback">
-                                        <div *ngIf="DAName.errors.required">DiningArea Name is required !</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <span style="font-weight: bold;">Quick Add</span>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Enter prefix. eg: 'Table'"
-                                            #prefix>
-                                        <input type="text" (keypress)="omit_special_char($event)" class="form-control"
-                                            placeholder="Enter No. of tables" #count>
-                                        <div class="input-group-append">
-                                            <button class="btn btn-icon btn-light"
-                                                (click)="quickadd(prefix.value,count.value)" type="button">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <span style="font-weight: bold;">DiningTable</span> <span
-                                        class="text-danger">*</span>
-                                    <div class="input-group" *ngFor="let item of DiningArea.DiningTable; let i=index">
-                                        <input type="text" class="form-control" [(ngModel)]="item.Description"
-                                            name="Description{{i}}" #Description{{i}}="ngModel" required
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button style="height: 36px;" class="btn btn-icon btn-light"
-                                                (click)="deleteTable(i)" type="button"><span class="btn-icon-wrap"><i
-                                                        class="fe fe-trash-2"></i></span></button>
-                                        </div>
-                                        <br><br>
-                                    </div>
-                                    <div class="text-right">
-                                        <button type="button" class="btn btn-link sp-nav-button" (click)="addTable()"
-                                            style="font-weight: bold;">+ Add Table</button>
-                                    </div>
-                                </div>
-                                <div class="col-xl-12 pl-0 pr-0 text-right">
-                                    <button class="btn btn-danger btn-sm mx-10 w-10"
-                                        (click)="back()">Cancel</button>&nbsp;
-                                    <button class="btn btn-success btn-sm mx-10 w-15" (click)="focus()">Save
-                                        DiningArea</button>
+                </strong>
+                <!-- <strong >Edit Variant Group</strong> -->
+            </h5>
+        </div>
+        <div class="card col-xl-10 ml-5" style="margin-top: 26px;">
+            <div class="card-body">
+                <form name="form" (ngSubmit)="DiningArea.StoreId != 0 && f.form.valid && savearea()" #f="ngForm"
+                    id="DineForm" novalidate>
+                    <section class="hk-sec-wrapper">
+                        <div class="col-xl-12">
+                            <div class="form-group">
+                                <select [(ngModel)]="DiningArea.StoreId" class="required form-control custom-select"
+                                    name="store1" #store1="ngModel"
+                                    [ngClass]="{'is-invalid': f.submitted && DiningArea.StoreId==0}">
+                                    <option value="0" selected>Select Store</option>
+                                    <option value="{{item.id}}" *ngFor="let item of store">{{item.name}}</option>
+                                </select>
+                                <div *ngIf="f.submitted && DiningArea.StoreId==0" class="invalid-feedback">
+                                    <div *ngIf="DiningArea.StoreId==0">Select a store !</div>
                                 </div>
                             </div>
-                        </section>
-                    </form>
-                </div>
+                            <div class="form-group">
+                                <span style="font-weight: bold;">DiningArea</span> <span class="text-danger">*</span>
+                                <input type="text" [(ngModel)]="DiningArea.Description" name="DAName"
+                                    class="form-control" #DAName="ngModel"
+                                    [ngClass]="{'is-invalid': f.submitted && DAName.invalid}" required>
+                                <div *ngIf="f.submitted && DAName.invalid" class="invalid-feedback">
+                                    <div *ngIf="DAName.errors.required">DiningArea Name is required !</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span style="font-weight: bold;">Quick Add</span>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Enter prefix. eg: 'Table'"
+                                        #prefix>
+                                    <input type="text" (keypress)="omit_special_char($event)" class="form-control"
+                                        placeholder="Enter No. of tables" #count>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-icon btn-light"
+                                            (click)="quickadd(prefix.value,count.value)" type="button">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span style="font-weight: bold;">DiningTable</span> <span class="text-danger">*</span>
+                                <div class="input-group" *ngFor="let item of DiningArea.DiningTable; let i=index">
+                                    <input type="text" class="form-control" [(ngModel)]="item.Description"
+                                        name="Description{{i}}" #Description{{i}}="ngModel" required
+                                        aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button style="height: 36px;    color: red;" class="btn btn-icon btn-light"
+                                            (click)="deleteTable(i)" type="button"><span class="btn-icon-wrap"><i
+                                                    class="fe fe-trash-2"></i></span></button>
+                                    </div>
+                                    <br><br>
+                                </div>
+                                <div class="text-right">
+                                    <button type="button" class="btn btn-link sp-nav-button" (click)="addTable()"
+                                        style="font-weight: bold;">+ Add Table</button>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 pl-0 pr-0 text-right">
+                                <button class="btn btn-secondary btn-sm mx-10 w-10" style="height: 33px;"
+                                    (click)="back()"><i nz-icon nzType="left"
+                                        style="margin-right: 6px;"></i>Cancel</button>&nbsp;
+                                <button class="btn btn-success btn-sm mx-10 w-15" style="height: 33px;"
+                                    (click)="focus()">Save
+                                    DiningArea</button>
+                            </div>
+                        </div>
+                    </section>
+                </form>
             </div>
         </div>
+    </div>
     <!-- </div> -->
 
 

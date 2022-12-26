@@ -213,69 +213,83 @@
         </div>
     </div>
 </div>
-<div class="row" *ngIf="isShown">
+
+
+
+
+
+
+<div *ngIf="isShown">
+    <div class="card col-lg-12" style="padding: 20px;">
+        <div class="card-header card-header-flex">
+            <div class="d-flex flex-column justify-content-center mr-auto" style="width: 335px;">
+                <div class="form-group" style="width: 10em;margin-left:40px;" *ngIf="isShown">
+                    <label for="username">Receive Status:</label>
+                    <select class="form-control custom-select" style="margin-left: 102px;margin-top: -62px;" name="Source">
+                        <option value="0">All</option>
+                        <option value="1">open</option>
+                        <option value="2">Closed</option>
+                        <option value="3">Returned</option>
+                    </select>
+                </div>
+              </div>
+        </div>
+        <nz-table #basicTable class="kit__utils__table mb-4" [nzData]="tabledata" *ngIf="isShown">
+            <thead>
+                <tr>
+                    <th style="text-align: center;"><strong># </strong></th>
+                    <th style="text-align: center;"><strong>BILL </strong></th>
+                    <th style="text-align: center;"><strong>OrderedBy Location </strong></th>
+                    <th style="text-align: center;"><strong>Supplier Store </strong></th>
+                    <th style="text-align: center;"><strong>DispatchDate </strong></th>
+                    <!-- <th style="text-align: center;"><strong>Status </strong></th> -->
+                    <th style="text-align: center;"><strong>Action </strong></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="text-align: center" *ngFor="let ord of basicTable.data; let i = index">
+                    <td>{{i+1}}</td>
+                    <td>
+                        <a class="btn btn-sm btn-light" href="javascript: void(0);"
+                            (click)="getorderid(ord.id,contentdetail1);">
+                            {{ord.billId}}
+                        </a>
+                    </td>
+                    <td>
+                        {{ord.receiver}}
+                    </td>
+                    <td>
+                        {{ord.supplier}}
+                    </td>
+                    <td>
+                        {{ord.dispatchedDate | date: 'MMM d, h:mm a'}}
+                    </td>
+                    <!-- <td>
+                        <span *ngIf="ord.receiveStatus1 == 1" class="badge badge-success mr-10">Received</span>
+                        <span *ngIf="ord.receiveStatus1 == 2" class="badge badge-danger mr-10">Cancelled</span>
+                        <span *ngIf="ord.receiveStatus1 == -1" class="badge badge-warning mr-10">Return</span>
+                    </td>  -->
+                    <td>
+                        <button *ngIf="ord.receiveStatus1 == !0" class="btn btn-success" (click)='receive(ord.id)'>Recieve</button>
+                        <button *ngIf="ord.receiveStatus1 == 3" class="btn btn-secondary" disabled>Received</button>
+                    
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+   
+    </div>
     <!-- <div class="mb-5" *ngIf="isShown">
         <nz-radio-group [(ngModel)]="nzValue">
              <label nz-radio nzValue="Dispatched" (click)="radio(nzValue)">Dispatch</label> 
             <label nz-radio nzValue="Receive" (click)="radio(nzValue)">Receive</label>
         </nz-radio-group>
     </div> -->
-    <br><br>
-
-    <div class="form-group" style="width: 10em;margin-left:40px;" *ngIf="isShown">
-        <label for="username">Receive Status:</label>
-        <select class="form-control custom-select" style="margin-left: 102px;margin-top: -62px;" name="Source">
-            <option value="0">All</option>
-            <option value="1">open</option>
-            <option value="2">Closed</option>
-            <option value="3">Returned</option>
-        </select>
-    </div>
+  
+   
 
 </div>
-<nz-table #basicTable class="kit__utils__table mb-4" [nzData]="tabledata" *ngIf="isShown">
-    <thead>
-        <tr>
-            <th style="text-align: center;"><strong># </strong></th>
-            <th style="text-align: center;"><strong>BILL </strong></th>
-            <th style="text-align: center;"><strong>OrderedBy Location </strong></th>
-            <th style="text-align: center;"><strong>Supplier Store </strong></th>
-            <th style="text-align: center;"><strong>DispatchDate </strong></th>
-            <!-- <th style="text-align: center;"><strong>Status </strong></th> -->
-            <th style="text-align: center;"><strong>Action </strong></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr style="text-align: center" *ngFor="let ord of basicTable.data; let i = index">
-            <td>{{i+1}}</td>
-            <td>
-                <a class="btn btn-sm btn-light" href="javascript: void(0);"
-                    (click)="getorderid(ord.id,contentdetail1);">
-                    {{ord.billId}}
-                </a>
-            </td>
-            <td>
-                {{ord.receiver}}
-            </td>
-            <td>
-                {{ord.supplier}}
-            </td>
-            <td>
-                {{ord.dispatchedDate | date: 'MMM d, h:mm a'}}
-            </td>
-            <!-- <td>
-                <span *ngIf="ord.receiveStatus1 == 1" class="badge badge-success mr-10">Received</span>
-                <span *ngIf="ord.receiveStatus1 == 2" class="badge badge-danger mr-10">Cancelled</span>
-                <span *ngIf="ord.receiveStatus1 == -1" class="badge badge-warning mr-10">Return</span>
-            </td>  -->
-            <td>
-                <button *ngIf="ord.receiveStatus1 == !0" class="btn btn-success" (click)='receive(ord.id)'>Recieve</button>
-                <button *ngIf="ord.receiveStatus1 == 3" class="btn btn-secondary" disabled>Received</button>
-            
-            </td>
-        </tr>
-    </tbody>
-</nz-table>
+
 <ng-template #contentdetail1 let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Order details</h4>

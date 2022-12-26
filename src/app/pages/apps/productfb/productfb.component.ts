@@ -82,6 +82,7 @@ export class ProductfbComponent implements OnInit {
     productCode: null,
     CompanyId: 0,
     action: '',
+
   }
   isvisible: boolean
   visible = false
@@ -384,10 +385,10 @@ export class ProductfbComponent implements OnInit {
     if (this.product.unitId == 0) isvalid = false
     if (this.product.name == '') isvalid = false
     if (this.product.description == '') isvalid = false
-    if (this.product.brand == '') isvalid = false
+    // if (this.product.brand == '') isvalid = false
     if (this.product.price == null) isvalid = false
     if (this.product.productCode == null) isvalid = false
-    if (this.product.barcode == null) isvalid = false
+    // if (this.product.barcode == null) isvalid = false
 
 
     return isvalid
@@ -574,10 +575,15 @@ export class ProductfbComponent implements OnInit {
   saveProduct() {
     this.submitted = true;
     console.log(this.products1)
+    this.products1.Recomended = !!this.products1.Recomended
+    this.products1.IsStockMaintained = !!this.products1.IsStockMaintained
+    this.products1.IsSaleProdGroup = !!this.products1.IsSaleProdGroup
+    this.products1.ProductTypeId = this.products1.ProductTypeId
     var postdata = { objData: JSON.stringify(this.products1) };
     //postdata.data = ;
     console.log(postdata);
     // var image = { image: this.image };
+
     this.Auth.saveProduct(postdata, this.image, this.products1.Id, this.loginfo.companyId).subscribe(data => {
       console.log(data)
       this.back()
