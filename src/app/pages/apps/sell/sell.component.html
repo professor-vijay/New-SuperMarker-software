@@ -1227,10 +1227,11 @@
     (nzOnClose)="draftorderdrawer = false" [nzWidth]="360" [nzMaskClosable]="true" [nzMask]="true">
     <div *ngFor="let dorder of draftOrders" class="btn-group" style="margin-left: 29px">
         <ul class="list-group">
+            <strong><code style="font-size: 125.5%;">[{{dorder.draftIndex}}]</code></strong>
             <a style="height: 35px;" href="javascript:void(0);" (click)="loadDraftOrder(dorder)"
                 (click)="draftorderdrawer = false" [class.cat-active]="selectedDraftIndex == dorder.draftIndex"
                 class="btn btn-outline-danger">
-                <code>[{{dorder.draftIndex}}]</code> <strong>{{dorder.draftName}}</strong>
+                 <strong>{{dorder.draftName}}</strong>
             </a>
         </ul>
     </div>

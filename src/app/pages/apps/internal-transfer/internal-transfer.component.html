@@ -43,9 +43,7 @@
     <div class="row">
       <nz-card style="height: 90% ;width:25%;" nzTitle="Select Product" [nzExtra]="extraTemplate" *ngIf="isTable">
         <div>
-          <label nz-checkbox [checked]="checkbox" [(ngModel)]="testid" value="" name="example_name"
-            (change)="changefilters($event.target.checked)" (click)="isDisabled = false"> Show All Product
-          </label>
+         
         </div>
         <br>
         <div>
@@ -102,7 +100,7 @@
                 <th><strong>Tax1 </strong> </th>
                 <th><strong>Tax2 </strong> </th>
                 <th><strong>Action </strong> </th>
-                <th><strong>expiary </strong> </th>
+              
               </tr>
             </thead>
             <tbody>
@@ -132,9 +130,7 @@
                     <i class="fe fe-trash mr-1"></i>
                   </a>
                 </td>
-                <td>
-                  {{product?.expiaryDate || '-'}}
-                </td>
+              
               </tr>
             </tbody>
           </nz-table>
@@ -305,10 +301,7 @@
             <label nz-checkbox [(ngModel)]="product.selected"
           (change)="Selectedbyproduct($event);"></label>
           </td> -->
-          <td>
-            <label nz-checkbox name="{{product.productId}}" [(ngModel)]="product.selected"
-              (change)="onChange(product, $event.target.checked)"></label>
-          </td>
+        
         </tr>
       </tbody>
     </nz-table>

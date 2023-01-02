@@ -67,7 +67,7 @@ export class InternalTransferComponent implements OnInit {
       map(term =>
         term === ''
           ? []
-          : this.stores.storeList
+          : this.stores.storelist
             .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
             .slice(0, 10),
       ),
@@ -97,8 +97,8 @@ export class InternalTransferComponent implements OnInit {
           : this.stores.storelist
             .filter(
               v =>
-              (v.name.toLowerCase().indexOf(term.toLowerCase()) > -1 &&
-                v != this.storeId?.toLowerCase().indexOf(term.toLowerCase()))
+              (v.name.toLowerCase().indexOf(term.toLowerCase()) > -1 
+                )
             )
             .slice(0, 10),
       ),
