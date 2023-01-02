@@ -670,7 +670,7 @@ export class SellComponent implements OnInit {
       }
       this.preorders.forEach(order => {
         console.log(order)
-        order.status_name = this.orderstatus[order.OrderStatusId].name
+        order.status_name = this.orderstatus[order.OrderStatusId].Name
         order.deliverytimestamp = order.DeliveryDateTime
           ? new Date(order.DeliveryDateTime).getTime()
           : 0
@@ -1232,7 +1232,7 @@ export class SellComponent implements OnInit {
   addProduct(product) {
     console.log(product)
     var options = {
-      quantity : this.temporaryItem,
+      quantity : this.temporaryItem.Quantity || 1 ,  
       
       key: '',
     }
@@ -1245,10 +1245,9 @@ export class SellComponent implements OnInit {
         windowClass: 'modal-holder',
         centered: true,
       })
-
       this.orderlogging('item_with_option_add')
 
-    } else {
+    }  else {
       this.order.additem(product, options)
       console.log(options)
       this.model = ''
@@ -1413,8 +1412,8 @@ export class SellComponent implements OnInit {
         '4': { '-5': 0, '5': 0, '-1': 0, '-2': 0 },
       }
       this.preorders.forEach(order => {
-        // console.log(order)
-        order.status_name = this.orderstatus[order.OrderStatusId].name
+        console.log(order)
+        order.status_name = this.orderstatus[order.OrderStatusId]?.name
         order.deliverytimestamp = order.DeliveryDateTime
           ? new Date(order.DeliveryDateTime).getTime()
           : 0

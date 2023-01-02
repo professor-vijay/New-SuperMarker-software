@@ -287,8 +287,9 @@ export class InternalTransferComponent implements OnInit {
     this.getStoreList()
     this.Getorderlist()
     this.getallprod()
+    this.temporaryItem.Quantity = null;
     // this.groupProducts()
- 
+
     this.products.forEach(product => {
       product.quantity = null
       product.tax = 0
@@ -423,7 +424,9 @@ export class InternalTransferComponent implements OnInit {
   getStoreList() {
     this.Auth.getstores(this.CompanyId).subscribe(data => {
       this.stores = data
+      this.stores.storelist = this.stores.storelist.filter(x => x.storeId == !this.StoreId )
       console.log(this.stores)
+      console.log(this.stores.storelist)
     })
   }
   getOrderList() {
@@ -553,13 +556,15 @@ export class InternalTransferComponent implements OnInit {
     this.submitted = true
     console.log(this.validation())
     if (this.validation()) {
-      this.order.addproduct(this.temporaryItem)
+      this.order.addproduct(this.temporaryItem,this.selectprod)
       this.temporaryItem = { DiscAmount: 0, Quantity: null }
-      this.productinput['nativeElement'].focus()
-      this.model = ''
+      // this.productinput['nativeElement'].focus()
+      // this.model = ''
       this.filteredvalues = []
       this.submitted = false
       console.log('cvcv', this.order)
+    } else {
+      this.order.addproduct(this.temporaryItem,this.selectprod)
     }
     return
   }
@@ -630,10 +635,7 @@ export class InternalTransferComponent implements OnInit {
     // console.log(this.tax)
   }
   date = new Date()
-  onChange(e) {
-    console.log('date', e)
-    this.orderDate = e
-  }
+
   showModal(): void {
     this.isVisible = true
   }
@@ -671,6 +673,7 @@ export class InternalTransferComponent implements OnInit {
     if (!this.temporaryItem.productId) isvalid = false
     if (this.temporaryItem.Quantity <= 0) isvalid = false
     if (this.temporaryItem.Quantity > this.temporaryItem.quantity) isvalid = false
+    
     // if (this.temporaryItem.Price <= 0) isvalid = false;
     return isvalid
   }
@@ -800,7 +803,7 @@ export class InternalTransferComponent implements OnInit {
   }
 
   // SuppliedById: any
-  formatterstore = (x: { name: string }) => x.name
+  formatterstore = (x: { name: string }) => x.name 
   selectedsupplieritem(item) {
     console.log('item', item)
     this.SuppliedById = item.id
@@ -808,9 +811,9 @@ export class InternalTransferComponent implements OnInit {
     this.getallprod()
   }
 
-  selectproduct() {
-    console.log('selected product', this.model)
-  }
+  // selectproduct() {
+  //   console.log('selected product', this.model)
+  // }
 
   crossclick() {
     this.modalService.dismissAll()
@@ -844,28 +847,46 @@ export class InternalTransferComponent implements OnInit {
   getallprod() {
     console.log(this.CompanyId, this.SuppliedById, this.booltest)
     this.Auth.getintprod(this.CompanyId, this.SuppliedById, this.booltest).subscribe(data => {
+
       this.gprod = data
+      this.gprod.batchprod
       console.log(this.gprod)
-      // this.batchprd = this.gprod['batchprod']
-      // console.log(this.batchprd)
-      // this.product = this.gprod['product']
-      // console.log(this.product)
+
       this.groupProducts()
       // this.test = this.gprod.batchprod.filter(x => x.isactive == !this.booltest)
       // console.log(this.test)
     })
   }
+  selectprod: any = [];
+  onChange(item: string, isChecked: boolean = true) {
+    if (isChecked) {
+      this.selectprod.push(item);
+      console.log(this.selectprod)
+      // this.addItem()
+    } else {
+      let index = this.selectprod.indexOf(item);
+      this.selectprod.splice(index, 1);
+      this.delete(item)
 
-  selectedItem(item, selectedprod, barcodeId) {
-    console.log(item)
-    if (item.hasOwnProperty('OptionGroup')) {
+      console.log(this.selectprod)
+    }
+
+  }
+
+
+
+  selectedItem(item, selectedprod) {
+    console.log(item) 
+    if (item.hasOwnProperty('batchprod')) {
       this.addItem()
     } else {
       this.selectedprod = this.gprod.batchprod.filter(x => x.barcodeId == item.barcodeId && x.quantity > 0)
       console.log(selectedprod)
-      if (this.selectedprod.length > 1) {
+      if (this.selectedprod.length > 0) {
         this.modalService.open(this.stockmodel, { centered: true, size: 'lg' })
       } else {
+        this.selectedprod = this.gprod.product.filter(x => x.id == item.id)
+        console.log(selectedprod)
         this.selectedproduct(this.selectedprod[0])
       }
       this.quantityel['nativeElement'].focus()
@@ -932,9 +953,9 @@ export class InternalTransferComponent implements OnInit {
 
   selectedprod: any = []
   prodid: any
- 
 
- 
+
+
   groupedProducts = []
   groupProducts() {
     var helper = {}
@@ -994,7 +1015,7 @@ export class InternalTransferComponent implements OnInit {
 
 
 
-  // batchproducts: any = []
+  batchproducts: any = []
   // selectedItem(item) {
   //   this.batchproducts = this.gprod.batchprod.filter(x => x.barcodeId == item.barcodeId && x.quantity > 0)
   //   if (this.batchproducts.length > 1) {

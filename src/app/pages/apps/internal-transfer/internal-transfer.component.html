@@ -55,7 +55,7 @@
           <input id="typeahead-template" #prod [ngClass]="{'is-invalid':submitted &&temporaryItem.product == ''}"
             #productautocomplete style="height: 84%;" #instance="ngbTypeahead" type="text" [(ngModel)]="model"
             class="form-control" placeholder="Search Product" [ngbTypeahead]="searchproduct" [resultTemplate]="rt"
-            [inputFormatter]="formatter"  (selectItem)="selectedItem($event.item,stock, $event.item.barcodeId)" (ngModelChange)="selectproduct()" />
+            [inputFormatter]="formatter" (selectItem)="selectedItem($event.item)" />
         </div>
         <br>
         <div>
@@ -102,6 +102,7 @@
                 <th><strong>Tax1 </strong> </th>
                 <th><strong>Tax2 </strong> </th>
                 <th><strong>Action </strong> </th>
+                <th><strong>expiary </strong> </th>
               </tr>
             </thead>
             <tbody>
@@ -130,6 +131,9 @@
                     slot="actions">
                     <i class="fe fe-trash mr-1"></i>
                   </a>
+                </td>
+                <td>
+                  {{product?.expiaryDate || '-'}}
                 </td>
               </tr>
             </tbody>
@@ -288,21 +292,32 @@
           <td>{{product.quantity}}</td>
           <td>{{product.price}}</td>
           <td>
-            <input type="number" nz-input nzSize='small' style="width:50px;" [(ngModel)]="temporaryItem.Quantity"
-              min="1" (input)="settotalprice(i,product.quantity)">
+            <!-- <input #quantityel type="number" nz-input nzSize='small' style="width:50px;"
+              [ngClass]="{'is-invalid':submitted &&temporaryItem.Quantity <= 0 || temporaryItem.Quantity > product.quantity}"
+              [(ngModel)]="temporaryItem.Quantity"> -->
+            <input #quantityel type="number"
+              [ngClass]="{'is-invalid':submitted &&temporaryItem.Quantity <= 0 || temporaryItem.Quantity > product.quantity}"
+              [(ngModel)]="temporaryItem.Quantity" onfocus="this.select()" placeholder="Qty" class="form-control"
+              (keyup.enter)="addItem('user')" min="1" />
           </td>
           <td>{{product.expiaryDate}}</td>
+          <!-- <td>
+            <label nz-checkbox [(ngModel)]="product.selected"
+          (change)="Selectedbyproduct($event);"></label>
+          </td> -->
           <td>
-            <label nz-checkbox name="{{product.productId}}" (click)="product.quantity>0&&selectedproducttest(product)" ></label>
+            <label nz-checkbox name="{{product.productId}}" [(ngModel)]="product.selected"
+              (change)="onChange(product, $event.target.checked)"></label>
           </td>
         </tr>
       </tbody>
     </nz-table>
   </div>
   <div class="modal-footer">
-    <!-- <span *ngIf="submitted && !stockmodalvalid" class="text-danger text-center">Select One of the
-      Product*</span>  -->
-    <button type="button" class="btn btn-primary" (click)="addItem();crossclick();d('Cross click')">OK</button>
+    <span *ngIf="submitted && !stockmodalvalid" class="text-danger text-center">Select One of the
+      Product*</span>
+    <button nz-button [disabled]="temporaryItem.Quantity <= 0 " nzType="default" class="mr-3 mt-2 pull-right"
+      nzSize="small" (click)="addItem;crossclick();d('Cross click')">Add
+    </button>
   </div>
-
 </ng-template>

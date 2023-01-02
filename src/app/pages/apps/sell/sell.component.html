@@ -677,7 +677,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-sm-4" *ngFor="let product of groupedProducts" (click)="addProduct(product)">
+                    <div class="col-sm-4" *ngFor="let product of groupedProducts" (click)="addProduct(product)"
+                        (selectItem)="selectedItem($event.item,batchproductmodal, $event.item.barcodeId)">
                         <a>
                             <div class="card">
                                 <div class="card-body px-0 py-0 pt-2">
@@ -866,6 +867,7 @@
                     <th>AvailableQty</th>
                     <th>Price</th>
                     <th>BatchDate</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -874,7 +876,7 @@
                     <td>{{ product.product }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>&#8377; {{ product.price }}</td>
-                    <td>{{ product.createdDate | date: 'MMM d, y' }}</td>
+                    <td>{{ product.createdDate | date: 'MMM d, y' }}</td>                   
                 </tr>
             </tbody>
         </nz-table>
