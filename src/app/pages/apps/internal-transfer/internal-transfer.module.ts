@@ -93,7 +93,7 @@ export class OrderModule {
     this.WipStatus = ''
     this.ProdStatus = ''
   }
-  addproduct(product,batchprod) {
+  addproduct(product) {
 
     // if (product.isorderitem) {
     //     console.log("isorderitem: ", true)
@@ -113,7 +113,7 @@ export class OrderModule {
     //   }
     //   this.setbillamount()
     //   console.log(productkey)
-    this.Items.push(new OrderItemModule(product,batchprod))
+    this.Items.push(new OrderItemModule(product))
     this.OrderDetail.push(new OrderItemDetailModule(product))
     this.setbillamount()
 
@@ -225,10 +225,9 @@ export class OrderItemModule {
   ProductKey: string
   batchId: number
   
-  constructor(product, batchprod) {
+  constructor(product) {
     console.log(product)
-    console.log(batchprod)
-    this.batchId = +product.batchId ? batchprod.batchId : ''
+ 
     this.ProductKey = product.productId
     console.log(this.ProductKey)
     this.Id = 0
@@ -264,7 +263,7 @@ export class OrderItemModule {
     // this.VarianceReasonDesc = '';
     this.BarcodeId = product.barcodeId
     this.DiscAmount = product.DiscAmount
-    this.ProductName = product.name ? batchprod.name :''
+    this.ProductName = product.name 
     this.ProductId = product.productId
     this.OrderQuantity = product.quantity
     this.DispatchedQuantity = product.Quantity
