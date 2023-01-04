@@ -1,7 +1,6 @@
 
 const https = require('https');
 var db = {};
-// Type 2: Persistent datastore with manual loading
 var Datastore = require('nedb')
 const nodemailer = require("nodemailer");
 const { SerialPort } = require('serialport');
@@ -54,59 +53,14 @@ db.user = new Datastore({ filename: './database/user.db' });
 
 Object.keys(db).forEach(key => {
     db[key].loadDatabase((data, error) => {
-        // if (error) console.log("Error loading database!")
-        // else console.log("Database loaded successfully!")
     });
 })
-// loadatabase();
 const axios = require('axios')
-
-// axios.get('https://biz1retail.azurewebsites.net/api/Product/getStockProduct?CompanyId=1')
-//     .then(res => {
-//         console.log(res.data)
-//         stockbatchesdb.insert(res.data, function (err, newDoc) {   // Callback is optional
-//         });
-//     })
-//     .catch(error => {
-//         console.error(error)
-//     })
-//     axios.get('https://biz1retail.azurewebsites.net/api/Product/getProductType?CompanyId=1')
-//     .then(res => {
-//         console.log(res.data)
-//         producttypedb.insert(res.data, function (err, newDoc) {   // Callback is optional
-//         });
-//     })
-//     .catch(error => {
-//         console.error(error)
-//     })
-// https.request('https://biz1retail.azurewebsites.net/api/Product/stockEntry?CompanyId=1', { "CompanyId": 1 }, (resp) => {
-//     let data = '';
-
-//     // A chunk of data has been recieved.
-//     resp.on('data', (chunk) => {
-//         data += chunk;
-//     });
-
-//     // The whole response has been received. Print out the result.
-//     resp.on('end', () => {
-//         console.log("qqqq", data)
-//         var products = JSON.parse(data).product;
-//         stockbatchesdb.insert(products, function (err, newDoc) {   // Callback is optional
-//             // newDoc is the newly inserted document, including its _id
-//             // newDoc has no key called notToBeSaved since its value was undefined
-//             console.log(err, index)
-//         });
-//     });
-
-// }).on("error", (err) => {
-//     console.log("Error: " + err.message);
-// });
 var express = require('express');
 var app = express();
 var cors = require('cors')
 var ip = require('ip')
 const bodyParser = require('body-parser');
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.raw({ limit: '50mb' }));
@@ -139,21 +93,6 @@ const listener = () => {
 app.get('/getWeight', function (req, res) {
     res.send({ status: 200, weight })
 })
-// app.get('/getWeight', function (req, res, next) {
-//     //when using text/plain it did not stream
-//     //without charset=utf-8, it only worked in Chrome, not Firefox
-//     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-//     res.setHeader('Transfer-Encoding', 'chunked');
-
-//     writer = fs.createWriteStream('test.txt')
-//     parser.on("data", (line) => writer.write(line))
-// });
-
-// app.get('/products', function (req, res) {
-//     db.productdb.find({}, function (err, docs) {
-//         res.send(docs)
-//     });
-// });
 
 app.get('/products', function (req, res) {
     db.productdb.find({}, function (err, docs) {
@@ -203,7 +142,7 @@ app.post('/batchproduct', function (req, res) {
     });
 })
 
-// Master
+
 
 app.post('/updatestock', function (req, res) {
     console.dir(req.body);
@@ -240,7 +179,6 @@ app.get('/join', function (req, res) {
             });
         }
     })
-    // res.send({ ip: req.ip })
 })
 
 app.get('/getclients', function (req, res) {
@@ -389,11 +327,7 @@ app.post('/saveorderdb', function (req, res) {
         if (i == 1)
             res.send({ message: 'data updated successfully' })
     });
-    // productdb.insert(req.body.products, function (err, newDoc) {   // Callback is optional
-    //     i++ // Callback is optional
-    //     if (i == 2)
-    //         res.send({ message: 'data updated successfully' })
-    // });
+
     if (req.body.order.OrderType == 6) {
         req.body.order.Items.forEach(item => {
             db.productdb.findOne({ _id: item._id }, function (err, newDoc) {
@@ -416,18 +350,6 @@ app.post('/saveorderfb', function (req, res) {
     })
 });
 
-// app.post('/addtaxgroup', function (req, res) {
-//     console.dir(req.body);
-//     taxgroupdb.insert(req.body, function (err, newDoc) {   // Callback is optional
-//         res.send({ message: 'yes iam the server' })
-//     });
-// })
-// app.post('/updatetaxgroup', function (req, res) {
-//     console.dir(req.body);
-//     taxgroupdb.update(req.body, function (err, newDoc) {   // Callback is optional
-//         res.send({ message: 'yes iam the server' })
-//     });
-// })
 app.post('/updatewastages', function (req, res) {
     console.dir(req.body);
     db.wastagedb.update({ _id: req.body._id }, req.body, { upsert: true }, function (err, newDoc) {
@@ -443,16 +365,6 @@ app.post('/updateunits', function (req, res) {
     });
 })
 
-// app.post('/updatecharges', function (req, res) {
-//     var i = 0;
-//     var j = req.body.length
-//     req.body.forEach(charge => {
-//         db.additionalcharges.update({ _id: charge._id }, charge, function (err1, newDoc) { // Callback is optional
-//             i++
-//             if (i == j) res.send({ msg: "success" })
-//         })
-//     })
-// });
 
 app.post('/updateadditional', function (req, res) {
     console.dir(req.body);
@@ -471,13 +383,7 @@ app.get('/gettblorderby_id', function (req, res) {
     })
 });
 
-// app.get('/gettblorderbytblid', function (req, res) {
-//     console.log(req.query)
-//     db.tableordersdb.find({ diningtablekey: req.query.diningtablekey }, function (err1, newDoc) { // Callback is optional
-//         console.log(newDoc)
-//         res.send({ msg: "success" })
-//     })
-// });
+
 
 app.post('/savetblorder', function (req, res) {
     console.log(req.body.diningtablekey)
@@ -591,13 +497,6 @@ app.post('/saveorder', function (req, res) {
     })
 });
 
-// app.post('/updateorder', function (req, res) {
-//     db.orderdb.update({ _id: req.body._id }, req.body, function (err1, newDoc) {   // Callback is optional
-//         db.transactionsdb.remove({ InvoiceNo: req.body.InvoiceNo }, { multi: true }, function (err, num) {
-//         })
-//         res.send({ msg: "success" })
-//     })
-// });
 
 app.post('/updateorder', function (req, res) {
     db.pendingordersdb.update({ _id: req.body._id }, req.body, function (err1, newDoc) { // Callback is optional
@@ -687,26 +586,6 @@ app.post('/updatepreference', function (req, res) {
         res.send({ message: 'yes iam the server' })
     });
 })
-
-// app.post('/savepreorder', function (req, res) {
-//     console.log(req.ip, req.hostname)
-//     req.body.status = "P"
-//     db.preorders.insert(req.body, function (err1, newDoc) { // Callback is optional
-//         console.log('Line: 188', err1)
-//         res.send({ msg: "success" })
-//     })
-// });
-
-// app.post('/saveorder', function (req, res) {
-//     console.log(req.ip, req.hostname)
-//     req.body.status = "N"
-//     db.pendingorders.insert(req.body, function (err1, newDoc) { // Callback is optional
-//         res.send({ msg: "success" })
-//     })
-// });
-
-
-
 app.post('/saveStockBatch', function (req, res) {
     console.log("qwerty", req.body)
     if (req.body) {
@@ -743,12 +622,7 @@ app.post('/saveStockBatch', function (req, res) {
         res.send({ msg: "empty or invalid payload" })
     }
 })
-// app.get('/getpurchaseorders', function (req, res) {
-//     console.log(req.ip, req.hostname)
-//     orderdb.find({ OrderType: +req.query.typeid }, function (err1, docs) {   // Callback is optional
-//         res.send(docs)
-//     })
-// });
+
 
 
 app.get('/getPendOrderSales', function (req, res) {
@@ -776,12 +650,7 @@ app.post('/updatevendors', function (req, res) {
         res.send({ message: 'yes iam the server' })
     });
 })
-// app.post('/addcategories', function (req, res) {
-//     console.dir(req.body);
-//     categoriesdb.insert(req.body, function (err, newDoc) {   // Callback is optional
-//     });
-//     res.send({ message: 'yes iam the server' })
-// })
+
 
 app.get('/getpreference', function (req, res) {
     db.preferencedb.find({}, function (err, docs) {
@@ -816,25 +685,6 @@ function updatevariantgroupdb(variantgroup_list) {
         });
     })
 }
-// app.get('/updatevariantgroup', function (req, res) {
-//     masteroptiongroupdb.remove({}, { multi: true }, function (err, newDoc) {
-//         axios.get('https://biz1retail.azurewebsites.net/api/Product/getvariantgroups?CompanyId=1')
-//             .then(response => {
-//                 console.log(response.data)
-//                 masteroptiongroupdb.insert(response.data, function (err, newDoc) {   // Callback is optional
-//                     var obj = { status: 200, message: "optiongroup db reset success" }
-//                     res.send(obj)
-//                     // loadatabase();
-//                 });
-//             })
-//             .catch(error => {
-//                 var obj = { status: 500, message: "optiongroup db reset failed", error: error }
-//                 res.send(obj)
-//                 // loadatabase();
-//             })
-
-//     });
-// })
 app.get('/updatevariant', function (req, res) {
     db.masteroptiondb.remove({}, { multi: true }, function (err, newDoc) {
         axios.get('https://biz1retail.azurewebsites.net/api/Product/getvariants?CompanyId=1')
@@ -867,22 +717,7 @@ app.post('/setorderkey', function (req, res) {
     });
 });
 
-// customerdb.remove({}, { multi: true }, function (err, newDoc) {
-//         axios.get('https://biz1retail.azurewebsites.net/api/Customer/GetCustomerList?CompanyId=1')
-//             .then(response => {
-//                 console.log(`statusCode: ${response.statusCode}`)
-//                 customerdb.insert(response.data, function (err, newDoc) {   // Callback is optional
-//                     console.log("db updated");
-//                     var obj = { status: 200, message: "option db reset success" }
-//                     res.send(obj)
-//                 });
-//             })
-//             .catch(error => {
-//                 var obj = { status: 500, message: "option db reset failed", error: error }
-//                 res.send(obj)
-//             })
 
-//     });
 
 app.post('/updatecustomer', function (req, res) {
     console.dir(req.body);
@@ -947,55 +782,6 @@ app.get('/syncdata', function (req, response) {
         }
 
     })
-    // masteroptiondb.find({}, function (err, data) {
-    //     if (err) return;
-    //     var dbdata = data;
-    //     var adddata = dbdata.filter(x => x.action == "A");
-    //     var udata = dbdata.filter(x => x.action == "U");
-    //     console.log(adddata.length, udata.length)
-    //     if (adddata.length > 0) {
-    //         axios
-    //             .post('https://biz1retail.azurewebsites.net/api/Product/bulkaddoption', adddata)
-    //             .then(res => {
-    //                 console.log(res.data)
-    //                 currentcount++;
-    //                 if (res.data.status == 200) {
-    //                     updatevariantdb(res.data.variant_list)
-    //                 }
-    //                 if (currentcount == actioncount) response.send(obj);
-    //             })
-    //             .catch(error => {
-    //                 console.error(error)
-    //                 currentcount++;
-    //                 if (currentcount == actioncount) response.send(obj);
-    //             })
-    //     } else {
-    //         currentcount++;
-    //         if (currentcount == actioncount) response.send(obj);
-    //     }
-    //     if (udata.length > 0) {
-    //         axios
-    //             .post('https://biz1retail.azurewebsites.net/api/Product/bulkupdateoption', udata)
-    //             .then(res => {
-    //                 console.log(res)
-    //                 currentcount++;
-    //                 if (res.data.status == 200) {
-    //                     updatevariantdb(res.data.variant_list)
-    //                 }
-    //                 if (currentcount == actioncount) response.send(obj);
-    //             })
-    //             .catch(error => {
-    //                 console.error(error)
-    //                 currentcount++;
-    //                 if (currentcount == actioncount) response.send(obj);
-    //             })
-    //     }
-    //     else {
-    //         currentcount++;
-    //         if (currentcount == actioncount) response.send(obj);
-    //     }
-
-    // })
     masteroptiongroupdb.find({}, function (err, data) {
         if (err) return;
         var dbdata = data;
@@ -1332,18 +1118,6 @@ app.post('/setstoredata', function (req, res) {
     });
 });
 
-// app.post('/addmasterproduct', function (req, res) {
-//     console.dir(req.body);
-//     masterproductdb.insert(req.body, function (err, newDoc) {   // Callback is optional
-//                     });
-//     res.send({ message: 'yes iam the server' })
-// })
-// app.post('/addmasterproduct', function (req, res) {
-//     console.dir(req.body);
-//     masterproductdb.insert(req.body, function (err, newDoc) {   // Callback is optional
-//                     });
-//     res.send({ message: 'yes iam the server' })
-// })
 function removeclient(id) {
     db.clientdb.remove({ _id: id }, {}, function (err, numRemoved) {
         // numRemoved = 1
@@ -1355,11 +1129,7 @@ function stopserver() {
     server.once('close', () => console.log('Server stopped'));
 
 }
-// var server = app.listen(8081, ip.address(), function () {
-//     var host = server.address().address
-//     var port = server.address().port
-//     console.log("Example app listening at http://%s:%s", host, port)
-// })
+
 
 var server;
 
@@ -1376,11 +1146,6 @@ function startServer() {
     })
 }
 startServer();
-// app.listen = function () {
-//     var server = http.createServer(this);
-//     return server.listen.apply(server, arguments);
-// };
-// startServer();
 
 module.exports = {
     startserver() {

@@ -782,17 +782,8 @@ export class SellComponent implements OnInit {
     })
   }
 
-  batchproduct: any = []
-  // selectedItem1(batchproduct, barcodeId) {
-  //   this.batchproduct = this.products.filter(x => x.barcodeId == barcodeId && x.quantity > 0)
-  //   if (this.batchproduct.length > 1) {
-  //     this.modalService.open(batchproduct, { centered: true })
-  //   } else {
-  //     this.selectedproduct(this.batchproduct[0])
-  //   }
-  //   this.QuantityRef['nativeElement'].focus()
+ 
 
-  // }
 
 
 
@@ -1376,6 +1367,7 @@ export class SellComponent implements OnInit {
 
   formatter = (x: { product: string }) => x.product
 
+  batchproduct: any = []
   selectedItem(item, batchproduct, barcodeId) {
     console.log(item)
     if (item.hasOwnProperty('OptionGroup')) {
@@ -1398,6 +1390,12 @@ export class SellComponent implements OnInit {
       this.temporaryItem[key] = product[key]
     })
     this.modalService.dismissAll()
+  }
+
+  deletepreorder(order) {
+    this.auth.deletepreorders(order._id).subscribe(data => {
+      this.getpreorders()
+    })
   }
 
 
